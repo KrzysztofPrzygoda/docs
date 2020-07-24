@@ -1,5 +1,12 @@
 # Markdown Syntax
 
+## Reference
+- [Markdown Guide](https://www.markdownguide.org/)
+
+### Markdown Guide
+- [Cheet Sheet](https://www.markdownguide.org/cheat-sheet/)
+- [Basic Syntax](https://www.markdownguide.org/basic-syntax/)
+
 ### macOS
 In any app context press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd> or choose `Menu > Edit > Emoji & Symbols` and click ⌘ icon to access Technical Characters. More info on Apple support article [Use emoji and symbols on Mac](https://support.apple.com/guide/mac-help/use-emoji-and-symbols-on-mac-mchlp1560/mac).
 

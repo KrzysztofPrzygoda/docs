@@ -2,14 +2,36 @@
 
 ## Reference
 
-- **[Markdown Guide](https://www.markdownguide.org/)** ([Cheet Sheet](https://www.markdownguide.org/cheat-sheet/), [Basic Syntax](https://www.markdownguide.org/basic-syntax/), [Extended Syntax](https://www.markdownguide.org/extended-syntax/), [Tools](https://www.markdownguide.org/tools/))
-- **[GitHub Guide](https://docs.github.com/en/github/writing-on-github)**
+- [markdownguide.org](https://www.markdownguide.org/)
+- [docs.github.com](https://docs.github.com/en/github/writing-on-github)
 
 ## Table of Contents
 
 - [Basic Syntax](#basic-syntax)
+    - [Heading](#heading)
+    - [Paragraph](#paragraph)
+    - [Bold](#bold)
+    - [Italic](#italic)
+    - [Blockquote](#blockquote)
+    - [Ordered List](#ordered-list)
+    - [Unordered List](#unordered-list)
+    - [Code](#code)
+    - [Link](#link)
+    - [Image](#image)
+    - [Horizontal Rule](#horizontal-rule)
 - [Extended Syntax](#extended-syntax)
+    - [Escaping Characters](#escaping-characters)
+    - [Line Break](#line-break)
+    - [Table](#table)
+    - [Code Block](#code-block)
+    - [Footnote](#footnote)
+    - [Heading ID](#heading-id-custom-id)
+    - [Definition List](#definition-list)
+    - [Strikethrough](#strikethrough)
+    - [Task List](#task-list)
 - [Keyboard Glyphs](#keyboard-glyphs)
+    - [General Keyboard](#general-keyboard)
+    - [macOS Keyboard](#macos-keyboard)
 
 ## Basic Syntax
 
@@ -162,7 +184,7 @@ A new line with<br />HTML break.
 | Line break | Text with line<br />break |
 ```
 
-### Fenced Code Block
+### Code Block
 
 ```json
 {

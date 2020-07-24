@@ -1,12 +1,20 @@
 # Markdown Guide
 
 ## Reference
+
 - **[Markdown Guide](https://www.markdownguide.org/)** ([Cheet Sheet](https://www.markdownguide.org/cheat-sheet/), [Basic Syntax](https://www.markdownguide.org/basic-syntax/), [Extended Syntax](https://www.markdownguide.org/extended-syntax/), [Tools](https://www.markdownguide.org/tools/))
 - **[GitHub Guide](https://docs.github.com/en/github/writing-on-github)**
 
+## Table of Contents
+
+- [Basic Syntax](#basic-syntax)
+- [Extended Syntax](#extended-syntax)
+- [Keyboard Glyphs](#keyboard-glyphs)
+
 ## Basic Syntax
 
-These are the elements outlined in John Gruber’s original design document. **All Markdown applications support these elements.**
+These are the elements outlined in John Gruber’s original design document.
+> **All Markdown applications support these elements.**
 
 ### Heading
 
@@ -35,21 +43,6 @@ Second paragraph.
 First paragraph.
 
 Second paragraph.
-```
-
-### Line Break
-
-A line with\
-simple break.
-
-```markdown
-A line with\
-simple break.
-```
-
-A new line with<br />HTML break.
-```markdown
-A new line with<br />HTML break.
 ```
 
 ### Bold
@@ -118,14 +111,6 @@ A new line with<br />HTML break.
 ![Image alt text](image.jpg)
 ```
 
-### Escaping Characters
-
-Text with escaping special \`character\`.
-
-```markdown
-Text with escaping special \`character\`.
-```
-
 ### Horizontal Rule
 
 ---
@@ -135,7 +120,31 @@ Text with escaping special \`character\`.
 
 ## Extended Syntax
 
-These elements extend the basic syntax by adding additional features. **Not all Markdown applications support these elements.**
+These elements extend the basic syntax by adding additional features.
+> **Not all Markdown applications support these elements.**
+
+### Escaping Characters
+
+Text with escaping special \`character\`.
+
+```markdown
+Text with escaping special \`character\`.
+```
+
+### Line Break
+
+A line with\
+simple break.
+
+```markdown
+A line with\
+simple break.
+```
+
+A new line with<br />HTML break.
+```markdown
+A new line with<br />HTML break.
+```
 
 ### Table
 

@@ -1,18 +1,27 @@
 # Markdown Guide
 
-**Markdown** is a text-to-HTML conversion tool for web writers. Markdown allows you to write using an easy-to-read, easy-to-write plain text format, then convert it to structurally valid XHTML (or HTML).
-
-Thus, **Markdown** is two things: (1) a plain text formatting syntax; and (2) a software tool, that converts the plain text formatting to HTML.
+*Markdown* is a plain text format for writing structured documents, based on conventions for indicating formatting in email and usenet posts. It was developed by *John Gruber* (with help from *Aaron Swartz*) and released in 2004 in the form of a syntax description and a Perl script (Markdown.pl) for converting Markdown to HTML. In the next decade, dozens of implementations were developed in many languages. Some extended the original Markdown syntax with conventions for footnotes, tables, and other document elements. Some allowed Markdown documents to be rendered in formats other than HTML. Websites like Reddit, StackOverflow, and GitHub had millions of people using Markdown. And Markdown started to be used beyond the web, to author books, articles, slide shows, letters, and lecture notes.
 
 ## Reference
 
-### Versions
+### Standards
+
 - [Markdown v1.0.1](https://daringfireball.net/projects/markdown/) is the original [syntax specification](https://daringfireball.net/projects/markdown/syntax) and at the same time [the tool written in Perl](https://daringfireball.net/projects/downloads/Markdown_1.0.1.zip) by *John Gruber* in 2004.
+- [Pandoc’s Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) is an extended and slightly revised version of *John Gruber’s* Markdown syntax.
+- [CommonMark](https://commonmark.org/) is a standard, unambiguous syntax specification for Markdown, along with a suite of comprehensive tests to validate Markdown implementations against this specification.
+- [GitHub Flavored Markdown (GFM)](https://github.github.com/gfm/) is the dialect of Markdown that is currently supported for user content on GitHub.com and GitHub Enterprise. GFM is a strict superset of CommonMark. All the features which are supported in GitHub user content and that are not specified on the original CommonMark Spec are hence known as extensions, and highlighted as such.
 
 ### Guides
+
 - [markdownguide.org](https://www.markdownguide.org/)
 - [docs.github.com](https://docs.github.com/en/github/writing-on-github)
- 
+- *Bold or italic?* on [practicaltypography.com](https://practicaltypography.com/bold-or-italic.html)
+
+### Tools
+
+- [Pandoc](https://pandoc.org/) a universal document converter.
+- [Markdown Here](https://markdown-here.com/) is an extension for popular browsers which allows you to easily prepare good-looking e-mails using Markdown syntax.
+- [tablesgenerator.com](https://www.tablesgenerator.com/markdown_tables#)
 
 ## Table of Contents
 
@@ -206,11 +215,11 @@ These elements extend the basic syntax by adding additional features.
 
 ### Table
 
-| Syntax | Description |
-| ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
-| Line break | Text with line<br />break |
+| Column 1 | Column 2 (centered) | Column 3 (right align) |
+| --- | :-: | --: |
+| Cell 11 | Cell 12 | Cell 13 |
+| Cell 21 | Cell 22 | Cell 23 |
+| Line break | Text with line<br />break | Cell 33 |
 ```markdown
 | Syntax | Description |
 | ----------- | ----------- |
@@ -218,7 +227,7 @@ These elements extend the basic syntax by adding additional features.
 | Paragraph | Text |
 | Line break | Text with line<br />break |
 ```
-> Usually table supports very few nested markdowns. For example does not support `# Heading` or list inside table. Then you can use HTML.
+> Table may support very few nested markdowns. For example does not support `# Heading` nor list inside a table. You may use HTML then, as shown above with `<br />` tag.
 
 ### Code Block
 

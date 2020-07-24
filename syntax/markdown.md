@@ -1,15 +1,25 @@
 # Markdown Guide
 
+**Markdown** is a text-to-HTML conversion tool for web writers. Markdown allows you to write using an easy-to-read, easy-to-write plain text format, then convert it to structurally valid XHTML (or HTML).
+
+Thus, **Markdown** is two things: (1) a plain text formatting syntax; and (2) a software tool, that converts the plain text formatting to HTML.
+
 ## Reference
 
+### Versions
+- [Markdown v1.0.1](https://daringfireball.net/projects/markdown/) is the original [syntax specification](https://daringfireball.net/projects/markdown/syntax) and at the same time [the tool written in Perl](https://daringfireball.net/projects/downloads/Markdown_1.0.1.zip) by *John Gruber* in 2004.
+
+### Guides
 - [markdownguide.org](https://www.markdownguide.org/)
 - [docs.github.com](https://docs.github.com/en/github/writing-on-github)
+ 
 
 ## Table of Contents
 
 - [Basic Syntax](#basic-syntax)
     - [Heading](#heading)
     - [Paragraph](#paragraph)
+    - [Line Break](#line-break)
     - [Bold](#bold)
     - [Italic](#italic)
     - [Blockquote](#blockquote)
@@ -18,10 +28,9 @@
     - [Code](#code)
     - [Link](#link)
     - [Image](#image)
+    - [Escapes](#escapes)
     - [Horizontal Rule](#horizontal-rule)
 - [Extended Syntax](#extended-syntax)
-    - [Escaping Characters](#escaping-characters)
-    - [Line Break](#line-break)
     - [Table](#table)
     - [Code Block](#code-block)
     - [Footnote](#footnote)
@@ -35,8 +44,8 @@
 
 ## Basic Syntax
 
-These are the elements outlined in John Gruber’s original design document.
-> **All Markdown applications support these elements.**
+These are the elements outlined in *John Gruber’s* original design document of [Markdown v1.0.1](https://daringfireball.net/projects/markdown/syntax#em).
+> **All Markdown applications should support these elements.**
 
 ### Heading
 
@@ -57,14 +66,45 @@ These are the elements outlined in John Gruber’s original design document.
 
 ### Paragraph
 
+A paragraph is simply one or more consecutive lines of text, separated by one or more blank lines (a line containing nothing but spaces or tabs is considered blank).
+
 First paragraph.
 
 Second paragraph.
+
+
+Third paragraph.
 
 ```markdown
 First paragraph.
 
 Second paragraph.
+
+
+Third paragraph.
+```
+
+### Line Break
+
+To break line using Markdown, you end a line with two or more <kbd>spaces</kbd> and <kbd>return</kbd>.
+
+A line broken with 2 spaces  
+and return.
+```markdown
+A line broken with 2 spaces  
+and return.
+```
+
+Some interpreters accepts a backslash\
+and return.
+```markdown
+Some interpreters accepts a backslash\
+and return.
+```
+
+A line with HTML break<br />can produce double new line on some interpreters.
+```markdown
+A line with HTML break<br />can produce double new line on some interpreters.
 ```
 
 ### Bold
@@ -115,6 +155,7 @@ Second paragraph.
 ### Code
 
 `code`
+
 ```markdown
 `code`
 ```
@@ -122,6 +163,7 @@ Second paragraph.
 ### Link
 
 [Link title](https://www.example.com)
+
 ```markdown
 [Link title](https://www.example.com)
 ```
@@ -129,8 +171,32 @@ Second paragraph.
 ### Image
 
 ![Image alt text](image.jpg)
+
 ```markdown
 ![Image alt text](image.jpg)
+```
+
+### Escapes
+
+Text with escaping special \`characters\`.
+
+```markdown
+Text with escaping special \`characters\`.
+```
+Markdown provides backslash escapes for the following characters (`\char` ):
+```markdown
+\   backslash
+`   backtick
+*   asterisk
+_   underscore
+{}  curly braces
+[]  square brackets
+()  parentheses
+#   hash mark
++   plus sign
+-   minus sign (hyphen)
+.   dot
+!   exclamation mark
 ```
 
 ### Horizontal Rule
@@ -144,29 +210,6 @@ Second paragraph.
 
 These elements extend the basic syntax by adding additional features.
 > **Not all Markdown applications support these elements.**
-
-### Escaping Characters
-
-Text with escaping special \`character\`.
-
-```markdown
-Text with escaping special \`character\`.
-```
-
-### Line Break
-
-A line with\
-simple break.
-
-```markdown
-A line with\
-simple break.
-```
-
-A new line with<br />HTML break.
-```markdown
-A new line with<br />HTML break.
-```
 
 ### Table
 
@@ -183,6 +226,7 @@ A new line with<br />HTML break.
 | Paragraph | Text |
 | Line break | Text with line<br />break |
 ```
+> Usually table supports very few nested markdowns. For example does not support `# Heading` or list inside table. Then you can use HTML.
 
 ### Code Block
 

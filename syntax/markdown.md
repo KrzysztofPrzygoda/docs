@@ -74,7 +74,6 @@ Second paragraph.
 
 
 Third paragraph.
-
 ```markdown
 First paragraph.
 
@@ -133,7 +132,6 @@ A line with HTML break<br />can produce double new line on some interpreters.
 1. First item
 2. Second item
 3. Third item
-
 ```markdown
 1. First item
 2. Second item
@@ -145,7 +143,6 @@ A line with HTML break<br />can produce double new line on some interpreters.
 - First item
 - Second item
 - Third item
-
 ```markdown
 - First item
 - Second item
@@ -155,7 +152,6 @@ A line with HTML break<br />can produce double new line on some interpreters.
 ### Code
 
 `code`
-
 ```markdown
 `code`
 ```
@@ -163,7 +159,6 @@ A line with HTML break<br />can produce double new line on some interpreters.
 ### Link
 
 [Link title](https://www.example.com)
-
 ```markdown
 [Link title](https://www.example.com)
 ```
@@ -171,7 +166,6 @@ A line with HTML break<br />can produce double new line on some interpreters.
 ### Image
 
 ![Image alt text](image.jpg)
-
 ```markdown
 ![Image alt text](image.jpg)
 ```
@@ -179,7 +173,6 @@ A line with HTML break<br />can produce double new line on some interpreters.
 ### Escapes
 
 Text with escaping special \`characters\`.
-
 ```markdown
 Text with escaping special \`characters\`.
 ```
@@ -218,7 +211,6 @@ These elements extend the basic syntax by adding additional features.
 | Header | Title |
 | Paragraph | Text |
 | Line break | Text with line<br />break |
-
 ```markdown
 | Syntax | Description |
 | ----------- | ----------- |
@@ -237,7 +229,6 @@ These elements extend the basic syntax by adding additional features.
   "age": 25
 }
 ```
-
 ```markdown
     ```json
     {
@@ -253,7 +244,6 @@ These elements extend the basic syntax by adding additional features.
 Here's a sentence with a footnote. [^1]
 
 [^1]: This is the footnote.
-
 ```markdown
 Here's a sentence with a footnote. [^1]
 
@@ -269,7 +259,6 @@ Here's a sentence with a footnote. [^1]
 
 term
 : definition
-
 ```markdown
 term
 : definition
@@ -278,7 +267,6 @@ term
 ### Strikethrough
 
 ~~The world is flat.~~
-
 ```markdown
 ~~The world is flat.~~
 ```
@@ -288,7 +276,6 @@ term
 - [x] Write the press release
 - [ ] Update the website
 - [ ] Contact the media
-
 ```markdown
 - [x] Write the press release
 - [ ] Update the website
@@ -300,13 +287,11 @@ term
 ### General Keyboard
 
 <kbd>control shift del</kbd>
-
 ```markdown
 <kbd>control shift del</kbd>
 ```
 
 <kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
-
 ```markdown
 <kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
 ```

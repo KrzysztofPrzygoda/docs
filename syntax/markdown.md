@@ -11,14 +11,17 @@ These are the elements outlined in John Gruber’s original design document. All
 ### Line Breaks
 
 ### Heading
+
 # H1
 ```markdown
-    # H1
+# H1
 ```
+
 ## H2
 ```markdown
 ## H2
 ```
+
 ### H3
 ```markdown
 ### H3
@@ -28,14 +31,14 @@ These are the elements outlined in John Gruber’s original design document. All
 
 **bold text**
 ```markdown
-    **bold text**
+**bold text**
 ```
 
 ### Italic
 
 *italicized text*
 ```markdown
-    *italicized text*
+*italicized text*
 ```
 
 ### Blockquote
@@ -75,20 +78,27 @@ These are the elements outlined in John Gruber’s original design document. All
 ```markdown
 `code`
 ```
+
 ### Link
 
-[Link title](https://www.example.com)\
-`[Link title](https://www.example.com)`
+[Link title](https://www.example.com)
+```markdown
+[Link title](https://www.example.com)
+```
 
 ### Image
 
-![Image alt text](image.jpg)\
-`![Image alt text](image.jpg)`
+![Image alt text](image.jpg)
+```markdown
+![Image alt text](image.jpg)
+```
 
 ### Horizontal Rule
 
 ---
-`---`
+```markdown
+---
+```
 
 ## Extended Syntax
 
@@ -107,6 +117,7 @@ These elements extend the basic syntax by adding additional features. Not all Ma
 | Header | Title |
 | Paragraph | Text |
 ```
+
 ### Fenced Code Block
 
 ```json
@@ -140,7 +151,9 @@ Here's a sentence with a footnote. [^1]
 ```
 
 ### Heading ID {#custom-id}
-`### Heading ID {#custom-id}`
+```markdown
+### Heading ID {#custom-id}
+```
 
 ### Definition List
 
@@ -154,8 +167,11 @@ term
 
 ### Strikethrough
 
-~~The world is flat.~~\
-`~~The world is flat.~~`
+~~The world is flat.~~
+
+```markdown
+~~The world is flat.~~
+```
 
 ### Task List
 
@@ -171,11 +187,17 @@ term
 
 ## Keyboard Glyphs
 
-<kbd>control shift del</kbd>\
-`<kbd>control shift del</kbd>`
+<kbd>control shift del</kbd>
 
-<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>\
-`<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>`
+```markdown
+<kbd>control shift del</kbd>
+```
+
+<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
+
+```markdown
+<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
+```
 
 ### macOS
 In any app context:

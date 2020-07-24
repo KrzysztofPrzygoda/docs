@@ -108,14 +108,12 @@ Most popular are:
 
 | Syntax | Output |
 | --- | --- |
-| `<kbd>⌥ Option</kbd> or <kbd>⌥</kbd>` | <kbd>⌥ Option</kbd> or <kbd>⌥</kbd> |
-
-<kbd>⌥ Option</kbd> or <kbd>⌥</kbd>\
-<kbd>⌃ Control</kbd> or <kbd>⌃</kbd>\
-<kbd>⇧ Shift</kbd> or <kbd>⇧</kbd>\
-<kbd>⌘ Command</kbd> or <kbd>⌘</kbd>\
-<kbd>⎋ Escape</kbd> or <kbd>⎋</kbd>\
-<kbd>⇪ Caps lock</kbd> or <kbd>⇪</kbd>\
-<kbd>⇥ Tab</kbd> or <kbd>⇥</kbd>\
-<kbd>⏏︎ Eject</kbd> or <kbd>⏏︎</kbd>\
-<kbd>⌫ Delete</kbd> or <kbd>⌫</kbd>
+| `<kbd>⌥ Option</kbd>` or `<kbd>⌥</kbd>` | <kbd>⌥ Option</kbd> or <kbd>⌥</kbd> |
+| `<kbd>⌃ Control</kbd>` or `<kbd>⌃</kbd>` | <kbd>⌃ Control</kbd> or <kbd>⌃</kbd> |
+| `<kbd>⇧ Shift</kbd>` or `<kbd>⇧</kbd>` | <kbd>⇧ Shift</kbd> or <kbd>⇧</kbd> |
+| `<kbd>⌘ Command</kbd>` or `<kbd>⌘</kbd>` | <kbd>⌘ Command</kbd> or <kbd>⌘</kbd> |
+| `<kbd>⎋ Escape</kbd>` or `<kbd>⎋</kbd>` | <kbd>⎋ Escape</kbd> or <kbd>⎋</kbd> |
+| `<kbd>⇪ Caps lock</kbd>` or `<kbd>⇪</kbd>` | <kbd>⇪ Caps lock</kbd> or <kbd>⇪</kbd> |
+| `<kbd>⇥ Tab</kbd>` or `<kbd>⇥</kbd>` | <kbd>⇥ Tab</kbd> or <kbd>⇥</kbd> |
+| `<kbd>⌫ Delete</kbd>` or `<kbd>⌫</kbd>` | <kbd>⌫ Delete</kbd> or <kbd>⌫</kbd> |
+| `<kbd>⏏︎ Eject</kbd>` or `<kbd>⏏︎</kbd>` | <kbd>⏏︎ Eject</kbd> or <kbd>⏏︎/kbd> |

@@ -218,17 +218,17 @@ These elements extend the basic syntax by adding additional features.
 
 ### Table
 
-| Column 1 | Column 2 (centered) | Column 3 (right align) |
-| --- | :-: | --: |
-| Cell 11 | Cell 12 | Cell 13 |
-| Cell 21 | Cell 22 | Cell 23 |
-| Line break | Text with line<br />break | Cell 33 |
+| Column 1 | Column 2 (aligned left) | Column 3 (centered) | Column 4 (aligned right) |
+| --- | :-- | :-: | --: |
+| Cell 11 | Cell 12 | Cell 13 | Cell 14 |
+| Cell 21 | Cell 22 | Cell 23 | Cell 24 |
+| Cell 31 | Cell 32 text with line<br />break. | Cell 33 | Cell 34 |
 ```markdown
-| Syntax | Description |
-| ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
-| Line break | Text with line<br />break |
+| Column 1 | Column 2 (aligned left) | Column 3 (centered) | Column 4 (aligned right) |
+| --- | :-- | :-: | --: |
+| Cell 11 | Cell 12 | Cell 13 | Cell 14 |
+| Cell 21 | Cell 22 | Cell 23 | Cell 24 |
+| Cell 31 | Cell 32 text with line<br />break. | Cell 33 | Cell 34 |
 ```
 > Table may support very few nested markdowns. For example does not support `# Heading` nor list inside a table. You may use HTML then, as shown above with `<br />` tag.
 

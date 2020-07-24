@@ -8,14 +8,35 @@
 
 These are the elements outlined in John Gruber’s original design document. All Markdown applications support these elements.
 
-| Element | Syntax | Output |
-| --- | --- | --- |
-| Heading | `# H1`<br />`## H2`<br />`### H3` | # H1<br />## H2<br />### H3 |
-| Bold | `**bold text**` | **bold text** |
-| Italic | `*italicized text*` | *italicized text* |
-| Blockquote | `> blockquote` | > blockquote |
-| Ordered List | `1. First item`<br />`2. Second item`<br />`3. Third item` | 1. First item<br />2. Second item<br />3. Third item |
-| Unordered List | `- First item`<br />`- Second item`<br />`- Third item` | - First item<br />- Second item<br />- Third item |
+### Heading
+
+# H1
+## H2
+### H3
+
+### Bold
+
+**bold text**
+
+### Italic
+
+*italicized text*
+
+### Blockquote
+
+> blockquote
+
+### Ordered List
+
+1. First item
+2. Second item
+3. Third item
+
+### Unordered List
+
+- First item
+- Second item
+- Third item
 
 ### Code
 
@@ -85,12 +106,12 @@ In any app context press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Spac
 
 Most popular are:
 
-<kbd>⌥ Option</kbd> <kbd>⌥</kbd>
-<kbd>⌃ Control</kbd> <kbd>⌃</kbd>
-<kbd>⇧ Shift</kbd> <kbd>⇧</kbd>
-<kbd>⌘ Command</kbd> <kbd>⌘</kbd>
-<kbd>⎋ Escape</kbd> <kbd>⎋</kbd>
-<kbd>⇪ Caps lock</kbd> <kbd>⇪</kbd>
-<kbd>⇥ Tab</kbd> <kbd>⇥</kbd>
-<kbd>⏏︎ Eject</kbd> <kbd>⏏︎</kbd>
-<kbd>⌫ Delete</kbd> <kbd>⌫</kbd>
+<kbd>⌥ Option</kbd> or <kbd>⌥</kbd>\
+<kbd>⌃ Control</kbd> or <kbd>⌃</kbd>\
+<kbd>⇧ Shift</kbd> or <kbd>⇧</kbd>\
+<kbd>⌘ Command</kbd> or <kbd>⌘</kbd>\
+<kbd>⎋ Escape</kbd> or <kbd>⎋</kbd>\
+<kbd>⇪ Caps lock</kbd> or <kbd>⇪</kbd>\
+<kbd>⇥ Tab</kbd> or <kbd>⇥</kbd>\
+<kbd>⏏︎ Eject</kbd> or <kbd>⏏︎</kbd>\
+<kbd>⌫ Delete</kbd> or <kbd>⌫</kbd>

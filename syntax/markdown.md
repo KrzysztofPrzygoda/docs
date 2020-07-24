@@ -106,6 +106,10 @@ In any app context press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Spac
 
 Most popular are:
 
+| Syntax | Output |
+| --- | --- |
+| `<kbd>⌥ Option</kbd> or <kbd>⌥</kbd>` | <kbd>⌥ Option</kbd> or <kbd>⌥</kbd> |
+
 <kbd>⌥ Option</kbd> or <kbd>⌥</kbd>\
 <kbd>⌃ Control</kbd> or <kbd>⌃</kbd>\
 <kbd>⇧ Shift</kbd> or <kbd>⇧</kbd>\

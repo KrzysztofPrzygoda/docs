@@ -1,44 +1,21 @@
 # Markdown Guide
 
 ## Reference
-- **[Markdown Guide](https://www.markdownguide.org/)**: [Cheet Sheet](https://www.markdownguide.org/cheat-sheet/), [Basic Syntax](https://www.markdownguide.org/basic-syntax/), [Extended Syntax](https://www.markdownguide.org/extended-syntax/), [Tools](https://www.markdownguide.org/tools/).
+- **[Markdown Guide](https://www.markdownguide.org/)** ([Cheet Sheet](https://www.markdownguide.org/cheat-sheet/), [Basic Syntax](https://www.markdownguide.org/basic-syntax/), [Extended Syntax](https://www.markdownguide.org/extended-syntax/), [Tools](https://www.markdownguide.org/tools/))
+- **[GitHub Guide](https://docs.github.com/en/github/writing-on-github)**
 
 ## Basic Syntax
 
 These are the elements outlined in John Gruber’s original design document. All Markdown applications support these elements.
 
-### Heading
-
-| Syntax | Output |
-| ----------- | ----------- |
-| `# H1` | # H1 |
-| `## H2` | ## H2 |
-| `### H3` | # H3 |
-
-
-### Bold
-
-**bold text**
-
-### Italic
-
-*italicized text*
-
-### Blockquote
-
-> blockquote
-
-### Ordered List
-
-1. First item
-2. Second item
-3. Third item
-
-### Unordered List
-
-- First item
-- Second item
-- Third item
+| Element | Syntax | Output |
+| --- | --- | --- |
+| Heading | `# H1`<br />`## H2`<br />`### H3` | # H1<br />## H2<br />### H3 |
+| Bold | `**bold text**` | **bold text** |
+| Italic | `*italicized text*` | *italicized text* |
+| Blockquote | `> blockquote` | > blockquote |
+| Ordered List | `1. First item`<br />`2. Second item`<br />`3. Third item` | 1. First item<br />2. Second item<br />3. Third item |
+| Unordered List | `- First item`<br />`- Second item`<br />`- Third item` | - First item<br />- Second item<br />- Third item |
 
 ### Code
 

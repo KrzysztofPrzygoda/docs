@@ -231,6 +231,8 @@ term
 
 ## Keyboard Glyphs
 
+### General Keyboard
+
 <kbd>control shift del</kbd>
 
 ```markdown
@@ -243,14 +245,19 @@ term
 <kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
 ```
 
-### macOS
+### macOS Keyboard
+
+### Icons
+
 In any app context:
-- press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd> or
+- press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd> (<kbd>⌃⌘Space</kbd>) or
 - choose `Menu > Edit > Emoji & Symbols`
 
-and click ⌘ icon to access Technical Characters. More info on Apple support article [Use emoji and symbols on Mac](https://support.apple.com/guide/mac-help/use-emoji-and-symbols-on-mac-mchlp1560/mac).
+and click ⌘ icon to access **Technical Characters**. Click on chosen icon to paste it at the coursor position.
 
-Most popular are:
+More info on Apple support article [Use emoji and symbols on Mac](https://support.apple.com/guide/mac-help/use-emoji-and-symbols-on-mac-mchlp1560/mac).
+
+### Most popular
 
 | Syntax | Output |
 | --- | --- |

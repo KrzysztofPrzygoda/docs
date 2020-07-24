@@ -6,9 +6,7 @@
 
 ## Basic Syntax
 
-These are the elements outlined in John Gruber’s original design document. All Markdown applications support these elements.
-
-### Line Breaks
+These are the elements outlined in John Gruber’s original design document. **All Markdown applications support these elements.**
 
 ### Heading
 
@@ -25,6 +23,33 @@ These are the elements outlined in John Gruber’s original design document. All
 ### H3
 ```markdown
 ### H3
+```
+
+### Paragraph
+
+First paragraph.
+
+Second paragraph.
+
+```markdown
+First paragraph.
+
+Second paragraph.
+```
+
+### Line Break
+
+A line with\
+simple break.
+
+```markdown
+A line with\
+simple break.
+```
+
+A new line with<br />HTML break.
+```markdown
+A new line with<br />HTML break.
 ```
 
 ### Bold
@@ -93,6 +118,14 @@ These are the elements outlined in John Gruber’s original design document. All
 ![Image alt text](image.jpg)
 ```
 
+### Escaping Characters
+
+Text with escaping special \`character\`.
+
+```markdown
+Text with escaping special \`character\`.
+```
+
 ### Horizontal Rule
 
 ---
@@ -102,7 +135,7 @@ These are the elements outlined in John Gruber’s original design document. All
 
 ## Extended Syntax
 
-These elements extend the basic syntax by adding additional features. Not all Markdown applications support these elements.
+These elements extend the basic syntax by adding additional features. **Not all Markdown applications support these elements.**
 
 ### Table
 
@@ -110,12 +143,14 @@ These elements extend the basic syntax by adding additional features. Not all Ma
 | ----------- | ----------- |
 | Header | Title |
 | Paragraph | Text |
+| Line break | Text with line<br />break |
 
 ```markdown
 | Syntax | Description |
 | ----------- | ----------- |
 | Header | Title |
 | Paragraph | Text |
+| Line break | Text with line<br />break |
 ```
 
 ### Fenced Code Block

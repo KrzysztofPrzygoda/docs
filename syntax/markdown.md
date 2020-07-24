@@ -8,29 +8,42 @@
 
 These are the elements outlined in John Gruber’s original design document. All Markdown applications support these elements.
 
+### Line Breaks
+
 ### Heading
 # H1
-`# H1`
+```markdown
+    # H1
+```
 ## H2
-`## H2`
+```markdown
+## H2
+```
 ### H3
-`### H3`
+```markdown
+### H3
+```
 
 ### Bold
 
-**bold text**\
-`**bold text**`
+**bold text**
+```markdown
+    **bold text**
+```
 
 ### Italic
 
-*italicized text*\
-`*italicized text*`
+*italicized text*
+```markdown
+    *italicized text*
+```
 
 ### Blockquote
 
 > blockquote
-
-`> blockquote`
+```markdown
+> blockquote
+```
 
 ### Ordered List
 
@@ -58,14 +71,10 @@ These are the elements outlined in John Gruber’s original design document. All
 
 ### Code
 
-`code`\
-\`code\`
-
-### Horizontal Rule
-
----
-`---`
-
+`code`
+```markdown
+`code`
+```
 ### Link
 
 [Link title](https://www.example.com)\
@@ -75,6 +84,11 @@ These are the elements outlined in John Gruber’s original design document. All
 
 ![Image alt text](image.jpg)\
 `![Image alt text](image.jpg)`
+
+### Horizontal Rule
+
+---
+`---`
 
 ## Extended Syntax
 
@@ -164,7 +178,11 @@ term
 `<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>`
 
 ### macOS
-In any app context press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd> or choose `Menu > Edit > Emoji & Symbols` and click ⌘ icon to access Technical Characters. More info on Apple support article [Use emoji and symbols on Mac](https://support.apple.com/guide/mac-help/use-emoji-and-symbols-on-mac-mchlp1560/mac).
+In any app context:
+- press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd> or
+- choose `Menu > Edit > Emoji & Symbols`
+
+and click ⌘ icon to access Technical Characters. More info on Apple support article [Use emoji and symbols on Mac](https://support.apple.com/guide/mac-help/use-emoji-and-symbols-on-mac-mchlp1560/mac).
 
 Most popular are:
 

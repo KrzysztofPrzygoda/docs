@@ -250,7 +250,7 @@ term
 ### Icons
 
 In any app context:
-- press <kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd> (<kbd>⌃⌘Space</kbd>) or
+- press <kbd>⌃⌘Space</kbd> (<kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd>) or
 - choose `Menu > Edit > Emoji & Symbols`
 
 and click ⌘ icon to access **Technical Characters**. Click on chosen icon to paste it at the coursor position.

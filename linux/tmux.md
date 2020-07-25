@@ -2,7 +2,7 @@
 
 https://gist.github.com/MohamedAlaa/2961058
 
-## About
+## About tmux
 **tmux** is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen. **tmux** may be detached from a screen and continue running in the background, then later reattached.
 
 When **tmux** is started it creates a new **session** with a single **window** and displays it on screen.
@@ -26,7 +26,7 @@ A **session** is a single collection of **pseudo terminals** under the managemen
 
 A **window** occupies the entire screen and may be split into rectangular **panes**.
 
-A **pane** is a separate **pseudo terminal** (the pty(4) manual page documents the technical details of pseudo terminals).
+A **pane** is a separate **pseudo terminal** ([the pty(4) manual page](https://man.openbsd.org/pty.4) documents the technical details of pseudo terminals).
 
 ## Questions
 
@@ -38,8 +38,11 @@ A **pane** is a separate **pseudo terminal** (the pty(4) manual page documents t
 
 ```bash
 $ man tmux
+
 # List the syntax of all commands supported by tmux
 $ tmux lscm (list-commands|list-co|lscm)
+
+# List the syntax of all commands supported by tmux
 $ tmux lsk (list-keys|list-k|lsk)
 ```
 
@@ -55,7 +58,10 @@ $ tmux lsc (list-clients|list-cl|lsc)
 #### Attach
 
 ```sh
+# Attach to the first session on the list
 $ tmux a (attach-session|attach|a)
+
+# Attach to the target session
 $ tmux a -t <session-name>
 ```
 
@@ -65,6 +71,7 @@ $ tmux a -t <session-name>
 # New session with default name
 $ tmux
 $ tmux new (new-session|new)
+
 # New session with specified name
 $ tmux new -s <session-name>
 ```
@@ -83,8 +90,10 @@ $ tmux det -s <session-name> -t <client-name>
 ```bash
 # Kill the first session from the list
 $ tmux kill-ses (kill-session|kill-ses)
+
 # Kill target session
 $ tmux kill-ses -t <session-name>
+
 # Kill the tmux server and clients and destroy all sessions
 $ tmux kill-ser (kill-server|kill-ser)
 ```

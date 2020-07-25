@@ -144,11 +144,11 @@ Refer to [Configuration](#configuration) section for adjustment.
 
 Action | Keys
 --- | ---
-Help | <kbd>?</kbd>
+Enter > Exit Help | <kbd>?</kbd> > <kbd>escape</kbd>
 Enter > Exit Command Mode | <kbd>:</kbd> > <kbd>escape</kbd>
 Issue Command | <kbd>:</kbd> `command` <kbd>enter</kbd>
 Command History | <kbd>:</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
-Toggle Mouse Scroll | <kbd>:</kbd> `set -g mouse` <kbd>enter</kbd>
+Toggle Mouse Mode | <kbd>:</kbd> `set -g mouse` <kbd>enter</kbd>
 
 ### Sessions
 

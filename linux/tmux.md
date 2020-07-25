@@ -120,10 +120,11 @@ Help | <kbd>?</kbd>
 
 Action | Keys
 --- | ---
-Detach | <kbd>d</kbd>
 List | <kbd>s</kbd>
 New | <kbd>:</kbd> `new` <kbd>enter</kbd>
 Rename | <kbd>$</kbd> `name` <kbd>enter</kbd>
+Detach | <kbd>d</kbd>
+Select Last | <kbd>L</kbd>
 
 ### Windows
 
@@ -131,7 +132,23 @@ Action | Keys
 --- | ---
 List | <kbd>w</kbd>
 Create | <kbd>c</kbd>
-Kill | <kbd>&</kbd> `(y/n)` <kbd>enter</kbd>
 Rename | <kbd>,</kbd> `name` <kbd>enter</kbd>
-Find | <kbd>f</kbd> `name` <kbd>enter</kbd>
-Previous / Next | <kbd>p</kbd> / <kbd>n</kbd>
+Kill | <kbd>&</kbd> `(y/n)`
+Select Last | <kbd>l</kbd>
+Select Prev / Next | <kbd>p</kbd> / <kbd>n</kbd>
+Select # | <kbd>0</kbd> ... <kbd>9</kbd>
+Select # > 9 | <kbd>'</kbd> `number` <kbd>enter</kbd>
+Find Text | <kbd>f</kbd> `text` <kbd>enter</kbd>
+
+### Panes
+
+Action | Keys
+--- | ---
+Split H / V  | <kbd>"</kbd> / <kbd>%</kbd>
+Break  | <kbd>!</kbd>
+Select Next | <kbd>o</kbd>
+Select U / D / L / R | <kbd>↑</kbd> / <kbd>↓</kbd> / <kbd>←</kbd> / <kbd>→</kbd>
+Swap | <kbd>control o</kbd>
+Toggle Zoom | <kbd>z</kbd>
+Toggle Layout | <kbd>space</kbd>
+Kill | <kbd>x</kbd> `(y/n)`

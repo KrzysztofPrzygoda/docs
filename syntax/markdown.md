@@ -105,7 +105,7 @@ A line broken with 2 spaces
 and return.
 ```
 
-Avoid using backslash `\` or `<br />` since it hampers raw text readability.
+> Avoid using backslash `\` or `<br />` since it hampers raw text readability.
 
 ### Bold
 

@@ -184,13 +184,6 @@ Inline `code` write in backticks.
 
 ### Link
 
-#### Automated link
-
-https://www.example.com
-```markdown
-https://www.example.com
-```
-
 #### Inline style
 
 [Link text](https://www.example.com "With title")
@@ -210,6 +203,21 @@ https://www.example.com
 [Reference]: https://www.example.com
 [Reference]: https://www.example.com "With title"
 ```
+
+#### Automated link
+
+https://www.example.com
+```markdown
+https://www.example.com
+```
+
+It's hard to escape from automated link and it needs some workaround like using:
+- backticks `https://www.example.com`,
+- [zero-width space](https://en.wikipedia.org/wiki/Zero-width_space) character (Unicode character `U+200B`, HTML `&#8203;`) but it's hard to [type](http://www.somebits.com/weblog/tech/zero-width-space.html).
+
+Here's an example with a *zero-width space* inserted between `https` and `:`
+
+https​://example.com
 
 ### Image
 

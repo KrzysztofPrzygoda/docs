@@ -1,5 +1,7 @@
 # Tmux
 
+https://gist.github.com/MohamedAlaa/2961058
+
 ## About
 **tmux** is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen. **tmux** may be detached from a screen and continue running in the background, then later reattached.
 
@@ -9,7 +11,7 @@ A **status line** at the bottom of the screen shows information on the current s
 
 Any number of **tmux** instances may connect to the same session, and any number of windows may be present in the same session. Once all sessions are killed, **tmux** exits.
 
-## Elements
+### Elements
 
 ```
 Session  
@@ -20,13 +22,10 @@ Session
     └─> Pane
 ```
 
-### Session
 A **session** is a single collection of **pseudo terminals** under the management of **tmux**. Each session has one or more **windows** linked to it.
 
-### Window
 A **window** occupies the entire screen and may be split into rectangular **panes**.
 
-### Pane
 A **pane** is a separate **pseudo terminal** (the pty(4) manual page documents the technical details of pseudo terminals).
 
 ## Questions

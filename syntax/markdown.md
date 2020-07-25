@@ -170,9 +170,29 @@ A line with HTML break<br />can produce double new line on some interpreters.
 
 ### Link
 
+Automated link:
+
+https://www.example.com
+```markdown
+https://www.example.com
+```
+
+Inline style:
+
 [Link title](https://www.example.com)
 ```markdown
 [Link title](https://www.example.com)
+```
+
+Reference style:
+
+[Link title][Reference]
+
+[Reference]: https://www.example.com
+```markdown
+[Link title][Reference]
+
+[Reference]: https://www.example.com
 ```
 
 ### Image

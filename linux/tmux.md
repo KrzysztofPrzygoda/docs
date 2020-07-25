@@ -118,7 +118,7 @@ $ tmux kill-ser (kill-server|kill-ser)
 
 ### Action Key
 
-Default `prefix` to enter **tmux** actions is <kbd>control b</kbd>.
+Default `prefix key` to enter **tmux** actions is <kbd>control b</kbd>. Refer to [Configuration](#configuration) section for customization.
 
 ### General
 
@@ -164,16 +164,16 @@ Toggle Zoom | <kbd>z</kbd>
 Make Window  | <kbd>!</kbd>
 Kill | <kbd>x</kbd> `(y/n)`
 
-## Customization
+## Configuration
 
-Create **tmux** config file in your `/home` folder:
-```
+Create `.tmux.conf` file in your `/home` folder:
+```bash
 $ touch ~/.tmux.conf
 $ nano ~/.tmux.conf
 ```
-Edit config file:
-```
-# Remap prefix from 'C-b' to 'C-a'
+Edit config options:
+```conf
+# Remap prefix C-b to C-a
 unbind C-b
 set-option -g prefix C-a
 bind-key C-a send-prefix

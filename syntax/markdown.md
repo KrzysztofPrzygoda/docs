@@ -177,9 +177,29 @@ A line with HTML break<br />can produce double new line on some interpreters.
 
 ### Image
 
-![Image alt text](image.jpg)
+Inline style:
+
+![Image alt text](image.jpg "Image title")
 ```markdown
-![Image alt text](image.jpg)
+![Image alt text](image.jpg "Image title")
+```
+
+Reference style:
+
+![Image alt text][reference]
+
+[reference]: image.jpg "Image title"
+```markdown
+![Image alt text][reference]
+
+[reference]: image.jpg "Image title"
+```
+
+YouTube link as an image:
+
+[![Image alt text](http://img.youtube.com/vi/<video_id>/0.jpg)](http://www.youtube.com/watch?v=<video_id>)
+```markdown
+[![Image alt text](http://img.youtube.com/vi/<video_id>/0.jpg)](http://www.youtube.com/watch?v=<video_id>)
 ```
 
 ### Escapes

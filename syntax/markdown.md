@@ -229,7 +229,7 @@ Text with escaping special \`characters\`.
 Text with escaping special \`characters\`.
 ```
 Markdown provides backslash escapes for the following characters (`\char` ):
-```markdown
+```
 \   backslash
 `   backtick
 *   asterisk
@@ -274,6 +274,21 @@ These elements extend the basic syntax by adding additional features.
 
 ### Code Block
 
+```
+fenced
+code
+block
+```
+```markdown
+    ```
+    fenced
+    code
+    block
+    ```
+```
+
+Some interpreters support syntax definition and highlighting:
+
 ```json
 {
   "firstName": "John",
@@ -281,7 +296,8 @@ These elements extend the basic syntax by adding additional features.
   "age": 25
 }
 ```
-```markdown
+
+```
     ```json
     {
         "firstName": "John",

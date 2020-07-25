@@ -50,9 +50,8 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2020.
     - [Definition List](#definition-list)
     - [Strikethrough](#strikethrough)
     - [Task List](#task-list)
-- [Keyboard Glyphs](#keyboard-glyphs)
-    - [General Keyboard](#general-keyboard)
-    - [macOS Keyboard](#macos-keyboard)
+- [Extras](#extras)
+    - [Keyboard](#keyboard)
 
 ## Basic Syntax
 
@@ -350,33 +349,31 @@ term
 - [ ] Contact the media
 ```
 
-## Keyboard Glyphs
+## Extras
+Auxiliary section that is outside of the Markdown scope.
 
-### General Keyboard
+### Keyboard
 
-<kbd>control shift del</kbd>
+#### General Keyboard
+
+<kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>Del</kbd>
 ```markdown
-<kbd>control shift del</kbd>
+<kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>Del</kbd>
 ```
 
-<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
-```markdown
-<kbd>control</kbd>+<kbd>shift</kbd>+<kbd>del</kbd>
-```
+#### macOS Keyboard
 
-### macOS Keyboard
-
-### Icons
+##### Glyphs
 
 In any app context:
 - press <kbd>⌃⌘Space</kbd> (<kbd>⌃ Control</kbd>+<kbd>⌘ Command</kbd>+<kbd>Space</kbd>) or
 - choose `Menu > Edit > Emoji & Symbols`
 
-and click ⌘ icon to access **Technical Characters**. Click on chosen icon to paste it at the coursor position.
+and click ⌘ icon to access **Technical Characters**. Click on chosen glyph to paste it at the coursor position.
 
 More info on Apple support article [Use emoji and symbols on Mac](https://support.apple.com/guide/mac-help/use-emoji-and-symbols-on-mac-mchlp1560/mac).
 
-### Most popular
+##### Most popular
 
 | Syntax | Output |
 | --- | --- |

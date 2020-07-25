@@ -40,7 +40,7 @@ $ man tmux
 $ tmux ls
 ```
 #### Attach
-```bash
+```sh
 # Attach to the first one
 $ tmux attach
 $ tmux a

@@ -30,6 +30,12 @@ tmux (server)
 - **Window** occupies the entire screen and may be split into several rectangular **panes** (one at least).
 - **Pane** is a separate [pseudo terminal](https://en.wikipedia.org/wiki/Pseudoterminal) (pty).
 
+### Benefits
+
+- Multiple pseudo terminals in a single terminal window.
+- Session continuation after any disconnection (loss, long runs etc.).
+- Session sharing in teams.
+
 ## Shell Commands
 
 ### Help
@@ -157,3 +163,21 @@ Swap | <kbd>control o</kbd>
 Toggle Zoom | <kbd>z</kbd>
 Make Window  | <kbd>!</kbd>
 Kill | <kbd>x</kbd> `(y/n)`
+
+## Customization
+
+Create **tmux** config file in your `/home` folder:
+```
+$ touch ~/.tmux.conf
+$ nano ~/.tmux.conf
+```
+Edit config file:
+```
+# Remap prefix from 'C-b' to 'C-a'
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+# Start window numbering at 1
+set -g base-index 1
+```

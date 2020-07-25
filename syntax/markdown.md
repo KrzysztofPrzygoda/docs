@@ -211,7 +211,7 @@ https://www.example.com
 https://www.example.com
 ```
 
-It's hard to escape from automated link and it needs some workaround like using:
+Escape from automated link needs some workaround like:
 - backticks `https://www.example.com`,
 - [zero-width space](https://en.wikipedia.org/wiki/Zero-width_space) character (Unicode character `U+200B`, HTML `&#8203;`) but it's hard to [type](http://www.somebits.com/weblog/tech/zero-width-space.html).
 

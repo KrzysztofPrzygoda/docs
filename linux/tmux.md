@@ -15,10 +15,9 @@ $ tmux a -t <session name>
 
 ## Keys
 
-Default `bind-key` is <kbd>Control</kbd>+<kbd>B</kbd>.
+Default `bind-key` is <kbd>control b</kbd>.
 
-Default `bind-key` is <kbd>CTRL+B</kbd>.
+Action | Keys
+--- | ---
+Help | <kbd>control b</kbd> <kbd>?</kbd>
 
-Default `bind-key` is <kbd>^B</kbd>.
-
-Default `bind-key` is `CTRL+B`.

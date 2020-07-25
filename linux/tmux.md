@@ -143,6 +143,7 @@ Default `prefix key` to enter **tmux** actions is <kbd>control b</kbd>. Refer to
 Action | Keys
 --- | ---
 Help | <kbd>?</kbd>
+Toggle Mouse Scroll | <kbd>:</kbd> `setw -g mouse` <kbd>enter</kbd>
 
 ### Sessions
 

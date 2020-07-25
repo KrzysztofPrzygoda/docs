@@ -136,14 +136,19 @@ $ tmux kill-ser (kill-server|kill-ser)
 
 ### Action Key
 
-Default `prefix key` to enter **tmux** actions is <kbd>control b</kbd>. Refer to [Configuration](#configuration) section for customization.
+Default `prefix key` to enter **tmux** actions is <kbd>control b</kbd> then continue with chosen action keys.
+
+Refer to [Configuration](#configuration) section for adjustment.
 
 ### General
 
 Action | Keys
 --- | ---
 Help | <kbd>?</kbd>
-Toggle Mouse Scroll | <kbd>:</kbd> `setw -g mouse` <kbd>enter</kbd>
+Enter > Exit Command Mode | <kbd>:</kbd> > <kbd>escape</kbd>
+Issue Command | <kbd>:</kbd> `command` <kbd>enter</kbd>
+Command History | <kbd>:</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
+Toggle Mouse Scroll | <kbd>:</kbd> `set -g mouse` <kbd>enter</kbd>
 
 ### Sessions
 
@@ -200,4 +205,7 @@ bind-key C-a send-prefix
 
 # Start window numbering at 1
 set -g base-index 1
+
+# Enable mouse scroll
+set -g mouse on
 ```

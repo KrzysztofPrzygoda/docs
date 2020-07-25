@@ -151,13 +151,28 @@ A line with HTML break<br />can produce double new line on some interpreters.
 
 ### Unordered List
 
+4 spaces make nested item.
+
 - First item
 - Second item
+    - Second nested item
+    - Second next nested item
+        - Further nesting...
 - Third item
 ```markdown
 - First item
 - Second item
+    - Second nested item
+    - Second next nested item
+        - Further nesting...
 - Third item
+```
+
+All available characters:
+```
+-   minus sign (hyphen)
+*   asterisk
++   plus sign
 ```
 
 ### Code

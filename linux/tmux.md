@@ -33,8 +33,26 @@ tmux (server)
 ### Benefits
 
 - Multiple pseudo terminals in a single terminal window.
-- Session continuation after any disconnection (loss, long runs etc.).
+- No session loss after any disconnection (the internet drop, long runs etc.).
 - Session sharing in teams.
+- Sessions automation using custom scripts that spin up the exact terminal state you need to start working on a given project.
+
+### Installation
+
+If not already preinstalled, then depending on your **Linux** distribution:
+```bash
+# APT-based (Debian, Ubuntu etc.)
+$ sudo apt-get update
+$ sudo apt-get install tmux
+# RPM-based (Red Hat, CentOS, Fedora, RHEL etc.)
+$ sudo yum update
+$ sudo yum install tmux
+```
+
+On **macOS** with [homebrew](https://brew.sh/):
+```zsh
+$ brew install tmux
+```
 
 ## Shell Commands
 

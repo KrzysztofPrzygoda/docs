@@ -168,7 +168,7 @@ A line with HTML break<br />can produce double new line on some interpreters.
 - Third item
 ```
 
-All available characters:
+#### Available characters
 ```
 -   minus sign (hyphen)
 *   asterisk
@@ -177,59 +177,63 @@ All available characters:
 
 ### Code
 
-`code`
+Inline `code` write in backticks.
 ```markdown
-`code`
+Inline `code` write in backticks.
 ```
 
 ### Link
 
-Automated link:
+#### Automated link
 
 https://www.example.com
 ```markdown
 https://www.example.com
 ```
 
-Inline style:
+#### Inline style
 
-[Link title](https://www.example.com)
+[Link text](https://www.example.com "With title")
 ```markdown
-[Link title](https://www.example.com)
+[Link text](https://www.example.com)
+[Link text](https://www.example.com "With title")
 ```
 
-Reference style:
+#### Reference style
 
-[Link title][Reference]
+[Link text][Reference]
 
-[Reference]: https://www.example.com
+[Reference]: https://www.example.com "With title"
 ```markdown
-[Link title][Reference]
+[Link text][Reference]
 
 [Reference]: https://www.example.com
+[Reference]: https://www.example.com "With title"
 ```
 
 ### Image
 
-Inline style:
+#### Inline style
 
-![Image alt text](image.jpg "Image title")
+![Image alt text](image.jpg "With title")
 ```markdown
-![Image alt text](image.jpg "Image title")
+![Image alt text](image.jpg)
+![Image alt text](image.jpg "With title")
 ```
 
-Reference style:
+#### Reference style
 
-![Image alt text][reference]
+![Image alt text][Reference]
 
-[reference]: image.jpg "Image title"
+[Reference]: image.jpg "With title"
 ```markdown
-![Image alt text][reference]
+![Image alt text][Reference]
 
-[reference]: image.jpg "Image title"
+[Reference]: image.jpg
+[Reference]: image.jpg "With title"
 ```
 
-YouTube link as an image:
+#### Image link to YouTube
 
 [![Image alt text](http://img.youtube.com/vi/<video_id>/0.jpg)](http://www.youtube.com/watch?v=<video_id>)
 ```markdown

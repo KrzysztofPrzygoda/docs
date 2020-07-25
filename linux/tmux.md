@@ -153,7 +153,7 @@ New | <kbd>:</kbd> `new` <kbd>enter</kbd>
 New Named | <kbd>:</kbd> `new: -s name` <kbd>enter</kbd>
 Rename | <kbd>$</kbd> `name` <kbd>enter</kbd>
 Detach | <kbd>d</kbd>
-Select Last | <kbd>L</kbd>
+Toggle Last | <kbd>L</kbd>
 
 ### Windows
 
@@ -176,10 +176,11 @@ Action | Keys
 Split H / V  | <kbd>"</kbd> / <kbd>%</kbd>
 Toggle Layout | <kbd>space</kbd>
 Navigate | <kbd>↑</kbd> / <kbd>↓</kbd> / <kbd>←</kbd> / <kbd>→</kbd>
+Toggle Zoom | <kbd>z</kbd>
 Select Next | <kbd>o</kbd>
 Swap | <kbd>control o</kbd>
-Toggle Zoom | <kbd>z</kbd>
 Make Window  | <kbd>!</kbd>
+Toggle Synch Input | <kbd>:</kbd> `setw synchronize-panes` <kbd>enter</kbd>
 Kill | <kbd>x</kbd> `(y/n)`
 
 ## Configuration

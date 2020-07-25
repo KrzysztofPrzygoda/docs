@@ -1,5 +1,6 @@
 # Tmux
 
+## About
 **tmux** is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen. **tmux** may be detached from a screen and continue running in the background, then later reattached.
 
 When **tmux** is started it creates a new **session** with a single **window** and displays it on screen.
@@ -13,7 +14,7 @@ Any number of **tmux** instances may connect to the same session, and any number
 ```
 Session  
 ├─> Window  
-├   └─> Pane  
+│   └─> Pane  
 └─> Window  
     ├─> Pane  
     └─> Pane
@@ -30,34 +31,47 @@ A **pane** is a separate **pseudo terminal** (the pty(4) manual page documents t
 
 ## Shell
 
-### Manual
+### Help
+
 ```bash
 $ man tmux
+$ tmux lscm (list-co|list-commands)
+$ tmux lsk (list-k|list-keys)
 ```
+
 ### Sessions
+
 #### List
+
 ```bash
-$ tmux ls
+$ tmux ls (list-s|list-sessions)
 ```
+
 #### Attach
+
 ```sh
-# Attach to the first one
-$ tmux attach
-$ tmux a
-# Attach to selected one
+$ tmux a (attach|attach-session)
 $ tmux a -t <session name>
 ```
+
 #### New
+
 ```bash
 $ tmux
 $ tmux new -s <session name>
 ```
+
 #### Detach
+
 ```bash
-$ tmux
-$ tmux new -s <session name>
+$ tmux det (detach|detach-client)
+$ tmux det -s <session name>
+$ tmux det -t <client name>
+$ tmux det -s <session name> -t <client name>
 ```
+
 #### Kill
+
 ```bash
 $ tmux kill-session -t <session name>
 ```
@@ -68,7 +82,7 @@ $ tmux kill-session -t <session name>
 
 Default `bind-key` to enter actions is <kbd>control b</kbd>.
 
-### General Actions
+### General
 
 Action | Keys
 --- | ---
@@ -78,5 +92,6 @@ Help | <kbd>?</kbd>
 
 Action | Keys
 --- | ---
+Detach | <kbd>d</kbd>
 New | <kbd>:</kbd> `new` <kbd>enter</kbd>
 Rename | <kbd>$</kbd> `name` <kbd>enter</kbd>

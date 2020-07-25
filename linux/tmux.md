@@ -136,7 +136,7 @@ $ tmux kill-ser (kill-server|kill-ser)
 
 ### Action Key
 
-Default `prefix key` to enter **tmux** actions is <kbd>control b</kbd> then continue with chosen action keys.
+Default `prefix key` to access **tmux** actions is <kbd>control b</kbd> then continue with chosen action keys.
 
 Refer to [Configuration](#configuration) section for adjustment.
 
@@ -148,7 +148,7 @@ Enter > Exit Help | <kbd>?</kbd> > <kbd>escape</kbd>
 Enter > Exit Command Mode | <kbd>:</kbd> > <kbd>escape</kbd>
 Issue Command | <kbd>:</kbd> `command` <kbd>enter</kbd>
 Command History | <kbd>:</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
-Toggle Mouse Mode | <kbd>:</kbd> `set -g mouse` <kbd>enter</kbd>
+Toggle Mouse Support | <kbd>:</kbd> `set -g mouse` <kbd>enter</kbd>
 
 ### Sessions
 
@@ -156,7 +156,7 @@ Action | Keys
 --- | ---
 List > Navigate | <kbd>s</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
 New | <kbd>:</kbd> `new` <kbd>enter</kbd>
-New Named | <kbd>:</kbd> `new: -s name` <kbd>enter</kbd>
+New Named | <kbd>:</kbd> `new -s name` <kbd>enter</kbd>
 Rename | <kbd>$</kbd> `name` <kbd>enter</kbd>
 Detach | <kbd>d</kbd>
 Toggle Last | <kbd>L</kbd>
@@ -206,6 +206,6 @@ bind-key C-a send-prefix
 # Start window numbering at 1
 set -g base-index 1
 
-# Enable mouse scroll
+# Enable mouse support
 set -g mouse on
 ```

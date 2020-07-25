@@ -96,7 +96,7 @@ Third paragraph.
 
 ### Line Break
 
-To break line using Markdown, you end a line with two or more <kbd>spaces</kbd> and <kbd>return</kbd>.
+To break line using Markdown, you end a line with two or more spaces and <kbd>Return</kbd>.
 
 A line broken with 2 spaces  
 and return.
@@ -105,17 +105,7 @@ A line broken with 2 spaces
 and return.
 ```
 
-Some interpreters accepts a backslash\
-and return.
-```markdown
-Some interpreters accepts a backslash\
-and return.
-```
-
-A line with HTML break<br />can produce double new line on some interpreters.
-```markdown
-A line with HTML break<br />can produce double new line on some interpreters.
-```
+Avoid using backslash `\` or `<br />` since it hampers raw text readability.
 
 ### Bold
 

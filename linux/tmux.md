@@ -1,36 +1,34 @@
-# Tmux
+# Tmux Guide
 
-https://gist.github.com/MohamedAlaa/2961058
+Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2020.
 
 ## About tmux
 **tmux** is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen. **tmux** may be detached from a screen and continue running in the background, then later reattached.
 
 When **tmux** is started it creates a new **session** with a single **window** and displays it on screen.
 
-A **status line** at the bottom of the screen shows information on the current session and is used to enter interactive commands.
+A session is displayed on screen by a **client** and all sessions are managed by a single **server**. The server and each client are separate processes which communicate through a socket in /tmp.
 
 Any number of **tmux** instances may connect to the same session, and any number of windows may be present in the same session. Once all sessions are killed, **tmux** exits.
 
 ### Elements
 
 ```
-Session  
-├─> Window  
-│   └─> Pane  
-└─> Window  
-    ├─> Pane  
-    └─> Pane
+tmux (server)
+├─> Session (clients) 
+│   └─> Window  
+│       └─> Pane (pty)
+└─> Session (clients)
+    ├─> Window  
+    │   └─> Pane (pty)  
+    └─> Window  
+        ├─> Pane (pty)  
+        └─> Pane (pty)
 ```
 
-A **session** is a single collection of **pseudo terminals** under the management of **tmux**. Each session has one or more **windows** linked to it.
-
-A **window** occupies the entire screen and may be split into rectangular **panes**.
-
-A **pane** is a separate **pseudo terminal** ([the pty(4) manual page](https://man.openbsd.org/pty.4) documents the technical details of pseudo terminals).
-
-## Questions
-
-- When do I need a new session instead of a new window?
+- **Session** is a single collection of **pseudo terminals** under the management of **tmux**. Each session has one or more **windows** linked to it.
+- **Window** occupies the entire screen and may be split into several rectangular **panes** (one at least).
+- **Pane** is a separate [pseudo terminal](https://en.wikipedia.org/wiki/Pseudoterminal) (pty).
 
 ## Shell Commands
 

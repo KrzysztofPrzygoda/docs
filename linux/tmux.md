@@ -7,7 +7,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2020.
 
 When **tmux** is started it creates a new **session** with a single **window** and displays it on screen.
 
-A session is displayed on screen by a **client** and all sessions are managed by a single **server**. The server and each client are separate processes which communicate through a socket in /tmp.
+A session is displayed on screen by a **client** and all sessions are managed by a single **server**. The server and each client are separate processes which communicate through a socket in `/tmp`.
 
 Any number of **tmux** instances may connect to the same session, and any number of windows may be present in the same session. Once all sessions are killed, **tmux** exits.
 
@@ -95,8 +95,14 @@ $ tmux det -s <session-name> -t <client-name>
 # Kill the first session from the list
 $ tmux kill-ses (kill-session|kill-ses)
 
+# Kill all but the current session
+$ tmux kill-ses -a
+
 # Kill target session
 $ tmux kill-ses -t <session-name>
+
+# Kill all but target session
+$ tmux kill-ses -a -t <session-name>
 
 # Kill the tmux server and clients and destroy all sessions
 $ tmux kill-ser (kill-server|kill-ser)
@@ -106,7 +112,7 @@ $ tmux kill-ser (kill-server|kill-ser)
 
 ### Action Key
 
-Default `bind-key` to enter actions is <kbd>control b</kbd>.
+Default `prefix` to enter **tmux** actions is <kbd>control b</kbd>.
 
 ### General
 
@@ -118,8 +124,9 @@ Help | <kbd>?</kbd>
 
 Action | Keys
 --- | ---
-List | <kbd>s</kbd>
+List > Navigate | <kbd>s</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
 New | <kbd>:</kbd> `new` <kbd>enter</kbd>
+New Named | <kbd>:</kbd> `new: -s name` <kbd>enter</kbd>
 Rename | <kbd>$</kbd> `name` <kbd>enter</kbd>
 Detach | <kbd>d</kbd>
 Select Last | <kbd>L</kbd>
@@ -128,11 +135,11 @@ Select Last | <kbd>L</kbd>
 
 Action | Keys
 --- | ---
-List | <kbd>w</kbd>
+List > Navigate | <kbd>w</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
 Create | <kbd>c</kbd>
 Rename | <kbd>,</kbd> `name` <kbd>enter</kbd>
 Kill | <kbd>&</kbd> `(y/n)`
-Select Last | <kbd>l</kbd>
+Toggle Last | <kbd>l</kbd>
 Select Prev / Next | <kbd>p</kbd> / <kbd>n</kbd>
 Select # | <kbd>0</kbd> ... <kbd>9</kbd>
 Select # > 9 | <kbd>'</kbd> `number` <kbd>enter</kbd>
@@ -143,10 +150,10 @@ Find Text | <kbd>f</kbd> `text` <kbd>enter</kbd>
 Action | Keys
 --- | ---
 Split H / V  | <kbd>"</kbd> / <kbd>%</kbd>
-Break  | <kbd>!</kbd>
+Toggle Layout | <kbd>space</kbd>
+Navigate | <kbd>↑</kbd> / <kbd>↓</kbd> / <kbd>←</kbd> / <kbd>→</kbd>
 Select Next | <kbd>o</kbd>
-Select U / D / L / R | <kbd>↑</kbd> / <kbd>↓</kbd> / <kbd>←</kbd> / <kbd>→</kbd>
 Swap | <kbd>control o</kbd>
 Toggle Zoom | <kbd>z</kbd>
-Toggle Layout | <kbd>space</kbd>
+Make Window  | <kbd>!</kbd>
 Kill | <kbd>x</kbd> `(y/n)`

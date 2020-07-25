@@ -29,14 +29,19 @@ A **window** occupies the entire screen and may be split into rectangular **pane
 ### Pane
 A **pane** is a separate **pseudo terminal** (the pty(4) manual page documents the technical details of pseudo terminals).
 
-## Shell
+## Questions
+
+- When do I need a new session instead of a new window?
+
+## Shell Commands
 
 ### Help
 
 ```bash
 $ man tmux
-$ tmux lscm (list-co|list-commands)
-$ tmux lsk (list-k|list-keys)
+# List the syntax of all commands supported by tmux
+$ tmux lscm (list-commands|list-co|lscm)
+$ tmux lsk (list-keys|list-k|lsk)
 ```
 
 ### Sessions
@@ -44,36 +49,45 @@ $ tmux lsk (list-k|list-keys)
 #### List
 
 ```bash
-$ tmux ls (list-s|list-sessions)
+$ tmux ls (list-sessions|list-s|ls)
+$ tmux lsc (list-clients|list-cl|lsc)
 ```
 
 #### Attach
 
 ```sh
-$ tmux a (attach|attach-session)
-$ tmux a -t <session name>
+$ tmux a (attach-session|attach|a)
+$ tmux a -t <session-name>
 ```
 
 #### New
 
 ```bash
+# New session with default name
 $ tmux
-$ tmux new -s <session name>
+$ tmux new (new-session|new)
+# New session with specified name
+$ tmux new -s <session-name>
 ```
 
 #### Detach
 
 ```bash
-$ tmux det (detach|detach-client)
-$ tmux det -s <session name>
-$ tmux det -t <client name>
-$ tmux det -s <session name> -t <client name>
+$ tmux det (detach-client|detach|det)
+$ tmux det -s <session-name>
+$ tmux det -t <client-name>
+$ tmux det -s <session-name> -t <client-name>
 ```
 
 #### Kill
 
 ```bash
-$ tmux kill-session -t <session name>
+# Kill the first session from the list
+$ tmux kill-ses (kill-session|kill-ses)
+# Kill target session
+$ tmux kill-ses -t <session-name>
+# Kill the tmux server and clients and destroy all sessions
+$ tmux kill-ser (kill-server|kill-ser)
 ```
 
 ## Keys
@@ -93,5 +107,17 @@ Help | <kbd>?</kbd>
 Action | Keys
 --- | ---
 Detach | <kbd>d</kbd>
+List | <kbd>s</kbd>
 New | <kbd>:</kbd> `new` <kbd>enter</kbd>
 Rename | <kbd>$</kbd> `name` <kbd>enter</kbd>
+
+### Windows
+
+Action | Keys
+--- | ---
+List | <kbd>w</kbd>
+Create | <kbd>c</kbd>
+Kill | <kbd>&</kbd> `(y/n)` <kbd>enter</kbd>
+Rename | <kbd>,</kbd> `name` <kbd>enter</kbd>
+Find | <kbd>f</kbd> `name` <kbd>enter</kbd>
+Previous / Next | <kbd>p</kbd> / <kbd>n</kbd>

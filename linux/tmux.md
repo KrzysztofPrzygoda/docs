@@ -37,55 +37,61 @@ A **pane** is a separate **pseudo terminal** ([the pty(4) manual page](https://m
 ### Help
 
 ```bash
+# Display tmux manual
 $ man tmux
 
 # List the syntax of all commands supported by tmux
 $ tmux lscm (list-commands|list-co|lscm)
 
-# List the syntax of all commands supported by tmux
+# List the key bindings table
 $ tmux lsk (list-keys|list-k|lsk)
 ```
 
-### Sessions
-
-#### List
+### List
 
 ```bash
 $ tmux ls (list-sessions|list-s|ls)
 $ tmux lsc (list-clients|list-cl|lsc)
 ```
 
-#### Attach
+### Attach
 
 ```sh
-# Attach to the first session on the list
+# Attach to the first detached session on the list
 $ tmux a (attach-session|attach|a)
 
 # Attach to the target session
 $ tmux a -t <session-name>
 ```
 
-#### New
+### New
 
 ```bash
 # New session with default name
 $ tmux
 $ tmux new (new-session|new)
 
-# New session with specified name
+# New named session
 $ tmux new -s <session-name>
 ```
 
-#### Detach
+### Detach
 
 ```bash
+# Detach current client from a session
 $ tmux det (detach-client|detach|det)
+
+# Detach all clients from target session
 $ tmux det -s <session-name>
+
+# Detach target client from all sessions
 $ tmux det -t <client-name>
+
+# Detach target client from target session
 $ tmux det -s <session-name> -t <client-name>
 ```
 
-#### Kill
+### Kill
 
 ```bash
 # Kill the first session from the list

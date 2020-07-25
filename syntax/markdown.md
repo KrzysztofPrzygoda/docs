@@ -133,9 +133,20 @@ A line with HTML break<br />can produce double new line on some interpreters.
 
 ### Blockquote
 
-> blockquote
+> Blockquote with **Markdown** inside.
 ```markdown
-> blockquote
+> Blockquote with **Markdown** inside.
+```
+
+> Multi line
+> does not work
+> until you type **2 spaces**  
+> and **return**.
+```markdown
+> Multi line
+> does not work
+> until you type **2 spaces**  
+> and **return**.
 ```
 
 ### Ordered List

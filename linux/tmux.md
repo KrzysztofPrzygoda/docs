@@ -198,7 +198,7 @@ Kill | <kbd>x</kbd> `(y/n)`
 
 ## Configuration
 
-Create `.tmux.conf` file in your `/home` folder:
+Create `.tmux.conf` file in your `/home/<username>` folder:
 ```bash
 $ touch ~/.tmux.conf
 $ nano ~/.tmux.conf
@@ -214,5 +214,10 @@ bind C-a send-prefix
 set -g base-index 1
 
 # Enable mouse support
+# 
 set -g mouse on
+# Toggle mouse support with prefix m
+bind m \
+    set -g mouse \;\
+    display "Mouse: #{?mouse,ON,OFF}"
 ```

@@ -59,6 +59,10 @@ $ brew install tmux
 [RPM Link]: https://en.wikipedia.org/wiki/RPM_Package_Manager
 [Homebrew Link]: https://brew.sh
 
+### Reference
+
+- [tmux Wiki](https://github.com/tmux/tmux/wiki)
+
 ## Shell Commands
 
 ### Help
@@ -198,6 +202,8 @@ Kill | <kbd>x</kbd> `(y/n)`
 
 ## Configuration
 
+### Config file
+
 Create `.tmux.conf` file in your `/home/<username>` folder:
 ```bash
 $ touch ~/.tmux.conf
@@ -221,3 +227,10 @@ bind m \
     set -g mouse \;\
     display "Mouse: #{?mouse,ON,OFF}"
 ```
+
+### Display config
+`:show-options -g`
+
+# Automation
+
+To be done.

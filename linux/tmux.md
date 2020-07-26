@@ -39,28 +39,35 @@ tmux (server)
 
 ### Installation
 
-If not already preinstalled, then depending on your **Linux** distribution:
+If not already preinstalled, then depending on your **Linux** distribution package manager ([APT][APT Link] or [RPM][RPM Link]):
 ```bash
-# APT-based (Debian, Ubuntu etc.)
-$ sudo apt-get update
-$ sudo apt-get install tmux
+# APT-based (Debian, Ubuntu, Mint etc.)
+$ sudo apt update
+$ sudo apt install tmux
+
 # RPM-based (Red Hat, CentOS, Fedora, RHEL etc.)
 $ sudo yum update
 $ sudo yum install tmux
 ```
 
-On **macOS** with [homebrew](https://brew.sh/):
+On **macOS** with [homebrew][Homebrew link]:
 ```zsh
 $ brew install tmux
 ```
+
+[APT Link]: https://en.wikipedia.org/wiki/APT_(software)
+[RPM Link]: https://en.wikipedia.org/wiki/RPM_Package_Manager
+[Homebrew Link]: https://brew.sh
 
 ## Shell Commands
 
 ### Help
 
 ```bash
-# Display tmux manual
+# Display tmux manual.
 $ man tmux
+# Type `/` to search text.
+# Press `(shift) n` for (previous) next match.
 
 # List the syntax of all commands supported by tmux
 $ tmux lscm (list-commands|list-co|lscm)
@@ -198,10 +205,10 @@ $ nano ~/.tmux.conf
 ```
 Edit config options:
 ```conf
-# Remap prefix C-b to C-a
+# Remap default prefix C-b to C-a
 unbind C-b
-set-option -g prefix C-a
-bind-key C-a send-prefix
+set -g prefix C-a
+bind C-a send-prefix
 
 # Start window numbering at 1
 set -g base-index 1

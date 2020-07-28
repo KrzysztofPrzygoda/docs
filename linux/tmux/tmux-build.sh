@@ -22,6 +22,8 @@ kill -SIGTERM $(pidof tmux)
 # For example, when you sudo to run this script,
 # it will be run as root (uid=0) and you may receive error:
 # connecting to /tmp/tmux-0/default (No such file or directory).
+# You may list all opened sockets with
+# sudo lsof -U | grep '^tmux'
 
 # Remove current packaged tmux installed from repository
 sudo apt -y remove tmux

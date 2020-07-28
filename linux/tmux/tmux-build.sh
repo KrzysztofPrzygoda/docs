@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Build and install tmux from GitHub repository
 # For Debian/Ubuntu distribution.
@@ -11,11 +11,11 @@ TMUX_VERSION=3.1b
 TMUX_DIR=/usr/local
 # TMUX_DIR=/usr
 
-# Finally binary will be placed in $TMUX_DIR/bin/tmux
-echo Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/
+# Final binary will be placed in $TMUX_DIR/bin/tmux
+echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
 
 # Stop tmux if running
-tmux kill-server
+sudo tmux kill-server
 # Remove current packaged tmux installed from repository
 sudo apt -y remove tmux
 
@@ -24,14 +24,14 @@ sudo apt -y remove tmux
 # Update repository information
 sudo apt update
 # Install download tools
-sudo apt -y install wget tar
+sudo apt -y install curl tar
 # Install compilation tools
 sudo apt -y install build-essential
 # Install tmux dependencies
 sudo apt -y install libevent-dev libncurses-dev
 
 # Get source archive
-wget https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz
+curl -fsSOL https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz
 
 # Unpack and remove archive file
 tar xf tmux-$TMUX_VERSION.tar.gz
@@ -41,10 +41,10 @@ rm -f tmux-$TMUX_VERSION.tar.gz
 cd tmux-$TMUX_VERSION
 # If you omit --prefix then default dir /usr/local will be taken
 ./configure --prefix=$TMUX_DIR
-echo "\nCompiltion in progress...\n"
+echo "\nCompilation in progress...\n"
 make --silent
 # Install compiled binaries
-sudo make install
+sudo make --silent install
 
 # Cleanup
 

@@ -28,7 +28,7 @@ sudo apt -y install wget tar
 # Install compilation tools
 sudo apt -y install build-essential
 # Install tmux dependencies
-sudo apt -y libevent-dev libncurses-dev
+sudo apt -y install libevent-dev libncurses-dev
 
 # Get source archive
 wget https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz

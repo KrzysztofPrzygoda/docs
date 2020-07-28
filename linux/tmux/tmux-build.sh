@@ -14,8 +14,15 @@ TMUX_DIR=/usr/local
 # Final binary will be placed in $TMUX_DIR/bin/tmux
 echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
 
-# Stop tmux if running
-sudo tmux kill-server
+# Ask all currently running tmux servers to quit
+kill -SIGTERM $(pidof tmux)
+# tmux kill-server
+# may not work here since each user starts its own server
+# with its own socket at /tmp/tmux-<uid>/<socket-file>.
+# For example, when you sudo to run this script,
+# it will be run as root (uid=0) and you may receive error:
+# connecting to /tmp/tmux-0/default (No such file or directory).
+
 # Remove current packaged tmux installed from repository
 sudo apt -y remove tmux
 
@@ -57,6 +64,12 @@ sudo mv tmux-$TMUX_VERSION $TMUX_DIR/src
 # Check current tmux version
 echo "\nAll done...\n"
 echo $(tmux -V) is installed in $(which tmux)
+
+# If it happens you get error "server version is too old for client"
+# then an old version server must be running in the background.
+# Just kill the server using
+# tmux kill-server
+# and then start a new session once again.
 
 # Uninstallation
 

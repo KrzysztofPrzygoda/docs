@@ -15,14 +15,15 @@ TMUX_DIR=/usr/local
 echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
 
 # Ask all currently running tmux servers to quit
-kill -SIGTERM $(pidof tmux)
+sudo kill -SIGTERM $(pidof tmux)
 # tmux kill-server
-# may not work here since each user starts its own server
+# may not work here because it closes only current user server
+# while each user starts its own server
 # with its own socket at /tmp/tmux-<uid>/<socket-file>.
 # For example, when you sudo to run this script,
-# it will be run as root (uid=0) and you may receive error:
+# it will be run as root user (uid=0) and you may receive error:
 # connecting to /tmp/tmux-0/default (No such file or directory).
-# You may list all opened sockets with
+# To list all opened tmux sockets use
 # sudo lsof -U | grep '^tmux'
 
 # Remove current packaged tmux installed from repository

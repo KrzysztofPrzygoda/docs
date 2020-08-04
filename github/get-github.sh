@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+#######################################
 # Performs download of a GitHub repository content (a file) or an archive
 # and extracts it to the current dir.
 # Installs:
@@ -7,7 +7,7 @@
 #   tar     Tarball archive utility package.
 # Author:
 #   Krzysztof Przygoda, 2020
-#
+#######################################
 # TODO(author): Handle default (omitted) GitHub ref (requires fancy arguments parsing and REST API utilization).
 #               https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
@@ -23,14 +23,14 @@ Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
 "
 
 #######################################
-# Check arguments
+# Arguments
 #######################################
 location="${1?${usage}}"
 reference="${2:-master}"
 pat="${3}"
 
 #######################################
-# Extract auxiliary variables
+# Auxiliary variables
 #######################################
 
 # Using Parameter Substitution (https://www.tldp.org/LDP/abs/html/parameter-substitution.html):
@@ -88,7 +88,7 @@ exists() {
 # Arguments:
 #   file            Path to archive file.
 #   destination-dir [Optional] Extraction directory.
-#                   Default: current directory.
+#                   [Default] Current directory.
 # Globals:
 #   None.
 # Outputs:
@@ -106,7 +106,6 @@ extract_archive() {
     mkdir -p "${_extract_dir}" || return 1
     # Use tar --strip-components=1 to skip archive root dir creation
     tar --extract --file="${_archive}" --directory="${_extract_dir}" || return 1
-    rm -f "${_archive}"
 }
 
 #######################################
@@ -185,6 +184,7 @@ github_archive() {
     curl -o "${_archive}" -fsSL "${_endpoint}" -H "Authorization: token ${pat}" || return 1
 
     extract_archive "${_archive}"
+    rm -f "${_archive}"
 }
 
 # Install required components

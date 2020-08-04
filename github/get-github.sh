@@ -1,12 +1,16 @@
 #!/bin/bash
 #
-# Get GitHub repository contents or archive
+# Performs download of a GitHub repository content (a file) or an archive
 # and extracts it to the current dir.
 # Installs:
 #   curl    File transfer package.
 #   tar     Tarball archive utility package.
-# Author: Krzysztof Przygoda, 2020
+# Author:
+#   Krzysztof Przygoda, 2020
+#
 # TODO(author): Handle default (omitted) GitHub ref (requires fancy arguments parsing and REST API utilization).
+#               https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+# TODO(author): Handle version=latest (requires JSON parsing with jq package).
 
 usage="
 Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
@@ -59,10 +63,6 @@ ref="${reference%%/*}" # Short
 file="${reference/${ref}}";
 # Delete preceding trailings
 file="${file#*/}"
-
-echo "reference = $reference";
-echo "ref = $ref";
-echo "file = $file";
 
 #######################################
 # Performs check if command is available.
@@ -198,7 +198,9 @@ else
     github_file
 fi
 
+#######################################
 # Reference
+#######################################
 
 # Deprecation Notice: GitHub will discontinue authentication to the API using query parameters.
 # Authenticating to the API should be done with HTTP basic authentication.

@@ -9,7 +9,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2020.
 The guide is based on version:
 ```bash
 $ tmux -V
-tmux 2.6
+tmux 3.1b
 ```
 To install it or upgrade go to the [Installation](#installation) section.
 
@@ -107,7 +107,7 @@ Action | Keys
 --- | ---
 Enter > Exit Help | <kbd>?</kbd> > <kbd>escape</kbd>
 Enter > Exit Command Mode | <kbd>:</kbd> > <kbd>escape</kbd>
-Issue Command | <kbd>:</kbd> `command` <kbd>enter</kbd>
+Issue tmux Command | <kbd>:</kbd> `command` <kbd>enter</kbd>
 Command History | <kbd>:</kbd> > <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
 Toggle Mouse Support | <kbd>:</kbd> `set -g mouse` <kbd>enter</kbd>
 
@@ -140,6 +140,7 @@ Find Text | <kbd>f</kbd> `text` <kbd>enter</kbd>
 
 Action | Keys
 --- | ---
+Clear  | <kbd>control l</kbd>
 Split H / V  | <kbd>"</kbd> / <kbd>%</kbd>
 Toggle Layout | <kbd>space</kbd>
 Navigate | <kbd>↑</kbd> / <kbd>↓</kbd> / <kbd>←</kbd> / <kbd>→</kbd>
@@ -166,7 +167,7 @@ set -g prefix2 C-a
 # Start window numbering at 1
 set -g base-index 1
 
-# Make 'prefix w' only show windows in the attached session
+# Change 'prefix w' to show windows in the attached session only
 bind w run 'tmux choose-tree -Nwf"##{==:##{session_name},#{session_name}}"'
 
 # Enable mouse support
@@ -176,7 +177,10 @@ bind w run 'tmux choose-tree -Nwf"##{==:##{session_name},#{session_name}}"'
 # - change window using the status line.
 set -g mouse on
 
-# Toggle mouse support with 'prefix m'
+# Toggle mouse support
+# with 'C-m'
+# bind -n C-m \
+# with 'prefix m'
 bind m \
     set -g mouse \;\
     display "Mouse #{?mouse,On,Off}"
@@ -190,16 +194,26 @@ $ tmux source-file ~/.tmux.conf
 ```
 
 ### Display config
+
+To do:
+- Save current config to `.tmux.conf`
+
 `:show-options -g`
 
 ## Automation
 
-Using Script File
-Using Config File
-Making Alias
+To do:
+- Using Script File
+- Using Config File
+- Using Plugin(s) and [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm)
+- Making Alias
+- SSH login to tmux (e.g. using [Byobu](https://askubuntu.com/a/834446/1095965))
 
-### More
-- Auto SSH login to tmux using [Byobu](https://askubuntu.com/a/834446/1095965).
+
+## Sharing
+
+To do:
+- Session sharing
 
 ---
 
@@ -245,7 +259,8 @@ tmux (server)
 The **tmux** packages available from the main repositories are **often quite out of date**, especially for long-term support (LTS) distributions.
 If you care about the latest version go to the [tmux Wiki Installation](https://github.com/tmux/tmux/wiki/Installing).
 
-#### Installation from repositories
+#### Package installation
+
 If not already preinstalled, then depending on your **Linux** distribution package manager ([APT][APT Link] or [RPM][RPM Link]):
 ```bash
 # APT-based (Debian, Ubuntu, Mint etc.)
@@ -266,19 +281,38 @@ $ brew install tmux
 [RPM Link]: https://en.wikipedia.org/wiki/RPM_Package_Manager
 [Homebrew Link]: https://brew.sh
 
-#### Installation from the source
-Check out releases at [tmux GitHub repository](https://github.com/tmux/tmux/releases).
+#### Source building
 
-Edit [`tmux-build.sh`](tmux-build.sh) script file and provide version number as well as directory of your choice:
+Based on the [tmux Wiki Installation](https://github.com/tmux/tmux/wiki/Installing) section.
+
+Check out releases at [tmux GitHub repository](https://github.com/tmux/tmux/releases) for version of your preference.
+
+Download [`tmux-build.sh`](tmux-build.sh) script file:
 ```bash
-TMUX_VERSION=3.1b
-# Default building tmux directory is /usr/local
-TMUX_DIR=/usr/local
-# Binary will be placed in $TMUX_DIR/bin/tmux (/usr/local/bin/tmux by default)
+$ wget https://github.com/KrzysztofPrzygoda/docs/raw/master/linux/tmux/tmux-build.sh
+# or
+$ curl -fsSOL https://github.com/KrzysztofPrzygoda/docs/raw/master/linux/tmux/tmux-build.sh
 ```
-Run script with
+
+> **WARNING NOTICE!**  
+> **This script removes current tmux package** (and source if exists in installation folder). Also installs several required packages. Refer to the script for details, step by step installation, modifications and uninstallation procedure.
+
+Usage:
 ```bash
-$ sudo sh tmux-build.sh
+$ sudo bash tmux-build.sh [version] [install-dir]
+# where:
+#    version        [Optional] GitHub release tag (default 3.1b).
+#    install-dir    [Optional] Dir to install tmux to (default /usr/local).
+```
+
+Usage examples:
+```bash
+$ sudo bash tmux-build.sh
+# Builds tmux 3.1b and installs it in /usr/local/bin
+$ sudo bash tmux-build.sh 3.2-rc
+# Builds tmux 3.2-rc and installs it in /usr/local/bin
+$ sudo bash tmux-build.sh 3.2-rc "/usr"
+# Builds tmux 3.2-rc and installs it in /usr/bin
 ```
 
 ### Reference

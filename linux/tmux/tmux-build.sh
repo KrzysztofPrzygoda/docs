@@ -1,18 +1,51 @@
 #!/bin/bash
-
-# Build and install tmux from GitHub repository
+#######################################
+# Builds and installs tmux from GitHub repository.
 # For Debian/Ubuntu distribution.
-# Reference: https://github.com/tmux/tmux/wiki/Installing
+# Reference:
+#   https://github.com/tmux/tmux/wiki/Installing
+#   https://github.com/tmux/tmux/releases
+# Usage: sudo bash tmux-build.sh [version] [install dir]
+#   version        [Optional] GitHub release tag (default 3.1b).
+#   install-dir    [Optional] Dir to install tmux to (default /usr/local [bin|src]).
+# Removes:
+#   tmux    Current packaged version of tmux and source (install-dir/src/tmux-*) if exists.
+# Installs:
+#   curl                File transfer package.
+#   tar                 Tarball archive utility package.
+#   build-essentials    Compilation tools package.
+#   libevent-dev        [Dependency] Event notification library.
+#   libncurses-dev      [Dependency] Updating character screens library.
+#   tmux                Terminal multiplexer source (install-dir/src) and binary (install-dir/bin).
+# Author:
+#   Krzysztof Przygoda, 2020
+#######################################
+# TODO(author): Handle version=latest (requires JSON parsing with jq package).
 
 # Check out releases at https://github.com/tmux/tmux/releases
-# and paste version number of your choice:
-TMUX_VERSION=3.1b
+# and paste default version number of your choice:
+TMUX_VERSION=${1:-"3.1b"}
 # Default building tmux directory is /usr/local
-TMUX_DIR=/usr/local
+TMUX_DIR=${2:-"/usr/local"}
 # TMUX_DIR=/usr
 
 # Final binary will be placed in $TMUX_DIR/bin/tmux
 echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
+
+# Install required components
+
+# Update repository information
+sudo apt update
+# Install download tools
+sudo apt -y install curl tar
+# Install compilation tools
+sudo apt -y install build-essential
+# Install tmux dependencies
+sudo apt -y install libevent-dev libncurses-dev
+
+# Get source archive or exit on failure
+URL=https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz
+curl -fsSOL $URL || exit 1
 
 # Ask all currently running tmux servers to quit
 sudo kill -SIGTERM $(pidof tmux)
@@ -26,22 +59,9 @@ sudo kill -SIGTERM $(pidof tmux)
 # To list all opened tmux sockets use
 # sudo lsof -U | grep '^tmux'
 
-# Remove current packaged tmux installed from repository
+# Remove current packaged tmux installed from OS repository
+# Turn it off if you want to leave it
 sudo apt -y remove tmux
-
-# Install required components
-
-# Update repository information
-sudo apt update
-# Install download tools
-sudo apt -y install curl tar
-# Install compilation tools
-sudo apt -y install build-essential
-# Install tmux dependencies
-sudo apt -y install libevent-dev libncurses-dev
-
-# Get source archive
-curl -fsSOL https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz
 
 # Unpack and remove archive file
 tar xf tmux-$TMUX_VERSION.tar.gz

@@ -125,7 +125,7 @@ extract_archive() {
 # Returns:
 #   0 on success. Non-zero otherwise.
 #######################################
-github_file() {
+github_file() {    
     # API
     # See https://docs.github.com/en/rest/reference/repos#get-repository-content
     # Restriction Notice: Up to 1 MB file
@@ -230,3 +230,12 @@ fi
 #     --header "Accept: application/vnd.github.v4.raw"
 #     --data "ref=${ref}" \
 #     --fail \
+
+# File one-liner
+# curl -OfsSL "https://github.com/${owner}/${repo}/raw/${ref}/${file}" -H "Authorization: token ${pat}"
+
+# Archive one-liner
+# with original archive name
+# curl -OfsSL "https://github.com/${owner}/${repo}/archive/${ref}.tar.gz" -H "Authorization: token ${pat}"
+# with defined archive name
+# curl -o "${repo}-${ref}.tar.gz" -fsSL "https://github.com/${owner}/${repo}/archive/${ref}.tar.gz" -H "Authorization: token ${pat}"

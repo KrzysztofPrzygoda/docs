@@ -18,7 +18,7 @@
 #   libncurses-dev      [Dependency] Updating character screens library.
 #   tmux                Terminal multiplexer source (install-dir/src) and binary (install-dir/bin).
 # Author:
-#   Krzysztof Przygoda, 2020
+#   (c) 2020 Krzysztof Przygoda, MIT License
 #######################################
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
 

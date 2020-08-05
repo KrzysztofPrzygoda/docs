@@ -6,7 +6,7 @@
 #   curl    File transfer package.
 #   tar     Tarball archive utility package.
 # Author:
-#   Krzysztof Przygoda, 2020
+#   (c) 2020 Krzysztof Przygoda, MIT License
 #######################################
 # TODO(author): Handle default (omitted) GitHub ref (requires fancy arguments parsing and REST API utilization).
 #               https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f

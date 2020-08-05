@@ -2,6 +2,11 @@
 #######################################
 # Performs download of a GitHub repository content (a file) or an archive
 # and extracts it to the current dir.
+# Download:
+#   $ wget https://github.com/krzysztofprzygoda/docs/raw/master/github/get-github.sh
+#   $ curl -fsSOL https://github.com/krzysztofprzygoda/docs/raw/master/github/get-github.sh
+# Usage:
+#   $ bash get-github.sh
 # Installs:
 #   curl    File transfer package.
 #   tar     Tarball archive utility package.
@@ -12,7 +17,7 @@
 #               https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
 
-usage="
+usage=<<END
 Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
 
     owner/repo          GitHub repository.
@@ -20,7 +25,7 @@ Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
                         [Default] The repository’s default branch (usually master).
                         [Optional] Downloads file with ref/path/to/file provided.
     pat                 [Optional] GitHub PAT (Private Access Token) for private repo authorization.
-"
+END
 
 #######################################
 # Arguments

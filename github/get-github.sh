@@ -17,7 +17,7 @@
 #               https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
 
-usage=<<END
+usage="
 Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
 
     owner/repo          GitHub repository.
@@ -25,14 +25,14 @@ Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
                         [Default] The repository’s default branch (usually master).
                         [Optional] Downloads file with ref/path/to/file provided.
     pat                 [Optional] GitHub PAT (Private Access Token) for private repo authorization.
-END
+"
 
 #######################################
 # Arguments
 #######################################
-location="${1?${usage}}"
-reference="${2:-master}"
-pat="${3}"
+location=${1?"${usage}"}
+reference=${2:-"master"}
+pat=${3}
 
 #######################################
 # Auxiliary variables

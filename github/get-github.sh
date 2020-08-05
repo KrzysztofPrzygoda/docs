@@ -18,9 +18,10 @@
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
 
 usage="
+
 Usage: bash $0 owner/repo [ref[/path/to/file]] [pat]
 
-    owner/repo          GitHub repository.
+    owner/repo          GitHub repository location.
     ref[/path/to/file]  [Optional] GitHub REF is the name of the commit/branch/tag.
                         [Default] The repository’s default branch (usually master).
                         [Optional] Downloads file with ref/path/to/file provided.

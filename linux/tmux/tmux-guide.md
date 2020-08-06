@@ -267,7 +267,7 @@ If not already preinstalled, then depending on your **Linux** distribution packa
 $ sudo apt update
 $ sudo apt install tmux
 
-# RPM-based (Red Hat, CentOS, Fedora, RHEL etc.)
+# RPM-based (Red Hat/RHEL, CentOS, Fedora etc.)
 $ sudo yum update
 $ sudo yum install tmux
 ```

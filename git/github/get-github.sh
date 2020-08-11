@@ -3,8 +3,8 @@
 # Performs download of a GitHub repository content (a file) or an archive
 # and extracts it to the current dir.
 # Download:
-#   $ wget https://github.com/krzysztofprzygoda/docs/raw/master/github/get-github.sh
-#   $ curl -fsSOL https://github.com/krzysztofprzygoda/docs/raw/master/github/get-github.sh
+#   $ wget https://github.com/krzysztofprzygoda/docs/raw/master/git/github/get-github.sh
+#   $ curl -fsSOL https://github.com/krzysztofprzygoda/docs/raw/master/git/github/get-github.sh
 # Usage:
 #   $ bash get-github.sh
 # Installs:

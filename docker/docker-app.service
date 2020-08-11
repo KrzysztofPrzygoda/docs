@@ -1,0 +1,29 @@
+# Systemd Unit Configuration File
+# /etc/systemd/system/docker-app.service
+# Runs docker container every time system starts.
+# Register it with:
+# systemctl enable docker-app
+# Tutorial: https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files
+
+[Unit]
+Description=Docker <app name> App Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=0
+
+# Docker Setup
+# Default Docker Compose installation folder is /usr/local/bin/
+
+# Dockerfile folder (this is where docker-compose will lookup)
+WorkingDirectory=/srv/docker
+# Service starting up command
+ExecStart=/usr/local/bin/docker-compose up -d
+# Service shutting down command
+ExecStop=/usr/local/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target

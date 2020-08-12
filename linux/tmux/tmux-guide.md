@@ -34,7 +34,15 @@ $ tmux lsk (list-keys|list-k|lsk)
 
 ```bash
 $ tmux ls (list-sessions|list-s|ls)
+# List sessions.
+
 $ tmux lsc (list-clients|list-cl|lsc)
+# List clients.
+```
+
+```bash
+$ sudo lsof -U | grep '^tmux'
+# List all tmux sockets.
 ```
 
 ### Attach
@@ -61,36 +69,56 @@ $ tmux new -s <session-name>
 ### Detach
 
 ```bash
-# Detach current client from a session
 $ tmux det (detach-client|detach|det)
+# Detach current client from a session
 
-# Detach all clients from target session
 $ tmux det -s <session-name>
+# Detach all clients from target session
 
-# Detach target client from all sessions
 $ tmux det -t <client-name>
+# Detach target client from all sessions
 
-# Detach target client from target session
 $ tmux det -s <session-name> -t <client-name>
+# Detach target client from target session
 ```
 
-### Kill
+### Close
+
+#### Session
 
 ```bash
-# Kill the first session from the list
 $ tmux kill-ses (kill-session|kill-ses)
+# Close the first session from the list.
 
-# Kill all but the current session
 $ tmux kill-ses -a
+# Close all but the current session.
 
-# Kill target session
 $ tmux kill-ses -t <session-name>
+# Close target session.
 
-# Kill all but target session
 $ tmux kill-ses -a -t <session-name>
+# Close all but target session.
+```
 
-# Kill the tmux server and clients and destroy all sessions
+#### Server
+
+```bash
 $ tmux kill-ser (kill-server|kill-ser)
+# Quit current user tmux server (incl. all clients and sessions).
+
+$ kill -SIGTERM $(pidof tmux)
+# Quit all tmux servers of every user.
+# Each user starts its own server
+# with its own socket at /tmp/tmux-<uid>/<socket-file>.
+# Moreover, one user can run multiple servers
+# specifying dedicated socket with
+# tmux -L <socket-name>.
+
+$ sudo lsof -U | grep '^tmux'
+# List all opened tmux sockets.
+
+$ sudo killall -SIGUSR1 tmux
+# Recreate accidentally deleted tmux server socket (see man tmux -L option).
 ```
 
 ## Keys

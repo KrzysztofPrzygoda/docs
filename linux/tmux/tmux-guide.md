@@ -18,16 +18,16 @@ To install it or upgrade go to the [Installation](#installation) section.
 ### Help
 
 ```bash
-# Display tmux manual.
 $ man tmux
+# Display tmux manual.
 # Type `/` to search text.
 # Press `(shift) n` for (previous) next match.
 
-# List the syntax of all commands supported by tmux
 $ tmux lscm (list-commands|list-co|lscm)
+# List the syntax of all commands supported by tmux
 
-# List the key bindings table
 $ tmux lsk (list-keys|list-k|lsk)
+# List the key bindings table
 ```
 
 ### List
@@ -48,22 +48,22 @@ $ sudo lsof -U | grep '^tmux'
 ### Attach
 
 ```sh
-# Attach to the first detached session on the list
 $ tmux a (attach-session|attach|a)
+# Attach to the first detached session on the list.
 
-# Attach to the target session
 $ tmux a -t <session-name>
+# Attach to the target session.
 ```
 
 ### New
 
 ```bash
-# New session with default name
 $ tmux
 $ tmux new (new-session|new)
+# New session with default name.
 
-# New named session
 $ tmux new -s <session-name>
+# New named session
 ```
 
 ### Detach
@@ -104,19 +104,40 @@ $ tmux kill-ses -a -t <session-name>
 
 ```bash
 $ tmux kill-ser (kill-server|kill-ser)
-# Quit current user tmux server (incl. all clients and sessions).
-
-$ kill -SIGTERM $(pidof tmux)
-# Quit all tmux servers of every user.
-# Each user starts its own server
-# with its own socket at /tmp/tmux-<uid>/<socket-file>.
-# Moreover, one user can run multiple servers
-# specifying dedicated socket with
-# tmux -L <socket-name>.
-
+# Quit current user tmux server with default socket (incl. all clients and sessions).
+```
+Each user on the same machine starts its own server with its own socket at (if not specified differently with `tmux -S <socket-path>` option):
+```bash
+/${TMUX_TMPDIR}/tmux-${uid}/<socket-file>
+# or if $TMUX_TMPDIR is unset
+/tmp/tmux-${uid}/<socket-file>
+# and by default it is
+/tmp/tmux-${uid}/default
+# where
+uid=`id -u`
+# for example
+/tmp/tmux-1000/default
+```
+Moreover, one user can run multiple servers specifying dedicated socket with:
+```bash
+$ tmux -L <socket-name>
+# which needs to be specified while closing this server
+$ tmux -L <socket-name> kill-server
+```
+So, it may happen that there are more than one server running on the same machine:
+```bash
 $ sudo lsof -U | grep '^tmux'
 # List all opened tmux sockets.
+```
+The simpliest way to close all of them is to send termination signal with:
+```bash
+$ kill -SIGTERM $(pidof tmux)
+# Quit all tmux servers of every user.
+```
 
+### Recover
+
+```bash
 $ sudo killall -SIGUSR1 tmux
 # Recreate accidentally deleted tmux server socket (see man tmux -L option).
 ```

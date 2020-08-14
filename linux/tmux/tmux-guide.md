@@ -105,6 +105,12 @@ $ tmux kill-ses -a -t <session-name>
 ```bash
 $ tmux kill-ser (kill-server|kill-ser)
 # Quit current user tmux server with default socket (incl. all clients and sessions).
+
+# Notice that:
+$ sudo tmux kill-ser
+error connecting to /tmp/tmux-0/default (No such file or directory)
+# Is trying to quit root user (uid=0) server and
+# this error happens if you start your server on a diffrent than root account.
 ```
 Each user on the same machine starts its own server with its own socket at (if not specified differently with `tmux -S <socket-path>` option):
 ```bash

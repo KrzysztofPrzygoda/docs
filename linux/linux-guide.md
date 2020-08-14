@@ -40,6 +40,23 @@ $ command -v <command>
 ```
 
 ```bash
+$ bash -c help
+$ help
+# List shell builtin commands.
+$ help <command>
+# Show builtin command help.
+```
+
+```bash
+$ man -k
+$ info
+# List utility commands.
+$ man <command>
+$ info <command>
+# Show command manual.
+```
+
+```bash
 $ apt show <package>
 # Show package details.
 ```
@@ -70,6 +87,15 @@ $ <command> -h|--help
 # Show command options (mostly).
 ```
 
+```bash
+$ info sh
+$ info bash
+# Show shell manual.
+$ bash -c "help set"
+$ help set
+# List shell options.
+```
+
 ### Debug
 
 https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
@@ -81,13 +107,91 @@ $ set +x
 # Turn off each command print-out before its run.
 ```
 
+### Execute
+
+#### General
+
+```bash
+$ <command> [options]
+# Run command in the current shell environment.
+$ \<command> [options]
+# Backslash bypasses alias definition.
+$ <command> [options]; <command> [options]; ...
+# Run commands' chain.
+```
+
+#### Capture
+
+```bash
+$ output=`<command> [options]`
+# Run command in the current shell (backticks) and store output in the variable.
+$ output=$(<command> [options])
+# Run command in subshell and store output in the variable.
+$ echo $?
+# Print last command exit code (0 on success, failure otherwise).
+$ result=$?
+# Store last command exit code in result variable.
+```
+
+#### Conditional
+
+```bash
+$ <command1> [options] || <command2> [options]
+# Run command1 OR on failure run command2
+$ <command1> [options] && <command2> [options]
+# Run command1 AND on success run command2
+$ <command1> [options] && <command2> [options] || <command3> [options]
+# Run command1 AND on success run command2 OR run command3 on failure of command1 OR failure of command2.
+$ if <command1> [options]; then <command2> [options] else <command3> [options] fi
+# Run command1 AND on success run command2. Otherwise, run command3.
+```
+
+#### Alias
+
+```bash
+$ alias <alias>='<command> [options]'
+$ alias la='ls -la'
+# Create/change command alias in the current environment.
+$ unalias <alias>
+# Remove alias from the current environment.
+$ alias <alias>
+$ alias la
+# Show alias definition.
+$ alias -p
+# Show all aliases.
+```
+
+#### Script
+
+```bash
+$ sh <script>
+# Run script in subprocess original Bourne Shell.
+$ bash <script>
+# Run script in subprocess Bourne Again Shell (expanded sh).
+$ source <script>
+$ . <script>
+# Run script in the current shell process.
+```
+
+#### As User
+
+```bash
+# Run command as another user:
+$ su - <user> -c "<command> [options]"
+# Needs user password.
+$ sudo -u <user> "<command> [options]"
+# Needs your password and sudo group membership.
+$ runuser -l <user> -c "<command> [options]"
+# Needs root account.
+```
+
 ### Variables
 
 ```bash
 $ var="value"
-# Local variable (available in current shell only)
+# Local variable (available in the current shell only).
 $ export var="value"
-# Global variable (available in any shell)
+# Global variable (available in any shell).
 ```
 ```bash
 $ env
@@ -119,61 +223,7 @@ $ echo "${var}"
 value
 # Double quotes expands variables.
 ```
-### Run
 
-```bash
-$ <command> [options]
-# Run command in the current shell environment.
-$ \<command> [options]
-# Backslash bypasses alias definition.
-$ <command> [options]; <command> [options]; ...
-# Run commands' chain.
-```
-
-```bash
-$ output=`<command> [options]`
-# Run command in the current shell (backticks) and store output in the variable.
-$ output=$(<command> [options])
-# Run command in subshell and store output in the variable.
-$ echo $?
-# Print last command exit code (0 on success, failure otherwise).
-$ result=$?
-# Store last command exit code in result variable.
-```
-```bash
-$ <command1> [options] || <command2> [options]
-# Run command1 OR on failure run command2
-$ <command1> [options] && <command2> [options]
-# Run command1 AND on success run command2
-$ <command1> [options] && <command2> [options] || <command3> [options]
-# Run command1 AND on success run command2 OR run command3 on failure of command1 OR failure of command2.
-$ if <command1> [options]; then <command2> [options] else <command3> [options] fi
-# Run command1 AND on success run command2. Otherwise, run command3.
-```
-```bash
-$ alias <alias>='<command> [options]'
-$ alias la='ls -la'
-# Create/change command alias in the current environment.
-$ unalias <alias>
-# Remove alias from the current environment.
-```
-
-```bash
-$ alias <alias>
-$ alias la
-# Show alias definition.
-$ alias -p
-# Show all aliases.
-```
-```bash
-$ sh <script>
-# Run script in subprocess original Bourne Shell.
-$ bash <script>
-# Run script in subprocess Bourne Again Shell (expanded sh).
-$ source <script>
-$ . <script>
-# Run script in the current shell process.
-```
 ## System
 
 ### Version

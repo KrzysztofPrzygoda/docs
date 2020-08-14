@@ -127,13 +127,16 @@ $ output=`<command> [options]`
 # Run command in the current shell (backticks) and store output in the variable.
 $ output=$(<command> [options])
 # Run command in subshell and store output in the variable.
+```
+
+```bash
 $ echo $?
 # Print last command exit code (0 on success, failure otherwise).
 $ result=$?
 # Store last command exit code in result variable.
 ```
 
-#### Conditional
+#### Conditional Execution
 
 ```bash
 $ <command1> [options] || <command2> [options]
@@ -199,6 +202,9 @@ $ printenv
 # Print global enironment variables.
 $ set
 # Print local (current shell) and global enironment variables (incl. functions).
+$ sudo sudo -V
+# The list of environment variables that sudo clears.
+# It is contained in the output of sudo -V when run as root).
 ```
 See [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).
 

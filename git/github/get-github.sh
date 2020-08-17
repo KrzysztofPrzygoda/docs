@@ -1,7 +1,7 @@
 #!/bin/bash
 #######################################
 # Performs download of a GitHub repository content (a file) or an archive
-# and extracts it to the current dir.
+# and extracts it to the ./repo-ref directory.
 # Download:
 #   $ wget https://github.com/krzysztofprzygoda/docs/raw/master/git/github/get-github.sh
 #   $ curl -fsSOL https://github.com/krzysztofprzygoda/docs/raw/master/git/github/get-github.sh

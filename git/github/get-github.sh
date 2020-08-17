@@ -111,7 +111,7 @@ extract_archive() {
     
     mkdir -p "${_extract_dir}" || return 1
     # Use tar --strip-components=1 to skip archive root dir creation
-    tar --extract --file="${_archive}" --directory="${_extract_dir}" || return 1
+    tar --extract --file="${_archive}" --directory="${_extract_dir}" --strip-components=1 || return 1
 }
 
 #######################################
@@ -173,6 +173,7 @@ github_file() {
 github_archive() {
     local _archive_format="tar.gz"
     local _archive="${repo}-${ref}.${_archive_format}"
+    local _extract_dir="${repo}-${ref}"
 
     # API
     # See https://docs.github.com/en/rest/reference/repos#download-a-repository-archive
@@ -189,7 +190,7 @@ github_archive() {
     echo "Downloading ${_endpoint}"
     curl -o "${_archive}" -fsSL "${_endpoint}" -H "Authorization: token ${pat}" || return 1
 
-    extract_archive "${_archive}"
+    extract_archive "${_archive}" "${_extract_dir}"
     rm -f "${_archive}"
 }
 

@@ -309,12 +309,12 @@ tmux (server)
 - Session sharing in teams.
 - Sessions automation using custom scripts that spin up the exact terminal state you need to start working on a given project.
 
-### Installation
+## Installation
 
 The **tmux** packages available from the main repositories are **often quite out of date**, especially for long-term support (LTS) distributions.
 If you care about the latest version go to the [tmux Wiki Installation](https://github.com/tmux/tmux/wiki/Installing).
 
-#### Package installation
+### Package installation
 
 If not already preinstalled, then depending on your **Linux** distribution package manager ([APT][APT Link] or [RPM][RPM Link]):
 ```bash
@@ -336,7 +336,7 @@ $ brew install tmux
 [RPM Link]: https://en.wikipedia.org/wiki/RPM_Package_Manager
 [Homebrew Link]: https://brew.sh
 
-#### Source building
+### Source building
 
 Based on the [tmux Wiki Installation](https://github.com/tmux/tmux/wiki/Installing) section.
 
@@ -358,6 +358,8 @@ $ sudo bash tmux-build.sh [version] [install-dir]
 # where:
 #    version        [Optional] GitHub release tag (default 3.1b).
 #    install-dir    [Optional] Dir to install tmux to (default /usr/local).
+$ sudo reboot
+# Reboot system after installation.
 ```
 
 Usage examples:
@@ -370,6 +372,6 @@ $ sudo bash tmux-build.sh 3.2-rc "/usr"
 # Builds tmux 3.2-rc and installs it in /usr/bin
 ```
 
-### Reference
+## Reference
 
 - [tmux Wiki](https://github.com/tmux/tmux/wiki)

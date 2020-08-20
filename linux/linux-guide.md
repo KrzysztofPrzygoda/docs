@@ -23,13 +23,11 @@ Mainly based on:
 
 ### Command Types
 
-There are 4 types of commands utilised in this document:
-- **[Builtin]** (Internal) [Build-in shell command][Shell Buildins Link] and thus the least expensive in execution.
-- **[Utility]** (External) GNU/Linux [Core Utilities](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands) command.
-- **[Package]** (External) Installed via system specific [Package Manager][PM Link]:
-    - [DEB-based][DEB Link] like [APT (Advanced Package Tool)][APT Link] or
-    - [RPM-based][RPM Link] like [YUM][YUM Link].
-- **[Source]** (External) Installed manually by building/compilling from the source.
+There are 4 types of commands utilised in this document.
+
+#### Internal Builtin
+
+[Build-in shell command][Shell Buildins Link] and thus the least expensive in execution.
 
 ```bash
 $ command -V <command>
@@ -40,12 +38,14 @@ $ command -v <command>
 ```
 
 ```bash
-$ bash -c help
 $ help
+$ bash -c help
 # List shell builtin commands.
 $ help <command>
 # Show builtin command help.
 ```
+
+#### External
 
 ```bash
 $ man -k
@@ -56,10 +56,21 @@ $ info <command>
 # Show command manual.
 ```
 
+##### Utility
+GNU/Linux [Core Utilities](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands) library command.
+
+##### Package
+Installed via system specific [Package Manager][PM Link]:
+- [DEB-based][DEB Link] like [APT (Advanced Package Tool)][APT Link] or
+- [RPM-based][RPM Link] like [YUM][YUM Link].
+
 ```bash
 $ apt show <package>
 # Show package details.
 ```
+##### Source
+Installed manually by building/compilling from the source.
+
 
 [Shell Buildins Link]: https://www.gnu.org/software/bash/manual/bash.html#Shell-Builtin-Commands
 [PM Link]: https://en.wikipedia.org/wiki/Package_manager
@@ -239,6 +250,19 @@ $ lsb_release -a
 $ lsb_release -sa
 # [Package] Show descriptive OS version.
 ```
+```bash
+$ uname -s
+# Kernel name.
+$ uname -r
+# Kernel version.
+$ uname -o
+# Operating system name.
+$ uname -m
+# Architecture (machine HW name).
+$ uname -s -r -m
+$ uname -a
+# All information
+```
 
 ### Kernel
 
@@ -287,7 +311,7 @@ $ sudo lsof -i TCP:80
 ```
 #### Sockets
 
-- [UNIX domain socket](https://en.wikipedia.org/wiki/Unix_domain_socket) (or IPC socket) is an inter-process communication mechanism that allows bidirectional data exchange between processes running on the same machine.
+- [UNIX domain socket](https://en.wikipedia.org/wiki/Unix_domain_socket) (or IPC socket) is an Inter-Process Communication mechanism that allows bidirectional data exchange between processes running on the same machine.
 - [Network socket](https://en.wikipedia.org/wiki/Network_socket) (incl. TCP/IP socket) is a mechanism allowing communication between processes over the network. In some cases, you can use TCP/IP sockets to talk with processes running on the same computer (by using the loopback interface).
 - UNIX domain sockets are subject to **file system permissions**, while TCP sockets can be controlled only on **the packet filter level**.
 
@@ -329,7 +353,10 @@ $ su - <user>
 $ cat /etc/login.defs
 # Show login control configuration file.
 ```
-
+```bash
+$ usermod -s /usr/sbin/nologin <user>
+# Turn off login possibility for the user.
+```
 ### Read
 
 ```bash
@@ -341,19 +368,37 @@ $ who
 # Show logged-in users.
 $ whoami
 # Show current user name.
-$ cat /etc/passwd
-# Show user accounts file.
 ```
-
 ```bash
 $ uid=`id -u`
 $ gid=`id -g`
 $ gids=`id -G`
 $ groupnames=`id -G -n`
 $ username=`id -u -n`
-# Read current user uid, gid, gids list,  groups names list and user name.
+# Read current user uid, gid, gids list, groups names list and user name.
 ```
-
+```bash
+$ getent [options] <database> <key>
+# Get entries from Name Service Switch libraries:
+# database = [passwd|shadow|group]
+# key = [<user-name>|<group-name>]
+```
+```bash
+$ cat /etc/passwd
+$ getent passwd
+# Show user accounts.
+$ man 5 passwd
+# Show passwd manual.
+```
+```bash
+$ cat /etc/shadow
+$ getent shadow
+# Show user passwords info and optional aging information.
+$ man 5 shadow
+# Show shadow manual.
+$ chage -l <user>
+# Show user password expiry information.
+```
 ### Create
 
 ```bash
@@ -375,11 +420,17 @@ $ passwd
 $ passwd <user>
 # Change other user password.
 ```
+```bash
+$ passwd -d <user>
+# Delete user password.
+# User will not able to login.
+```
 
 #### Group
 
 ```bash
 $ usermod -aG <group> <user>
+$ usermod -aG <group1>,<group2>,<group3> <user>
 # Add user to the group.
 # -a|--append Append w/o removing from other groups.
 # -G|--groups Supplementary groups list.

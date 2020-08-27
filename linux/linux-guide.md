@@ -241,6 +241,17 @@ value
 # Double quotes expands variables.
 ```
 
+```bash
+$ (set -o posix; set) | less
+# List all defined variables and only variables (w/o functions using POSIX mode).
+
+$ (set -o posix; set) >/tmp/variables.before
+$ source <script>
+$ (set -o posix; set) >/tmp/variables.after
+$ diff /tmp/variables.before /tmp/variables.after
+$ rm /tmp/variables.before /tmp/variables.after
+# Extract variables defined by script.
+```
 ## System
 
 ### Version
@@ -330,6 +341,116 @@ $ sudo lsof -U | grep '^<command>'
 $ sudo netstat -apx | grep '<command>'
 # List UNIX sockets opened by a command/process.
 ```
+
+## Secure Shell
+
+### Debug
+
+```bash
+$ ssh -v [...]
+# Debug SSH connection.
+```
+
+### Config
+
+```bash
+$ man ssh_config
+# Show manual for SSH client config file.
+$ man sshd_config
+# Show manual for SSH daemon (server) config file.
+```
+Config files:
+```bash
+~/.ssh/config
+# This is the per-user configuration file.
+# Because of the potential for abuse, this file must have strict permissions: read/write for the user, and not writable by others.
+
+/etc/ssh/ssh_config
+# Systemwide SSH client config file.
+
+/etc/ssh/sshd_config
+# Daemon (server) config file.
+```
+Example of `~/.ssh/config` file:
+```bash
+Host *
+  ServerAliveInterval 120
+  # Send null packets to server each 120 seconds.
+  ServerAliveCountMax 720
+  # Close the connection if the server has been inactive for 720 intervals (720*120s = 24h)
+
+  UseKeychain yes
+  # On macOS, search for passphrases in the user's keychain when attempting to use a particular key. 
+  AddKeysToAgent yes
+
+  # Private keys location
+  IdentityFile ~/.ssh/id_rsa
+  IdentityFile ~/.ssh/LightsailDefaultKey-eu-central-1.pem
+
+Host sub.domain.com
+  HostName sub.domain.com
+  User root
+  ForwardAgent yes
+```
+
+### Key Pair
+
+On the private machine:
+
+```bash
+# Generate key pair
+$ ssh-keygen -t rsa
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/<user>/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/<user>/.ssh/id_rsa.
+Your public key has been saved in /home/<user>/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:tY9D3MXfeh9/nqz7nWWGQaIbaL+zZBswVRPMxUjSklU <user>@<host>
+The key's randomart image is:
++---[RSA 2048]----+
+|          .B**E  |
+|          oo=o.  |
+|          o.. +  |
+|         = + + ..|
+|        S * . . o|
+|       . = =   + |
+|          O . o.=|
+|         o.=  .+X|
+|          +o o+**|
++----[SHA256]-----+
+```
+On the host:
+```bash
+# Create user on the host
+$ useradd -m <user>
+
+# Copy public key file contents
+/home/<user>/.ssh/id_rsa.pub
+# and paste it into the host file
+/home/<user>/.ssh/authorized_keys
+
+# Set correct permissions on the host
+$ chown -R <user>:<user> /home/<user>/.ssh
+$ chmod 700 /home/<user>/.ssh
+$ chmod 600 /home/<user>/.ssh/authorized_keys
+
+# Ensure that Public Key authentication is enabled on the host
+$ grep PubkeyAuthentication /etc/ssh/sshd_config
+PubkeyAuthentication yes
+
+# Restart SSH daemon (sshd) on the host
+$ sudo systemctl restart ssh.service
+```
+On the private machine:
+```bash
+$ ssh -i <private-key-file> <user>@<host>
+# Login user to host using indicated private key.
+```
+
+### Config
 
 ## Software
 ### Info
@@ -491,6 +612,13 @@ $ groupadd -g|--gid <gid> <group>
 ```
 
 ### Modify
+
+```bash
+$ sudo visudo
+# Edit /etc/sudoers file with dedicated editor
+# to avoid errors that will render the system unusable.
+```
+
 ### Delete
 
 ## Files
@@ -510,6 +638,16 @@ $ sudo lsof -u <user>
 # List opened files by user.
 $ sudo lsof -u ^<user>
 # List all opened files but user.
+```
+
+### Find
+
+```bash
+$ find <path> -name <expression>
+# Find files with names matching expression by starting from path.
+# -iname for case insensitive search
+$ find . -name "FileName*"
+# Find recursively from current folder files that name begins with "FileName".
 ```
 
 ## Scripting

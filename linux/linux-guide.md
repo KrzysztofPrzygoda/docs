@@ -57,9 +57,11 @@ $ info <command>
 ```
 
 ##### Utility
+
 GNU/Linux [Core Utilities](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands) library command.
 
 ##### Package
+
 Installed via system specific [Package Manager][PM Link]:
 - [DEB-based][DEB Link] like [APT (Advanced Package Tool)][APT Link] or
 - [RPM-based][RPM Link] like [YUM][YUM Link].
@@ -68,7 +70,9 @@ Installed via system specific [Package Manager][PM Link]:
 $ apt show <package>
 # Show package details.
 ```
+
 ##### Source
+
 Installed manually by building/compilling from the source.
 
 
@@ -648,6 +652,21 @@ $ find <path> -name <expression>
 # -iname for case insensitive search
 $ find . -name "FileName*"
 # Find recursively from current folder files that name begins with "FileName".
+```
+
+### Modify
+
+```bash
+$ mv <old-filename> <new-filename>
+# Rename file
+
+for f in *.html; do
+    mv -- "$f" "${f%.html}.php"
+done
+# Rename all *.html files to *.php
+
+$ find . -depth -name "*.html" -exec sh -c 'f="{}"; mv -- "$f" "${f%.html}.php"' \;
+# Rename all found *.html files to *.php
 ```
 
 ## Scripting

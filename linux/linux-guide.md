@@ -128,7 +128,9 @@ $ set +x
 
 ```bash
 $ <command> [options]
-# Run command in the current shell environment.
+# Run command in the current shell environment (system looks for command in the $PATH).
+$ ./<command> [options]
+# Run command in the current shell environment (system looks for command in current dir).
 $ \<command> [options]
 # Backslash bypasses alias definition.
 $ <command> [options]; <command> [options]; ...

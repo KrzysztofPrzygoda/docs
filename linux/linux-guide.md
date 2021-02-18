@@ -312,6 +312,10 @@ $ kill -SIGTERM $(pidof tmux)
 # Quit all tmux processes
 ```
 ### CPU
+```bash
+$ nproc
+# Print the number of processing units available to the current process, which may be less than the number of online processors.
+```
 ### Memory
 ### Drives
 

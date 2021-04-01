@@ -316,6 +316,21 @@ $ htop
 ```
 
 ```bash
+$ ps aux
+# Show processes.
+$ ps -eafww
+$ ps aux --forest
+# Show PID parents (PPID).
+
+$ pidof <program-name>
+# Grab PIDs for any named program.
+
+$ pgrep <process-name-to-match>
+$ pgrep -u root <process-name-to-match>
+# Similar to pidof but match based.
+```
+
+```bash
 $ man 7 signal
 # Show signal list manual.
 $ kill -l
@@ -323,10 +338,20 @@ $ kill -l
 $ fuser -l
 # List available signal names.
 ```
+
 ```bash
+$ kill <PID>
+# Kill process with PID.
+$ kill -SIGTERM $(pidof <program-name>)
+# Send termination signal to processes found by pidof.
 $ kill -SIGTERM $(pidof tmux)
 # Quit all tmux processes
+$ pkill -f "python manage.py runserver"
+# Kill all processes with CMD containing string.
+$ sudo fuser -k 80/tcp
+# Just kill whatever PID is using port 80 tcp.
 ```
+
 ### CPU
 
 ```bash
@@ -341,6 +366,19 @@ $ cat /proc/meminfo
 $ vmstat
 ```
 ### Drives
+TODO: Drives operations.
+
+### Drivers
+
+See info: [How to display list of modules or device drivers in Linux Kernel](https://www.cyberciti.biz/faq/howto-display-list-of-modules-or-device-drivers-in-the-linux-kernel/)
+
+```bash
+$ lsmod
+$ cat /proc/modules
+# Show the status of loaded modules in the Linux Kernel.
+# Linux kernel use a term modules for all hardware device drivers.
+# Please note that `lsmod` is a trivial program which nicely formats the contents of the /proc/modules, showing what kernel modules are currently loaded.
+```
 
 ## Networking
 

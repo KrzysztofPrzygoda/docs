@@ -25,7 +25,7 @@ Mainly based on:
 
 There are 4 types of commands utilised in this document.
 
-#### Internal Builtin
+#### Internal Builtin Commands
 
 [Build-in shell command][Shell Buildins Link] and thus the least expensive in execution.
 
@@ -45,7 +45,7 @@ $ help <command>
 # Show builtin command help.
 ```
 
-#### External
+#### External Commands
 
 ```bash
 $ man -k
@@ -300,6 +300,22 @@ $ watch "dmesg | tail -20"
 ### Processes
 
 ```bash
+$ top
+# Display sorted information about processes.
+$ top -o %MEM
+# Sort by memory
+# or via Menu:
+# * press SHIFT+F to enter the interactive menu
+# * press the UP or DOWN arrow until the %MEM choice is highlighted
+# * press S to select %MEM choice
+# * press ENTER to save your selection
+# * press q or ESC to exit the interactive menu
+
+$ htop
+# Extended version of top
+```
+
+```bash
 $ man 7 signal
 # Show signal list manual.
 $ kill -l
@@ -312,11 +328,18 @@ $ kill -SIGTERM $(pidof tmux)
 # Quit all tmux processes
 ```
 ### CPU
+
 ```bash
 $ nproc
 # Print the number of processing units available to the current process, which may be less than the number of online processors.
 ```
 ### Memory
+
+```bash
+$ free
+$ cat /proc/meminfo
+$ vmstat
+```
 ### Drives
 
 ## Networking

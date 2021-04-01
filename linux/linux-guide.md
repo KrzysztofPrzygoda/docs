@@ -75,7 +75,6 @@ $ apt show <package>
 
 Installed manually by building/compilling from the source.
 
-
 [Shell Buildins Link]: https://www.gnu.org/software/bash/manual/bash.html#Shell-Builtin-Commands
 [PM Link]: https://en.wikipedia.org/wiki/Package_manager
 [DEB Link]: https://en.wikipedia.org/wiki/Deb_(file_format)
@@ -137,7 +136,7 @@ $ <command> [options]; <command> [options]; ...
 # Run commands' chain.
 ```
 
-#### Capture
+#### Output Capture
 
 ```bash
 $ output=`<command> [options]`
@@ -152,6 +151,23 @@ $ echo $?
 $ result=$?
 # Store last command exit code in result variable.
 ```
+#### Shell Variables
+See info: [Special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)
+
+```bash
+$0 # Filename of the shell script/function.
+$1…$n # Params.
+$# # Number of params.
+$* # Params. “$*” expands to one word delimited by the first char in $IFS.
+$@	# Params. “$*” expands to separate words like “$1” “$2” etc.
+$?	# Exit status of last task.
+$!	# PID of last background task.
+$$	# PID of shell.
+$-	# Options set by set command.
+```
+See info: [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
+
+TODO: Parameter substitution
 
 #### Conditional Execution
 
@@ -312,7 +328,7 @@ $ top -o %MEM
 # * press q or ESC to exit the interactive menu
 
 $ htop
-# Extended version of top
+# [Package] Extended version of top
 ```
 
 ```bash

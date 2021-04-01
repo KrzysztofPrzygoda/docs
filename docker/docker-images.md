@@ -13,7 +13,7 @@ Interesting docker images.
 
 ### Trust and Quality Levels
 
-[Official Image]((https://hub.docker.com/search?q=&type=image&image_filter=official))  
+[Official Image](https://hub.docker.com/search?q=&type=image&image_filter=official)  
 Curated by Docker, open source and "drop-in" solution repositories. [Read more](https://docs.docker.com/docker-hub/official_images/).
 
 [Docker Certified](https://hub.docker.com/search?q=&type=image&certification_status=certified)  

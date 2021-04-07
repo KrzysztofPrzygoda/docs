@@ -332,6 +332,8 @@ On **macOS** with [homebrew][Homebrew link]:
 $ brew install tmux
 ```
 
+On **Synology** refer to [Compile Open Source Project: tmux](https://help.synology.com/developer-guide/create_package/compile_tmux.html) in Synology [Package Developer Guide](https://help.synology.com/developer-guide/index.html).
+
 [APT Link]: https://en.wikipedia.org/wiki/APT_(software)
 [RPM Link]: https://en.wikipedia.org/wiki/RPM_Package_Manager
 [Homebrew Link]: https://brew.sh

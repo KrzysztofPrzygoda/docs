@@ -16,8 +16,23 @@ Mainly based on:
     - [Keys](#keys)
     - [Help](#help)
     - [Debug](#debug)
-    - [Run](#run)
-- [System Information](#system-information)
+    - [Execute](#execute)
+- [System](#system)
+    - [Version](#version)
+    - [Kernel](#kernel)
+    - [Processes](#processes)
+    - [CPU](#cpu)
+    - [Memory](#memory)
+    - [Drives](#drives)
+    - [Drivers](#drivers)
+- [Networking](#networking)
+- [Secure Shell (SSH)](#secure-shell)
+- [Software](#software)
+- [Users](#users)
+- [User Groups](#user-groups)
+- [Files](#files)
+- [Scripting](#scripting)
+- [Reference](#reference)
 
 ## General
 
@@ -151,23 +166,6 @@ $ echo $?
 $ result=$?
 # Store last command exit code in result variable.
 ```
-#### Shell Variables
-See info: [Special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)
-
-```bash
-$0 # Filename of the shell script/function.
-$1…$n # Params.
-$# # Number of params.
-$* # Params. “$*” expands to one word delimited by the first char in $IFS.
-$@	# Params. “$*” expands to separate words like “$1” “$2” etc.
-$?	# Exit status of last task.
-$!	# PID of last background task.
-$$	# PID of shell.
-$-	# Options set by set command.
-```
-See info: [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
-
-TODO: Parameter substitution
 
 #### Conditional Execution
 
@@ -228,6 +226,18 @@ $ var="value"
 # Local variable (available in the current shell only).
 $ export var="value"
 # Global variable (available in any shell).
+$ echo $var
+value
+# Prints var value
+```
+```bash
+$ var=value
+$ echo '${var}'
+${var}
+# Single quotes preserves value.
+$ echo "${var}"
+value
+# Double quotes expands variables.
 ```
 ```bash
 $ env
@@ -239,29 +249,36 @@ $ sudo sudo -V
 # The list of environment variables that sudo clears.
 # It is contained in the output of sudo -V when run as root).
 ```
-See [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).
-
+Some popular environment variables:
 ```bash
+$ echo $PATH
+# Show which directories to search for executable files in response to commands issued by a user.
+# It increases both the convenience and the safety of such operating systems and is widely considered to be the single most important environmental variable..
 $ echo $SHELL
-# Show user defined shell.
-$ echo $0
-# Show current shell/script/function.
-$ echo $$
-# Show current shell PID.
-$ echo $!
-# Show PID of the most recently executed background (asynchronous) command.
+# Show user shell (shell program path).
+$ echo $HOME
+# Show user home dir path.
 ```
-See more [special parameters](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect_03_02_05).
+
+#### Special Variables
+See: [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).
+See: [special parameters](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect_03_02_05).
+See: [special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)
 
 ```bash
-$ var=value
-$ echo '${var}'
-${var}
-# Single quotes preserves value.
-$ echo "${var}"
-value
-# Double quotes expands variables.
+$0 # Current shell/script/function.
+$1…$n # Params.
+$# # Number of params.
+$* # Params. “$*” expands to one word delimited by the first char in $IFS.
+$@	# Params. “$*” expands to separate words like “$1” “$2” etc.
+$?	# Exit status of last task.
+$!	# PID of of the most recently executed background (asynchronous) command.
+$$	# PID of the current shell.
+$-	# Options set by set command.
 ```
+
+TODO: Parameter substitution
+See: [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
 
 ```bash
 $ (set -o posix; set) | less
@@ -274,6 +291,7 @@ $ diff /tmp/variables.before /tmp/variables.after
 $ rm /tmp/variables.before /tmp/variables.after
 # Extract variables defined by script.
 ```
+
 ## System
 
 ### Version
@@ -536,8 +554,6 @@ On the private machine:
 $ ssh -i <private-key-file> <user>@<host>
 # Login user to host using indicated private key.
 ```
-
-### Config
 
 ## Software
 ### Info

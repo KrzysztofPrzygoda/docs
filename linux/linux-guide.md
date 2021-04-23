@@ -261,9 +261,10 @@ $ echo $HOME
 ```
 
 #### Special Variables
-See: [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).
-See: [special parameters](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect_03_02_05).
-See: [special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)
+
+See: [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).  
+See: [special parameters](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect_03_02_05).  
+See: [special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)  
 
 ```bash
 $0 # Current shell/script/function.
@@ -277,7 +278,7 @@ $$	# PID of the current shell.
 $-	# Options set by set command.
 ```
 
-TODO: Parameter substitution
+TODO: Parameter substitution  
 See: [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
 
 ```bash

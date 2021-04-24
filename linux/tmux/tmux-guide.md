@@ -23,20 +23,20 @@ $ man tmux
 # Type `/` to search text.
 # Press `(shift) n` for (previous) next match.
 
-$ tmux lscm (list-commands|list-co|lscm)
-# List the syntax of all commands supported by tmux
+$ tmux lscm [list-commands|list-co|lscm]
+# List the syntax of all commands supported by tmux.
 
-$ tmux lsk (list-keys|list-k|lsk)
-# List the key bindings table
+$ tmux lsk [list-keys|list-k|lsk]
+# List the key bindings table.
 ```
 
 ### List
 
 ```bash
-$ tmux ls (list-sessions|list-s|ls)
+$ tmux ls [list-sessions|list-s|ls]
 # List sessions.
 
-$ tmux lsc (list-clients|list-cl|lsc)
+$ tmux lsc [list-clients|list-cl|lsc]
 # List clients.
 ```
 
@@ -48,7 +48,7 @@ $ sudo lsof -U | grep '^tmux'
 ### Attach
 
 ```sh
-$ tmux a (attach-session|attach|a)
+$ tmux a [attach-session|attach|a]
 # Attach to the first detached session on the list.
 
 $ tmux a -t <session-name>
@@ -59,27 +59,27 @@ $ tmux a -t <session-name>
 
 ```bash
 $ tmux
-$ tmux new (new-session|new)
+$ tmux new [new-session|new]
 # New session with default name.
 
 $ tmux new -s <session-name>
-# New named session
+# New named session.
 ```
 
 ### Detach
 
 ```bash
-$ tmux det (detach-client|detach|det)
-# Detach current client from a session
+$ tmux det [detach-client|detach|det]
+# Detach current client from a session.
 
 $ tmux det -s <session-name>
-# Detach all clients from target session
+# Detach all clients from target session.
 
 $ tmux det -t <client-name>
-# Detach target client from all sessions
+# Detach target client from all sessions.
 
 $ tmux det -s <session-name> -t <client-name>
-# Detach target client from target session
+# Detach target client from target session.
 ```
 
 ### Close
@@ -87,7 +87,7 @@ $ tmux det -s <session-name> -t <client-name>
 #### Session
 
 ```bash
-$ tmux kill-ses (kill-session|kill-ses)
+$ tmux kill-ses [kill-session|kill-ses]
 # Close the first session from the list.
 
 $ tmux kill-ses -a
@@ -103,7 +103,7 @@ $ tmux kill-ses -a -t <session-name>
 #### Server
 
 ```bash
-$ tmux kill-ser (kill-server|kill-ser)
+$ tmux kill-ser [kill-server|kill-ser]
 # Quit current user tmux server with default socket (incl. all clients and sessions).
 
 # Notice that:

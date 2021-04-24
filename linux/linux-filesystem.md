@@ -1,4 +1,4 @@
-# Linux Filesystem Hierarchy Standard
+# Linux Filesystem Hierarchy Standard (FHS)
 
 ## Reference
 

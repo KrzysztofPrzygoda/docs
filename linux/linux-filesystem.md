@@ -45,7 +45,7 @@ Historical UNIX-like filesystem hierarchies contained both static and variable f
 The following directories, or symbolic links to directories, are required in `/`.  
 
 Directory | Description 
---------- | -----------
+:-------- | :----------
 `/bin`    | Essential command binaries. 
 `/bin`    | Essential command binaries.  
 `/boot`   | Static files of the boot loader.  
@@ -66,7 +66,7 @@ Directory | Description
 The following directories, or symbolic links to directories, must be in `/`, if the corresponding subsystem is installed:  
 
 Directory    | Description 
------------- | -----------
+:----------- | :----------
 `/home`	     | User home directories (optional).  
 `/lib<qual>` | Alternate format essential shared libraries (optional).  
 `/root`	     | Home directory for the root user (optional).  

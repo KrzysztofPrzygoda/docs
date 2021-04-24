@@ -259,28 +259,6 @@ $ echo $SHELL
 $ echo $HOME
 # Show user home dir path.
 ```
-
-#### Special Variables
-
-See: [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).  
-See: [special parameters](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect_03_02_05).  
-See: [special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)  
-
-```bash
-$0 # Current shell/script/function.
-$1…$n # Params.
-$# # Number of params.
-$* # Params. “$*” expands to one word delimited by the first char in $IFS.
-$@	# Params. “$*” expands to separate words like “$1” “$2” etc.
-$?	# Exit status of last task.
-$!	# PID of of the most recently executed background (asynchronous) command.
-$$	# PID of the current shell.
-$-	# Options set by set command.
-```
-
-TODO: Parameter substitution  
-See: [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
-
 ```bash
 $ (set -o posix; set) | less
 # List all defined variables and only variables (w/o functions using POSIX mode).
@@ -291,6 +269,24 @@ $ (set -o posix; set) >/tmp/variables.after
 $ diff /tmp/variables.before /tmp/variables.after
 $ rm /tmp/variables.before /tmp/variables.after
 # Extract variables defined by script.
+```
+
+#### Special Variables
+
+See: [list of reserved variables](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect2) (set or used by `sh` and `bash`).  
+See: [special parameters](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html#sect_03_02_05).  
+See: [special parameters and shell variables](https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)  
+
+```bash
+$0 # Current shell/script/function.
+$1…$n # Shell script params provided while execution.
+$# # Number of params.
+$* # Params. “$*” expands to one word delimited by the first char in $IFS.
+$@ # Params. “$*” expands to separate words like “$1” “$2” etc.
+$? # Exit status of last task.
+$! # PID of of the most recently executed background (asynchronous) command.
+$$ # PID of the current shell.
+$- # Options set by set command.
 ```
 
 ## System
@@ -777,6 +773,7 @@ $ find . -depth -name "*.html" -exec sh -c 'f="{}"; mv -- "$f" "${f%.html}.php"'
 - Environment
 - Variables
 - Special Variables
+- [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
 
 ### Arguments Parsing
 

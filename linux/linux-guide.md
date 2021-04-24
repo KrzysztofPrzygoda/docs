@@ -416,12 +416,27 @@ $ cat /proc/modules
 ### Inspect
 
 ```bash
-$ sudo lsof -i
+$ ifconfig
+$ ip a [addr|a]
+# List all network interfaces.
+# Use ip instead of ifconfig on CentOS/RHEL >= v7.
+# You may install ifconfig via:
+$ yum install net-tools
+```
+```bash
+$ netstat
 # List all network connections.
+$ sudo lsof -i
+# List all network files/connections.
 $ sudo lsof -i [ip-version][protocol][@hostname|hostaddr][:service|port]
 $ sudo lsof -i TCP:80
 # Find out process listening on tcp/ip port 80.
 ```
+```bash
+$ hostname
+# Get name of the host/machine/computer.
+```
+
 #### Sockets
 
 - [UNIX domain socket](https://en.wikipedia.org/wiki/Unix_domain_socket) (or IPC socket) is an Inter-Process Communication mechanism that allows bidirectional data exchange between processes running on the same machine.

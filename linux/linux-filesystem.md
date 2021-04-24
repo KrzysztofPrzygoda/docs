@@ -8,7 +8,72 @@
 - OS Manuals
     - [Debian Reference](https://www.debian.org/doc/manuals/debian-reference/index.en.html)
 
-## Quick Look
+## The Filesystem
+
+This standard assumes that the operating system underlying an FHS-compliant file system supports the same basic security features found in most UNIX filesystems.
+
+It is possible to define two independent distinctions among files: 
+
+- **shareable** vs. **unshareable** and
+- **variable** vs. **static**.
+
+In general, files that differ in either of these respects should be located in different directories. This makes it easy to store files with different usage characteristics on different filesystems.
+
+Shareable | Unshareable
+--- | ---
+Files that can be stored on one host and used on others. | Files that are not shareable. For example, the files in user home directories are shareable whereas device lock files are not.
+
+<br />
+
+Variable | Static
+--- | ---
+Files that are not static. | Files that do not change without system administrator intervention (e.g. binaries, libraries, documentation etc.).
+
+<br />
+
+### Rationale
+
+Shareable files can be stored on one host and used on several others. Typically, however, not all files in the filesystem hierarchy are shareable and so each system has local storage containing at least its unshareable files. It is convenient if all the files a system requires that are stored on a foreign host can be made available by mounting one or a few directories from the foreign host.
+
+Static and variable files should be segregated because static files, unlike variable files, can be stored on read-only media and do not need to be backed up on the same schedule as variable files.
+
+Historical UNIX-like filesystem hierarchies contained both static and variable files under both `/usr` and `/etc`. In order to realize the advantages mentioned above, the `/var` hierarchy was created and all variable files were transferred from `/usr` to `/var`. Consequently `/usr` can now be mounted read-only (if it is a separate filesystem). Variable files have been transferred from `/etc` to `/var` over a longer period as technology has permitted.
+
+## Short List
+
+### Required
+The following directories, or symbolic links to directories, are required in `/`.  
+
+Directory | Description 
+--------- | -----------
+`/bin`    | Essential command binaries. 
+`/bin`    | Essential command binaries.  
+`/boot`   | Static files of the boot loader.  
+`/dev`    | Device files.  
+`/etc`    | Host-specific system configuration.  
+`/lib`    | Essential shared libraries and kernel modules.  
+`/media`  | Mount point for removable media.  
+`/mnt`	  | Mount point for mounting a filesystem temporarily.  
+`/opt`	  | Add-on application software packages.  
+`/run`	  | Data relevant to running processes.  
+`/sbin`	  | Essential system binaries.  
+`/srv`	  | Data for services provided by this system.  
+`/tmp`	  | Temporary files.  
+`/usr`	  | Secondary hierarchy.  
+`/var`	  | Variable data.  
+
+### Specific Options
+The following directories, or symbolic links to directories, must be in `/`, if the corresponding subsystem is installed:  
+
+Directory    | Description 
+------------ | -----------
+`/home`	     | User home directories (optional).  
+`/lib<qual>` | Alternate format essential shared libraries (optional).  
+`/root`	     | Home directory for the root user (optional).  
+
+<br />
+
+## Extended List
 
 `/bin` > `/usr/bin` : Essential user command binaries (for use by all users).  
 `/boot` : Static files of the boot loader.  

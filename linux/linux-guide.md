@@ -582,7 +582,9 @@ Where to install (see FHS)?
 
 ```bash
 $ su - <user>
-# Switch user.
+# Switch user (substitute user identity).
+$ su -
+# Switch to superuser (root), which is default user in su.
 ```
 
 ```bash
@@ -736,6 +738,8 @@ $ sudo visudo
 
 ### Delete
 
+TODO
+
 ## Files
 
 ### List
@@ -817,15 +821,15 @@ $ find . -name "FileName*"
 ```
 ```bash
 $ locate <filename>
-# Find filenames quickly, using files database.
+# Find filenames quickly, using prebuilt files database (index/cache).
 # The locate program searches a database for all pathnames which match the specified pattern. 
 # The database is recomputed periodically (usually weekly or daily), and contains the pathnames of all files which are publicly accessible.
 # The locate program may fail to list some files that are present, or may list files that have been removed from the system.
 # This is because locate only reports files that are present in the database, which is typically only regenerated once a week.
 # Use find(1) to locate files that are of a more transitory nature.
-# You may ask to update database using:
+# You may ask to update database right away using:
 $ sudo updatedb
-# 
+# You may also need to install mlocate package before.
 ```
 
 ### Read

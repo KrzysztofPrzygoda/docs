@@ -738,8 +738,59 @@ $ sudo visudo
 
 ## Files
 
-### Inspect
-https://www.cyberciti.biz/tips/linux-audit-files-to-see-who-made-changes-to-a-file.html
+### List
+
+```bash
+$ ls -l
+# List directory contents in long format.
+$ ls -la
+# List directory contents in long format including hidden files begin with dot.
+
+# The Long Format
+# The following information is displayed in long format for each file:
+# file mode, number of links, owner name, group name, number of bytes in the file, date file was last modified, and the pathname.
+# Example: drwxr-xr-x@   10 Master  staff    320 Feb 27 15:08 Data
+
+# The File Mode
+# First letter in file mode:
+# b     Block special file (block device).
+# c     Character special file (special file or device file).
+# d     Directory.
+# l     Symbolic link.
+# s     Socket link.
+# p     Named pipe (FIFO).
+# -     Regular file.
+# The next three fields are three characters each:
+# owner permissions, group permissions, and other permissions.
+# Each field has three character positions:
+# 1. If r, the file is readable; if -, it is not readable.
+# 2. If w, the file is writable; if -, it is not writable.
+# 3. The first of the following that applies:
+#    S   If in the owner permissions, the file is not executable and set-user-ID mode is set. If in the group permis-
+#        sions, the file is not executable and set-group-ID mode is set.
+#    s   If in the owner permissions, the file is executable and set-user-ID mode is set. If in the group permissions,
+#        the file is executable and setgroup-ID mode is set.
+#    x   The file is executable or the directory is searchable.
+#    -   The file is neither readable, writable, executable, nor set-user-ID nor set-group-ID mode, nor sticky. (See
+#        below.)
+#    These next two apply only to the third character in the last group (other permissions).
+#    T   The sticky bit is set (mode 1000), but not execute or search permission. (See chmod(1) or sticky(8).)
+#    t   The sticky bit is set (mode 1000), and is searchable or executable. (See chmod(1) or sticky(8).)
+```
+```bash
+$ ls -lS
+# Sort by decreasing size.
+$ ls -lSr
+# Sort by increasing size.
+$ ls -lt
+# Sort in time order.
+$ ls -ltr
+# Sort in time reverse order.
+```
+
+### Audit
+
+See: [Audit who changed the file](https://www.cyberciti.biz/tips/linux-audit-files-to-see-who-made-changes-to-a-file.html).
 
 ```bash
 $ sudo lsof </path/to/file>
@@ -763,6 +814,37 @@ $ find <path> -name <expression>
 # -iname for case insensitive search
 $ find . -name "FileName*"
 # Find recursively from current folder files that name begins with "FileName".
+```
+```bash
+$ locate <filename>
+# Find filenames quickly, using files database.
+# The locate program searches a database for all pathnames which match the specified pattern. 
+# The database is recomputed periodically (usually weekly or daily), and contains the pathnames of all files which are publicly accessible.
+# The locate program may fail to list some files that are present, or may list files that have been removed from the system.
+# This is because locate only reports files that are present in the database, which is typically only regenerated once a week.
+# Use find(1) to locate files that are of a more transitory nature.
+# You may ask to update database using:
+$ sudo updatedb
+# 
+```
+
+### Read
+
+```bash
+$ cat <file>
+# Show file contents.
+```
+
+### Create
+
+```bash
+$ touch <file>
+$ touch <file 1> <file 2> <file 3>
+# Create empty file (or files) if doesn't exists.
+# Update last modification date if file exists.
+$ echo "text" > file.txt
+# Create file.txt with text.
+# Overwrite file.txt with text if it does exist.
 ```
 
 ### Modify

@@ -585,6 +585,8 @@ $ su - <user>
 # Switch user (substitute user identity).
 $ su -
 # Switch to superuser (root), which is default user in su.
+$ exit
+# To logout from su user.
 ```
 
 ```bash
@@ -818,6 +820,10 @@ $ find <path> -name <expression>
 # -iname for case insensitive search
 $ find . -name "FileName*"
 # Find recursively from current folder files that name begins with "FileName".
+# Wildcards (substitute for any class of characters in a search):
+# *   (sterisk/star) represents zero or mor characters
+# ?   (questionmark) represents a single character
+# []  (brackets) represents a range of characters
 ```
 ```bash
 $ locate <filename>
@@ -849,6 +855,29 @@ $ touch <file 1> <file 2> <file 3>
 $ echo "text" > file.txt
 # Create file.txt with text.
 # Overwrite file.txt with text if it does exist.
+```
+
+### Link
+
+```bash
+$ ls -i <file>
+# Show inode number of the file.
+# inode is a pointer/number of a file on the disk partition.
+$ ln <file>
+# Create Hard Link to file.
+# Hard Link has the same inode number as the original file.
+# Hard Link is not affected by deleting, moving or renaming original file.
+$ ln -s <file>
+# Create Soft Link to file.
+# Soft Link has its own inode number (it's another/pseudo file).
+# Soft Link will be broken if the original file is deleted, moved or renamed.
+# Example:
+Hulk@MacBookPro /tmp $ touch ~/file
+Hulk@MacBookPro /tmp $ ls -li ~/file
+8655350673 -rw-r--r--  1 Hulk  staff  0 Apr 26 00:09 /Users/Hulk/file
+Hulk@MacBookPro /tmp $ ln -s ~/file
+Hulk@MacBookPro /tmp $ ls -li file
+8655350742 lrwxr-xr-x  1 Hulk  wheel  18 Apr 26 00:10 file -> /Users/Hulk/file
 ```
 
 ### Modify

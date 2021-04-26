@@ -794,24 +794,6 @@ $ ls -ltr
 # Sort in time reverse order.
 ```
 
-### Audit
-
-See: [Audit who changed the file](https://www.cyberciti.biz/tips/linux-audit-files-to-see-who-made-changes-to-a-file.html).
-
-```bash
-$ sudo lsof </path/to/file>
-$ sudo lsof | grep <filename>
-$ sudo fuser -u </path/to/file>
-# Show info about opened file (pid, user, etc.).
-```
-
-```bash
-$ sudo lsof -u <user>
-# List opened files by user.
-$ sudo lsof -u ^<user>
-# List all opened files but user.
-```
-
 ### Find
 
 ```bash
@@ -893,6 +875,43 @@ done
 
 $ find . -depth -name "*.html" -exec sh -c 'f="{}"; mv -- "$f" "${f%.html}.php"' \;
 # Rename all found *.html files to *.php
+```
+
+### Delete
+
+```bash
+$ rm <file>
+$ rm <file1> <file2> <file3>
+$ rm *.<ext>
+# Remove file.
+$ rm -f <file>
+# Force to remove file without confirmation, even if is write-protected.
+$ rmdir <dir>
+$ rm -d <dir>
+# Remove directory.
+$ rm -r <dir>
+$ rm -rf <dir>
+# Remove all dir contents without asking (recursively, i.e. the file hierarchy rooted in dir argument).
+$ rm -ri <file>
+# Remove file with confirmation (-i overrides -f).
+```
+
+### Audit
+
+See: [Audit who changed the file](https://www.cyberciti.biz/tips/linux-audit-files-to-see-who-made-changes-to-a-file.html).
+
+```bash
+$ sudo lsof </path/to/file>
+$ sudo lsof | grep <filename>
+$ sudo fuser -u </path/to/file>
+# Show info about opened file (pid, user, etc.).
+```
+
+```bash
+$ sudo lsof -u <user>
+# List opened files by user.
+$ sudo lsof -u ^<user>
+# List all opened files but user.
 ```
 
 ## Scripting

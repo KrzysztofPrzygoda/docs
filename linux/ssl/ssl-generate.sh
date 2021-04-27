@@ -3,10 +3,10 @@
 # Generate keys and SSL certificate for CA and site:
 #   CA key    CA RSA key
 #   CA pem    CA Certificate in PEM format
-#   CA srl    ?
+#   CA srl    CA Certificate serial number
 #   Site key  RSA key
 #   Site csr  Certificate Signing Request
-#   Site ext  Certificate information
+#   Site ext  Certificate configuration information
 #   Site crt  Certificate
 #   Site pem  Certificate in PEM format
 # Reference:

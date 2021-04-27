@@ -28,7 +28,7 @@ $ openssl req -new -key my.organization.com -out my.organization.com.csr
 
 ## 4. Prepare ext file with SSL cert extensions
 ```bash
-$ nano my.organization.com.csr.ext
+$ nano my.organization.com.ext
 ```
 And paste content:
 ```
@@ -44,7 +44,7 @@ DNS.2 = my2.organization.com
 
 ## 5. Generate site certificate using CAcert, CA key, site CSR and ext file
 ```bash
-$ openssl x509 -req -in my.organization.com.csr -CA testCA.pem -CAkey testCA.key -CAcreateserial -out my.organization.com.crt -days 825 -sha256 -extfile my.organization.com.csr.ext
+$ openssl x509 -req -in my.organization.com.csr -CA testCA.pem -CAkey testCA.key -CAcreateserial -out my.organization.com.crt -days 825 -sha256 -extfile my.organization.com.ext
 ```
 
 ## 6. Convert to PEM in case when app requires PEM format

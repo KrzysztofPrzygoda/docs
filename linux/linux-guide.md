@@ -908,7 +908,7 @@ $ find . -depth -name "*.html" -exec sh -c 'f="{}"; mv -- "$f" "${f%.html}.php"'
 $ rm <file>
 $ rm <file1> <file2> <file3>
 $ rm *.<ext>
-# Remove file.
+# Remove file(s).
 $ rm -f <file>
 # Force to remove file without confirmation, even if is write-protected.
 $ rmdir <dir>
@@ -919,6 +919,32 @@ $ rm -rf <dir>
 # Remove all dir contents without asking (recursively, i.e. the file hierarchy rooted in dir argument).
 $ rm -ri <file>
 # Remove file with confirmation (-i overrides -f).
+```
+```bash
+$ shopt -s extglob
+# Enable shell pattern matching operators
+# *(pattern)    matches zero or more occurances of the pattern
+# ?(pattern)    matches zero or one occurance of the pattern
+# +(pattern)    matches one or more occurances of the pattern
+# @(pattern)    matches one of the pattern
+# !(pattern)    matches anything except of the pattern
+
+$ rm -v !(filename)
+# Delete all files except specified filename
+$ rm -v !(filename1|filename2)
+# Delete all files except filename1 and filename2
+$ rm !(*.zip)
+# Delete all except .zip files
+
+$ shopt -u extglob
+# Disable shell pattern matching operators
+```
+```bash
+$ find . -type f -not \(-name '*.zip' -or -name `*.jpg` \) -delete
+# Delete all files except .zip and .jpg
+$ find . -type f -not -name '*.zip' -delete
+$ find . -type f -not -name '*.zip' -print0 | xargs -0 -I {} rm -v {}
+# Delete all except .zip files
 ```
 
 ### Audit

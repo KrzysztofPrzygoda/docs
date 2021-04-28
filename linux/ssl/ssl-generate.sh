@@ -41,7 +41,9 @@ openssl genrsa -out ${CA_name}.key 4096
 # Generate CA key.
 openssl req -x509 -new -key ${CA_name}.key -sha256 -days 1825 -out ${CA_name}.pem -nodes
 # Generate self-signed CA certificate.
-# Asks for organization info (enter whatever you want - it doesn't matter).
+# Asks for organization info.
+# Enter whatever you want but later you may want to identify this cert in OS.
+# So, it's good to enter something recognizable (org name at least like: My Own CA).
 
 ## 2. Generate site key
 openssl genrsa -out ${site}.key 2048

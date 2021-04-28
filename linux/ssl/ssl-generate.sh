@@ -66,3 +66,12 @@ openssl x509 -req -in ${site}.csr -CA ${CA_name}.pem -CAkey ${CA_name}.key -CAcr
 
 ## 6. Convert to PEM in case when app requires PEM format
 openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM
+
+## 7. Add fakeCA.pem to Windows
+# https://docs.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate
+# 1. Launch MMC (mmc.exe).
+# 2. Choose File > Add/Remove Snap-ins.
+# 3. Choose Certificates, then choose Add.
+# 4. Choose My user account.
+# 5. Choose Add again and this time select Computer Account.
+# 6. Move the new certificate from the Certificates-Current User > Trusted Root Certification Authorities into Certificates (Local Computer) > Trusted Root Certification Authorities.

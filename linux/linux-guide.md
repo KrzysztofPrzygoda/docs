@@ -902,6 +902,11 @@ $ find . -depth -name "*.html" -exec sh -c 'f="{}"; mv -- "$f" "${f%.html}.php"'
 # Rename all found *.html files to *.php
 ```
 
+```bash
+$ cat file1 file2 > file3
+# Concatenate files (file3 = file1 + file2).
+```
+
 ### Delete
 
 ```bash

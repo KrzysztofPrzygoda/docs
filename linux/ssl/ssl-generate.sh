@@ -31,15 +31,15 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = domain.com
-DNS.2 = *.domain.com
+DNS.1 = $site
+DNS.2 = *.$site
 "
 
-## 1. Generate CA cert and key
+## 1. Generate fake CA cert and key
 openssl genrsa -out ${CA_name}.key 4096
 # Generate CA key.
-openssl req -x509 -new -nodes -key ${CA_name}.key -sha256 -days 1825 -out ${CA_name}.pem
-# Generate CA certificate.
+openssl req -x509 -new -key ${CA_name}.key -sha256 -days 1825 -out ${CA_name}.pem -nodes
+# Generate self-signed CA certificate.
 # Asks for organization info (enter whatever you want - it doesn't matter).
 
 ## 2. Generate site key

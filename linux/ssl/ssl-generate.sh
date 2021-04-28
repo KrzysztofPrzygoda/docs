@@ -1,6 +1,6 @@
 #!/bin/bash
 #######################################
-# Generate keys and SSL certificate for CA and site:
+# Generate keys and SSL certificate for fake CA and site:
 #   CA key    CA RSA key
 #   CA pem    CA Certificate in PEM format
 #   CA srl    CA Certificate serial number
@@ -22,11 +22,11 @@
 #######################################
 # TODO(author): Nothing to do.
 
-CA_name="testCA"
+CA_name="fakeCA"
 site="my.organization.com"
 site_extention="
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
+authorityKeyIdentifier = keyid, issuer
+basicConstraints = CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
@@ -35,6 +35,20 @@ DNS.1 = my.organization.com
 DNS.2 = my2.organization.com
 "
 
+## 1. Generate CA cert and key
+openssl genrsa -out ${CA_name}.key 4096
+# Generate CA key.
+openssl req -x509 -new -nodes -key ${CA_name}.key -sha256 -days 1825 -out ${CA_name}.pem
+# Generate CA certificate.
+# Asks for organization info (enter whatever you want - it doesn't matter).
+
+## 2. Generate site key
+openssl genrsa -out ${site}.key 2048
+
+## 3. Generate CSR for site cert
+openssl req -new -key ${site}.key -out ${site}.csr
+# Asks for information.
+# Enter relevant data to your domain here:
 # country="PL"
 # state="dolnoslaskie"
 # city="Wroclaw"
@@ -42,22 +56,6 @@ DNS.2 = my2.organization.com
 # org_unit="Company Section"
 # common_name="my.organization.com" # FQDN or YOUR name
 # email="my.email@organization.com"
-
-## 1. Generate CA cert and key
-openssl genrsa -out ${CA_name}.key 4096
-# Generate CA key.
-openssl req -x509 -new -nodes -key ${CA_name}.key -sha256 -days 1825 -out ${CA_name}.pem
-# Generate CA certificate. Asks for organization info.
-
-# openssl x509 -in ${CA_name}.pem -text -noout
-# View CA certificate.
-
-## 2. Generate site key
-openssl genrsa -out ${site}.key 2048
-
-## 3. Generate CSR for site cert
-openssl req -new -key ${site}.key -out ${site}.csr
-# Asks for organization info.
 
 ## 4. Prepare ext file with SSL cert extensions
 echo ${site_extention} > ${site}.ext

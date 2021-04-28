@@ -23,7 +23,7 @@
 # TODO(author): Nothing to do.
 
 CA_name="fakeCA"
-site="my.organization.com"
+site="domain.com"
 site_extention="
 authorityKeyIdentifier = keyid, issuer
 basicConstraints = CA:FALSE
@@ -31,8 +31,8 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = my.organization.com
-DNS.2 = my2.organization.com
+DNS.1 = domain.com
+DNS.2 = *.domain.com
 "
 
 ## 1. Generate CA cert and key
@@ -58,7 +58,7 @@ openssl req -new -key ${site}.key -out ${site}.csr
 # email="my.email@organization.com"
 
 ## 4. Prepare ext file with SSL cert extensions
-echo ${site_extention} > ${site}.ext
+echo "${site_extention}" > ${site}.ext
 
 ## 5. Generate site certificate using CA cert, CA key, site CSR and ext file
 openssl x509 -req -in ${site}.csr -CA ${CA_name}.pem -CAkey ${CA_name}.key -CAcreateserial -out ${site}.crt -days 825 -sha256 -extfile ${site}.ext

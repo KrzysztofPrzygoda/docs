@@ -757,7 +757,7 @@ $ ls -la
 # file mode, number of links, owner name, group name, number of bytes in the file, date file was last modified, and the pathname.
 # Example: drwxr-xr-x@   10 Master  staff    320 Feb 27 15:08 Data
 
-# The File Mode
+# The File Mode (File Type)
 # First letter in file mode:
 # b     Block special file (block device).
 # c     Character special file (special file or device file).
@@ -793,6 +793,31 @@ $ ls -lt
 $ ls -ltr
 # Sort in time reverse order.
 ```
+
+### Permissions
+
+```bash
+# Types:
+# r : read
+# w : write
+# x : execute (run program)
+# - : not permitted
+
+# Control levels (permission triplets):
+# u : user (owner)
+# g : group (of users)
+# o : others (everyone else on the system)
+
+$ ls -l <file>
+# Show file permittions.
+
+$ chmod g+w <file>
+# Set group permission to write file.
+$ chmod a+r <file>
+# Set read permission to all.
+```
+
+### Ownership
 
 ### Find
 

@@ -22,6 +22,7 @@
 #######################################
 # TODO(author): Nothing to do.
 
+# Config example: https://www.switch.ch/pki/manage/request/csr-openssl/
 CA_name="fakeCA"
 site="domain.com"
 site_extention="

@@ -12,7 +12,9 @@ The solution to the above problem is to follow Public Key Infrastructure scheme 
 1. Create your own Certificate Authority (CA) and add its certificate to your OS *Trusted Root Certification Authorities* database.
 2. Then sign your every SSL certificate with your own CA certificate.
 
-In short, instead of self-signed cert you use signed cert, but by your own CA, which you need to add to Trusted CA in your OS manually. That's it.
+In short, instead of self-signed cert you use signed cert, but by your own CA, which you need to add to Trusted CA in your OS manually.
+
+That's it.
 
 ### 1. Create your own CA certificate
 ```bash

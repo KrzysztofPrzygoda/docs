@@ -57,7 +57,7 @@ if [ "apt" = $pm || "apt-get" = $pm ]; then
 elif [ "yum" = $pm ]; then
     sudo $pm -y install gcc make bison pkg-config
     # Install tmux dependencies
-    sudo $pm -y install libevent-devel libncurses-devel
+    sudo $pm -y install libevent-devel ncurses-devel
 fi
 
 # Get source archive or exit on failure

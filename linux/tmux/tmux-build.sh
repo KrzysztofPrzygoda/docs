@@ -30,7 +30,7 @@ TMUX_DIR=${2:-"/usr/local"}
 # TMUX_DIR=/usr
 
 # Final binary will be placed in $TMUX_DIR/bin/tmux
-echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
+echo -e "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
 
 # Install required components
 
@@ -42,7 +42,7 @@ elif command -v apt-get >/dev/null; then
 elif command -v yum >/dev/null; then
     pm="yum" # CentOS
 else
-    echo "Can't find package manager" && exit 1
+    echo "Can't find package manager apt/apt-get/yum" && exit 1
 fi
 
 # Update repository information
@@ -88,7 +88,7 @@ rm -f tmux-$TMUX_VERSION.tar.gz
 cd tmux-$TMUX_VERSION
 # If you omit --prefix then default dir /usr/local will be taken
 ./configure --prefix=$TMUX_DIR
-echo "\nCompilation in progress...\n"
+echo -e "\nCompilation in progress...\n"
 make --silent
 # Install compiled binaries
 sudo make --silent install
@@ -102,7 +102,7 @@ sudo rm -rf $TMUX_DIR/src/tmux-*
 sudo mv tmux-$TMUX_VERSION $TMUX_DIR/src
 
 # Check current tmux version
-echo "\nAll done...\n"
+echo -e "\nAll done...\n"
 echo $(tmux -V) is installed in $(which tmux)
 
 # If it happens you get error "server version is too old for client"

@@ -40,7 +40,7 @@ DNS.2 = *.$site
 ## 1. Generate fake CA cert and key
 openssl genrsa -out ${CA_name}.key 4096
 # Generate CA key.
-openssl req -x509 -new -key ${CA_name}.key -sha256 -days 1825 -out ${CA_name}.pem -nodes
+openssl req -x509 -new -sha256 -days 1825 -key ${CA_name}.key -out ${CA_name}.pem -nodes
 # Generate self-signed CA certificate.
 # Asks for organization info.
 # Enter whatever you want but later you may want to identify this cert in OS.
@@ -65,7 +65,10 @@ openssl req -new -key ${site}.key -out ${site}.csr
 echo "${site_extention}" > ${site}.ext
 
 ## 5. Generate site certificate using CA cert, CA key, site CSR and ext file
-openssl x509 -req -in ${site}.csr -CA ${CA_name}.pem -CAkey ${CA_name}.key -CAcreateserial -out ${site}.crt -days 825 -sha256 -extfile ${site}.ext
+openssl x509 -req -days 825 -sha256 \
+  -in ${site}.csr -extfile ${site}.ext \
+  -CA ${CA_name}.pem -CAkey ${CA_name}.key -CAcreateserial \
+  -out ${site}.crt
 
 ## 6. Convert to PEM in case when app requires PEM format
 openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM

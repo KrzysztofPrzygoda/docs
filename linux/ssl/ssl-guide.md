@@ -7,7 +7,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 - Root Certificate Authority (CA) > Intermediate CA > Digital Certificate
 - Revocation Services (CRL, OCSP)
 
-## 1. Create your ouwn CA certificate
+## 1. Create your own CA certificate
 ```bash
 $ openssl genrsa -out myCA.key 4096
 # Generate CA private key.

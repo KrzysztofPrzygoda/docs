@@ -12,7 +12,7 @@ The solution to the above problem is to follow *Public Key Infrastructure* schem
 1. Create your own *Certificate Authority* (CA) and add its certificate to your OS *Trusted Root Certification Authorities* database.
 2. Then sign your every SSL certificate with your own CA certificate.
 
-In short, instead of self-signed cert you use signed cert, but by your own CA, which you need to add to Trusted CA in your OS manually.
+In short, instead of self-signed cert you use signed one, but by your own CA, which you need to add manually to Trusted CAs on your OS database.
 
 That's it. Just follow the steps below.
 

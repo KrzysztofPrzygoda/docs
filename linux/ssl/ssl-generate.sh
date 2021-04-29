@@ -1,6 +1,6 @@
 #!/bin/bash
 #######################################
-# Generate keys and SSL certificate for fake CA and site:
+# Generate keys and SSL certificate for your own CA and your site:
 #   CA key    CA RSA key
 #   CA pem    CA Certificate in PEM format
 #   CA srl    CA Certificate serial number
@@ -23,7 +23,7 @@
 # TODO(author): Nothing to do.
 
 # Config example: https://www.switch.ch/pki/manage/request/csr-openssl/
-CA_name="fakeCA"
+CA_name="myCA"
 site="domain.com"
 site_extention="
 authorityKeyIdentifier = keyid, issuer
@@ -80,7 +80,7 @@ openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM
 #    Certificates-Current User > Trusted Root Certification Authorities
 #    into
 #    Certificates (Local Computer) > Trusted Root Certification Authorities.
-# 7. Relaunch your browser(s) or even you may need to restart OS to get changes.
+# 7. Relaunch your browser(s) or even you may need to restart OS to changes take effect.
 
 ## 8. On your client machine add your site domain to the hosts file
 # Add line:

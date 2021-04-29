@@ -1,5 +1,7 @@
 # nginx Guide
 
+Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
+
 ## Install
 
 ```bash
@@ -54,6 +56,15 @@ server {
 }
 ```
 
+### Check Config
+
+```bash
+$ sudo nginx -t
+# Check server configuration syntax.
+```
+
+### Enable Config
+
 Disable `default` site and enable `mysite`:
 ```bash
 $ cd /etc/nginx/sites-enabled
@@ -63,19 +74,12 @@ $ sudo ln -s /etc/nginx/sites-available/mysite
 # Create symlink to your site config
 ```
 
-### Check
-
-```bash
-$ sudo nginx -t
-# CHeck server configuration syntax
-```
-
 ## Control
 
 ```bash
 $ systemctl status nginx
-# Show server service status
+# Show server service status.
 $ sudo systemctl restart nginx
-# Restart server service
+# Restart server service.
 ```
 

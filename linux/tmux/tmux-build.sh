@@ -21,6 +21,7 @@
 #   (c) 2020 Krzysztof Przygoda, MIT License
 #######################################
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
+# set -e
 
 # Check out releases at https://github.com/tmux/tmux/releases
 # and paste default version number of your choice:
@@ -34,14 +35,24 @@ echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
 
 # Install required components
 
+if command -v apt >/dev/null; then
+    pm="apt" # Debian
+elif command -v apt-get >/dev/null; then
+    pm="apt-get" # Older Debian
+elif command -v yum >/dev/null; then
+    pm="yum" # CentOS
+else
+    echo "Can't find package manager" && exit 1
+fi
+
 # Update repository information
-sudo apt update
+sudo $pm update
 # Install download tools
-sudo apt -y install curl tar
+sudo $pm -y install curl tar
 # Install compilation tools
-sudo apt -y install build-essential
+sudo $pm -y install build-essential
 # Install tmux dependencies
-sudo apt -y install libevent-dev libncurses-dev
+sudo $pm -y install libevent-dev libncurses-dev
 
 # Get source archive or exit on failure
 URL=https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz

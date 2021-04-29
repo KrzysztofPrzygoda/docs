@@ -21,7 +21,6 @@
 #   (c) 2020 Krzysztof Przygoda, MIT License
 #######################################
 # TODO(author): Handle version=latest (requires JSON parsing with jq package).
-# set -e
 
 # Check out releases at https://github.com/tmux/tmux/releases
 # and paste default version number of your choice:
@@ -35,6 +34,7 @@ echo "Installing tmux $TMUX_VERSION in $TMUX_DIR/bin/ \n"
 
 # Install required components
 
+# Determine available package manager
 if command -v apt >/dev/null; then
     pm="apt" # Debian
 elif command -v apt-get >/dev/null; then
@@ -50,9 +50,15 @@ sudo $pm update
 # Install download tools
 sudo $pm -y install curl tar
 # Install compilation tools
-sudo $pm -y install build-essential
-# Install tmux dependencies
-sudo $pm -y install libevent-dev libncurses-dev
+if [ "apt" = $pm || "apt-get" = $pm ]; then
+    sudo $pm -y install build-essential bison pkg-config
+    # Install tmux dependencies
+    sudo $pm -y install libevent-dev libncurses-dev
+elif [ "yum" = $pm ]; then
+    sudo $pm -y install gcc make bison pkg-config
+    # Install tmux dependencies
+    sudo $pm -y install libevent-devel libncurses-devel
+fi
 
 # Get source archive or exit on failure
 URL=https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz
@@ -72,7 +78,7 @@ sudo kill -SIGTERM $(pidof tmux)
 
 # Remove current packaged tmux installed from OS repository
 # Turn it off if you want to leave it
-sudo apt -y remove tmux
+sudo $pm -y remove tmux
 
 # Unpack and remove archive file
 tar xf tmux-$TMUX_VERSION.tar.gz

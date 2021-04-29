@@ -80,6 +80,7 @@ openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM
 #    Certificates-Current User > Trusted Root Certification Authorities
 #    into
 #    Certificates (Local Computer) > Trusted Root Certification Authorities.
+# 7. Relaunch your browser(s) or even you may need to restart OS to get changes.
 
 ## 8. On your client machine add your site domain to the hosts file
 # Add line:

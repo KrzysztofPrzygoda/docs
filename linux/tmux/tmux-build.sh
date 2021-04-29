@@ -24,7 +24,7 @@
 
 # Check out releases at https://github.com/tmux/tmux/releases
 # and paste default version number of your choice:
-TMUX_VERSION=${1:-"3.1b"}
+TMUX_VERSION=${1:-"3.2"}
 # Default building tmux directory is /usr/local
 TMUX_DIR=${2:-"/usr/local"}
 # TMUX_DIR=/usr
@@ -103,7 +103,7 @@ sudo mv tmux-$TMUX_VERSION $TMUX_DIR/src
 
 # Check current tmux version
 echo -e "\nAll done...\n"
-echo $(tmux -V) is installed in $(which tmux)
+echo `tmux -V` is installed in `which tmux`
 
 # If it happens you get error "server version is too old for client"
 # then an old version server must be running in the background.

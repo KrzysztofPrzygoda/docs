@@ -51,7 +51,10 @@ DNS.2 = my2.domain.com
 
 ### 3. Create SSL certificate for your domain
 ```bash
-$ openssl x509 -req -in my.domain.com.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out my.domain.com.crt -days 825 -sha256 -extfile my.domain.com.ext
+$ openssl x509 -req -in my.domain.com.csr \
+    -CA myCA.pem -CAkey myCA.key -CAcreateserial \
+    -out my.domain.com.crt -extfile my.domain.com.ext \
+    -days 825 -sha256
 # Generate site certificate (CRT) signed by your own CA, using CA cert, CA key, site CSR and site ext file.
 ```
 Sometimes you may need to convert your site cert to PEM format in case when app requires it:

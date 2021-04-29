@@ -8,13 +8,13 @@ If you don't need commercial SSL certificate (like in development or for private
 
 ## Solution
 
-The solution to the above problem is to follow Public Key Infrastructure scheme (see [PKI section](#Public-Key-Infrastructure-PKI) at the end for explanation) and create your own Chain of Trust:
-1. Create your own Certificate Authority (CA) and add its certificate to your OS *Trusted Root Certification Authorities* database.
+The solution to the above problem is to follow *Public Key Infrastructure* scheme (see [PKI section](#Public-Key-Infrastructure-PKI) at the end for explanation) and create your own [Chain of Trust](#Chain-of-Trust-CoT):
+1. Create your own *Certificate Authority* (CA) and add its certificate to your OS *Trusted Root Certification Authorities* database.
 2. Then sign your every SSL certificate with your own CA certificate.
 
 In short, instead of self-signed cert you use signed cert, but by your own CA, which you need to add to Trusted CA in your OS manually.
 
-That's it.
+That's it. Just follow the steps below.
 
 ### 1. Create your own CA certificate
 ```bash
@@ -61,7 +61,7 @@ $ openssl x509 -in my.domain.com.crt -out my.domain.com.pem -outform PEM
 ```
 
 ### 4. Add your CA to OS database
-Now you need to add myCA.pem certificate to your OS collection of Trusted Root Certification Authorities (TRCA).
+Now you need to add `myCA.pem` certificate to your OS collection of Trusted Root Certification Authorities (TRCA).
 
 Bear in mind that some apps (e.g. Firefox browser) may hold their own (OS independent) TRCA database.
 

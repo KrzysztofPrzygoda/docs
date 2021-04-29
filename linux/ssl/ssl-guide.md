@@ -76,7 +76,7 @@ Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/ar
    **Certificates-Current User** > **Trusted Root Certification Authorities**  
    into  
    **Certificates (Local Computer)** > **Trusted Root Certification Authorities**.
-7. Relaunch your browser(s) or even you may need to restart OS to changes take effect.
+7. Relaunch your browser(s) or even you may need to restart OS to make changes to take effect.
 
 ### 5. Add your domain to hosts
 If your domain does not exist in DNS system, you may add it to the `hosts` file on your client machine to resolve IP of the host that is meant to be pointed by the domain. 

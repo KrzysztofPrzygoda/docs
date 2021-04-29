@@ -54,7 +54,7 @@ DNS.2 = my2.domain.com
 $ openssl x509 -req -in my.domain.com.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out my.domain.com.crt -days 825 -sha256 -extfile my.domain.com.ext
 # Generate site certificate (CRT) signed by your own CA, using CA cert, CA key, site CSR and site ext file.
 ```
-Sometimes you may need to convert yuor site cert to PEM format in case when app requires it:
+Sometimes you may need to convert your site cert to PEM format in case when app requires it:
 ```bash
 $ openssl x509 -in my.domain.com.crt -out my.domain.com.pem -outform PEM
 # Convert CRT to PEM format.
@@ -63,7 +63,7 @@ $ openssl x509 -in my.domain.com.crt -out my.domain.com.pem -outform PEM
 ### 4. Add your CA to OS database
 Now you need to add myCA.pem certificate to your OS collection of Trusted Root Certification Authorities (TRCA).
 
-Bear in mind that some apps (e.g. Firefox browser) may hold their own (independent to OS) TRCA database.
+Bear in mind that some apps (e.g. Firefox browser) may hold their own (OS independent) TRCA database.
 
 #### Windows
 Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate):
@@ -76,7 +76,7 @@ Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/ar
    **Certificates-Current User** > **Trusted Root Certification Authorities**  
    into  
    **Certificates (Local Computer)** > **Trusted Root Certification Authorities**.
-7. Relaunch your browser(s) or even you may need to restart OS to  changes take effect.
+7. Relaunch your browser(s) or even you may need to restart OS to changes take effect.
 
 ### 5. Add your domain to hosts
 If your domain does not exist in DNS system, you may add it to the `hosts` file on your client machine to resolve IP of the host that is meant to be pointed by the domain. 

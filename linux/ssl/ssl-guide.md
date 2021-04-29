@@ -4,7 +4,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Problem
 
-If you don't need commercial SSL certificate (like in development of for private purposes), you may create self-signed one. But then browsers will warn you that cert is unrecognized and will impair access to the system secured with self-signed cert.
+If you don't need commercial SSL certificate (like in development or for private purposes), you may create self-signed one. But then browsers will warn you that cert is unrecognized and will impair access to the system secured with self-signed cert.
 
 ## Solution
 

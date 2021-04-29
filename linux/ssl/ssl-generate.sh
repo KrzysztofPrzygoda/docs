@@ -1,6 +1,7 @@
 #!/bin/bash
 #######################################
-# Generate keys and SSL certificate for your own CA and your site:
+# Generates private CA (fake one) key/cert and SSL certificate for your site signed by your private CA.
+# Output:
 #   CA key    CA RSA key
 #   CA pem    CA Certificate in PEM format
 #   CA srl    CA Certificate serial number

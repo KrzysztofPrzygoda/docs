@@ -50,7 +50,7 @@ sudo $pm update
 # Install download tools
 sudo $pm -y install curl tar
 # Install compilation tools
-if [ "apt" = $pm || "apt-get" = $pm ]; then
+if [ "apt" = $pm ] || [ "apt-get" = $pm ]; then
     sudo $pm -y install build-essential bison pkg-config
     # Install tmux dependencies
     sudo $pm -y install libevent-dev libncurses-dev

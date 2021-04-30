@@ -74,6 +74,7 @@ openssl x509 -req -days 825 -sha256 \
 openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM
 
 ## 7. Add fakeCA.pem certificate to your OS collection of Trusted Root Certification Authorities
+
 # Windows: https://docs.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate
 # 1. Launch MMC (mmc.exe).
 # 2. Choose File > Add/Remove Snap-ins.
@@ -85,6 +86,15 @@ openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM
 #    into
 #    Certificates (Local Computer) > Trusted Root Certification Authorities.
 # 7. Relaunch your browser(s) or even you may need to restart OS to changes take effect.
+
+# macOS
+# 1. Double-click the root CA certificate to open it in Keychain Access.
+#    The root CA certificate appears in login.
+# 2. Copy the root CA certificate to System.
+#    You must copy the certificate to System to ensure that it is trusted by all users and local system processes.
+# 3. Open the root CA certificate, expand Trust, select Use System Defaults, and save your changes.
+# 4. Reopen the root CA certificate, expand Trust, select Always Trust, and save your changes.
+# 5. Delete the root CA certificate from login.
 
 ## 8. On your client machine add your site domain to the hosts file
 # Add line:

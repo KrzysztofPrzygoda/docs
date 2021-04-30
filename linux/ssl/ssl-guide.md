@@ -30,10 +30,29 @@ $ openssl genrsa -out myCA.key 4096
 # This is the key used to sign the certificate requests.
 # Anyone holding this can sign certificates on your behalf.
 # So keep it in a safe place!
-
+```
+```bash
 $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
 # Generate self-signed CA certificate.
 
+# You will be prompted for Subject (organization info).
+# Enter whatever you want but meaningful info will help you later to identify this cert in OS.
+
+# Example:
+# C = US
+# ST = My CA State
+# L = My CA City
+# O = My CA Organization, Inc.
+# OU = My CA Organization Unit
+# CN = myca.com
+# emailAddress = me@myca.com
+
+# To automate input, you can add -subj option to the above command:
+$ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem \
+    -subj "/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com/emailAddress=me@myca.com"
+# [Optional] Generate self-signed CA certificate one-liner with subject.
+```
+```bash
 $ openssl x509 -in myCA.pem -text -noout
 # View certificate.
 ```
@@ -45,6 +64,12 @@ $ openssl genrsa -out my.domain.com.key 2048
 
 $ openssl req -new -key my.domain.com -out my.domain.com.csr
 # Generate CSR for site certification.
+
+# To automate input, you can add -subj option to the above command:
+$ openssl req -new -key my.domain.com -out my.domain.com.csr \
+    -subj "/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/emailAddress=me@gmail.com"
+# [Optional] Generate CSR for site certification one-liner with subject.
+
 ```
 Prepare ext file with SSL cert extensions (X509v3):
 ```bash
@@ -65,8 +90,9 @@ You may also sign any subdomain with asterix:
 ```
 [alt_names]
 DNS.1 = domain.com
-DNS.2 = *.domain.com
-DNS.3 = *.my.domain.com
+DNS.2 = www.domain.com
+DNS.3 = *.domain.com
+DNS.4 = *.my.domain.com
 ```
 
 ### 3. Create SSL certificate for your domain
@@ -78,7 +104,7 @@ $ openssl x509 -req -in my.domain.com.csr -days 825 -sha256 \
 # using: CA cert, CA key, site CSR and site ext file.
 
 $ openssl verify -CAfile myCA.pem my.domain.com.crt
-# [Optional] Verify site certificate with CA certificate
+# [Optional] Verify site cert with CA cert.
 ```
 Sometimes you may need to convert your site cert to PEM format in case when app requires it:
 ```bash

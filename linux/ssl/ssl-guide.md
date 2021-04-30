@@ -4,9 +4,12 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
 - X.509: [RFC5280](https://tools.ietf.org/html/rfc5280) (version 3) standard from the International Telecommunication Union for [PKI]((#Public-Key-Infrastructure-PKI)). Among other things, it defines the format for public key certificates.
-- [OpenSSL Documentation](https://www.openssl.org/docs/)
-- [OpenSSL CookBook](https://www.feistyduck.com/library/openssl-cookbook/): A Short Guide to the Most Frequently Used OpenSSL Features and Commands By Ivan Ristić
-- [simba.com](https://www.simba.com/products/SEN/doc/Client-Server_user_guide/content/clientserver/configuringssl/signingca.htm): Generating a Certificate Authority (CA) Certificate for Self-Signing
+- [OpenSSL Documentation](https://www.openssl.org/docs/). OpenSSL is a cryptography toolkit. Contains many subcommands, each with a manpage of its own e.g. `ca(1)`, `req(1)` , `x509(1)`.
+- [OpenSSL CookBook](https://www.feistyduck.com/library/openssl-cookbook/): A Short Guide to the Most Frequently Used OpenSSL Features and Commands By Ivan Ristić.
+
+Some similar guides:
+- [simba.com](https://www.simba.com/products/SEN/doc/Client-Server_user_guide/content/clientserver/configuringssl/signingca.htm): Generating a Certificate Authority (CA) Certificate for Self-Signing.
+- [gist.github.com/Soarez](https://gist.github.com/Soarez/9688998): How to setup your own CA with OpenSSL
 
 ## Problem
 
@@ -44,20 +47,20 @@ $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
 
 # You will be prompted for Subject (organization info).
 # Enter whatever you want but meaningful info will help you later to identify this cert in OS.
+# To automate input, you can add -subj option to the above command with Distinguish Names (DN):
 
-# Example:
-# C = US
-# ST = My CA State
-# L = My CA City
-# O = My CA Organization, Inc.
-# OU = My CA Organization Unit
-# CN = myca.com
-# emailAddress = me@myca.com
-
-# To automate input, you can add -subj option to the above command:
 $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem \
     -subj "/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com"
 # [Optional] Generate self-signed CA certificate one-liner with subject.
+```
+Example of **Distinguished Names** (DN), defined in [RFC1779](https://tools.ietf.org/html/rfc1779):
+```bash
+C = US
+ST = My CA State
+L = My CA City
+O = My CA Organization Name, Inc.
+OU = My CA Organization Unit
+CN = myca.com
 ```
 ```bash
 $ openssl x509 -in myCA.pem -text -noout
@@ -74,7 +77,7 @@ $ openssl req -new -key my.domain.com -out my.domain.com.csr
 
 # To automate input, you can add -subj option to the above command:
 $ openssl req -new -key my.domain.com -out my.domain.com.csr \
-    -subj "/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/E=me@gmail.com"
+    -subj "/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/emailAddress=me@gmail.com"
 # [Optional] Generate CSR for site certification one-liner with subject.
 
 ```

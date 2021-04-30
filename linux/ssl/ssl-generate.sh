@@ -25,11 +25,13 @@
 #######################################
 # TODO(author): Nothing to do.
 
-# Config example:
-# https://www.switch.ch/pki/manage/request/csr-openssl/
+# Configuration for CA
 CA_name="myCA"
-site="domain.com"
+CA_subject="/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com/emailAddress=me@myca.com"
 
+# Configuration for site
+site="domain.com"
+site_subject="/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/emailAddress=me@gmail.com"
 # X509 V3 certificate extension configuration format:
 # https://www.openssl.org/docs/manmaster/man5/config.html
 site_extention="
@@ -44,28 +46,39 @@ DNS.2 = *.$site
 "
 
 ## 1. Generate fake CA cert and key
+
 openssl genrsa -out ${CA_name}.key 4096
 # Generate CA key.
-openssl req -x509 -new -sha256 -days 1825 -key ${CA_name}.key -out ${CA_name}.pem -nodes
+
+# openssl req -x509 -new -sha256 -days 1825 -key ${CA_name}.key -out ${CA_name}.pem -nodes
 # Generate self-signed CA certificate.
-# Asks for organization info.
+openssl req -x509 -new -sha256 -days 1825 -key ${CA_name}.key -out ${CA_name}.pem -subj "${CA_subject}" -nodes
+# [Optional] Generate self-signed CA certificate one-liner with subject.
+# -nodes option turns off cert encription
+
+# Prompts for organization info (subject).
 # Enter whatever you want but later you may want to identify this cert in OS.
 # So, it's good to enter something recognizable (org name at least like: My Own CA).
+# Example:
+# C = US
+# ST = My CA State
+# L = My CA City
+# O = My CA Organization, Inc.
+# OU = My CA Organization Unit
+# CN = myca.com
+# emailAddress = me@myca.com
 
 ## 2. Generate site key
+
 openssl genrsa -out ${site}.key 2048
 
 ## 3. Generate CSR for site cert
-openssl req -new -key ${site}.key -out ${site}.csr
-# Asks for information.
-# Enter relevant data to your domain here:
-# country="PL"
-# state="dolnoslaskie"
-# city="Wroclaw"
-# org_name="Company Name"
-# org_unit="Company Section"
-# common_name="my.organization.com" # FQDN or YOUR name
-# email="my.email@organization.com"
+
+# openssl req -new -key ${site}.key -out ${site}.csr
+# Prompts for organization info (subject).
+# Enter relevant data to your domain here (see CA subject format above).
+openssl req -new -key ${site}.key -out ${site}.csr -subj "${site_subject}"
+# [Optional] One-liner with subject.
 
 ## 4. Prepare ext file with SSL cert extensions
 echo "${site_extention}" > ${site}.ext

@@ -68,7 +68,7 @@ $ openssl req -new -key my.domain.com -out my.domain.com.csr
 
 # To automate input, you can add -subj option to the above command:
 $ openssl req -new -key my.domain.com -out my.domain.com.csr \
-    -subj "/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/emailAddress=me@gmail.com"
+    -subj "/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/E=me@gmail.com"
 # [Optional] Generate CSR for site certification one-liner with subject.
 
 ```
@@ -87,7 +87,8 @@ subjectAltName = @alt_names
 DNS.1 = my.domain.com
 DNS.2 = my2.domain.com
 ```
-You may also sign any subdomain with asterix:
+For more detailed info refer to `[ v3_req ]` section in `/etc/ssl/openssl.cnf` file.
+You may also sign any subdomain with asterisk `*`:
 ```
 [alt_names]
 DNS.1 = domain.com

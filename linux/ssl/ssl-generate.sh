@@ -7,13 +7,14 @@
 #   CA srl    CA Certificate serial number
 #   Site key  RSA key
 #   Site csr  Certificate Signing Request
-#   Site ext  Certificate configuration information
+#   Site ext  Certificate configuration information (x509v3_config)
 #   Site crt  Certificate
 #   Site pem  Certificate in PEM format
 # Reference:
-#   Intro to Digital Certificates https://www.youtube.com/watch?v=qXLD2UHq2vk
+#   OpenSSL Manual  https://www.openssl.org/docs/manmaster/man5/
+#   Intro to Digital Certificates   https://www.youtube.com/watch?v=qXLD2UHq2vk
 # Usage: sudo bash ssl-generate.sh [no-options]
-#   no-options    [Optional] There are no options provided currently.
+#   no-options  [Optional] There are no options provided currently.
 # Removes:
 #   app-name    Nothing is removed.
 # Installs:
@@ -23,9 +24,13 @@
 #######################################
 # TODO(author): Nothing to do.
 
-# Config example: https://www.switch.ch/pki/manage/request/csr-openssl/
+# Config example:
+# https://www.switch.ch/pki/manage/request/csr-openssl/
 CA_name="myCA"
 site="domain.com"
+
+# X509 V3 certificate extension configuration format:
+# https://www.openssl.org/docs/manmaster/man5/config.html
 site_extention="
 authorityKeyIdentifier = keyid, issuer
 basicConstraints = CA:FALSE

@@ -5,6 +5,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 ## Reference
 - [OpenSSL Documentation](https://www.openssl.org/docs/)
 - [OpenSSL CookBook](https://www.feistyduck.com/library/openssl-cookbook/): A Short Guide to the Most Frequently Used OpenSSL Features and Commands By Ivan Ristić
+- [simba.com](https://www.simba.com/products/SEN/doc/Client-Server_user_guide/content/clientserver/configuringssl/signingca.htm): Generating a Certificate Authority (CA) Certificate for Self-Signing
 
 ## Problem
 

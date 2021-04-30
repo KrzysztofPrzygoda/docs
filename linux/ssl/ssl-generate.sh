@@ -12,6 +12,7 @@
 #   Site pem  Certificate in PEM format
 # Reference:
 #   OpenSSL Manual  https://www.openssl.org/docs/manmaster/man5/
+#   OpenSSL CookBook    https://www.feistyduck.com/books/openssl-cookbook/
 #   Intro to Digital Certificates   https://www.youtube.com/watch?v=qXLD2UHq2vk
 # Usage: sudo bash ssl-generate.sh [no-options]
 #   no-options  [Optional] There are no options provided currently.

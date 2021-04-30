@@ -2,6 +2,10 @@
 
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
+## Reference
+- [OpenSSL Documentation](https://www.openssl.org/docs/)
+- [OpenSSL CookBook](https://www.feistyduck.com/library/openssl-cookbook/): A Short Guide to the Most Frequently Used OpenSSL Features and Commands By Ivan Ristić
+
 ## Problem
 
 If you don't need commercial SSL certificate (like in development or for private purposes), you may create self-signed one. But then browsers will warn you that cert is unrecognized and will impair access to the system secured with self-signed cert.
@@ -42,20 +46,27 @@ $ openssl genrsa -out my.domain.com.key 2048
 $ openssl req -new -key my.domain.com -out my.domain.com.csr
 # Generate CSR for site certification.
 ```
-Prepare ext file with SSL cert extensions:
+Prepare ext file with SSL cert extensions (X509v3):
 ```bash
 $ nano my.domain.com.ext
 ```
 And paste content:
 ```
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
+authorityKeyIdentifier = keyid, issuer
+basicConstraints = CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = my.domain.com
 DNS.2 = my2.domain.com
+```
+You may also sign any subdomain with asterix:
+```
+[alt_names]
+DNS.1 = domain.com
+DNS.2 = *.domain.com
+DNS.3 = *.my.domain.com
 ```
 
 ### 3. Create SSL certificate for your domain

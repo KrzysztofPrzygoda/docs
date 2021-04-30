@@ -175,6 +175,8 @@ Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/ar
 If your domain does not exist in DNS system, you may add it to the `hosts` file on your client machine to resolve IP of the host that is meant to be pointed by the domain. 
 
 Windows: `C:\Windows\System32\drivers\etc\hosts`
+Linux: `/etc/hosts`
+Mac: `/private/etc/hosts`
 
 ```bash
 # My domain

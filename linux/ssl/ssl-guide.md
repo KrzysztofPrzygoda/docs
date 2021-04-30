@@ -3,6 +3,7 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
+- X.509: [RFC5280](https://tools.ietf.org/html/rfc5280) (version 3) standard from the International Telecommunication Union for [PKI]((#Public-Key-Infrastructure-PKI)). Among other things, it defines the format for public key certificates.
 - [OpenSSL Documentation](https://www.openssl.org/docs/)
 - [OpenSSL CookBook](https://www.feistyduck.com/library/openssl-cookbook/): A Short Guide to the Most Frequently Used OpenSSL Features and Commands By Ivan Ristić
 - [simba.com](https://www.simba.com/products/SEN/doc/Client-Server_user_guide/content/clientserver/configuringssl/signingca.htm): Generating a Certificate Authority (CA) Certificate for Self-Signing
@@ -139,7 +140,7 @@ Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/ar
 4. Reopen the root CA certificate, expand **Trust**, select **Always Trust**, and save your changes.
 5. Delete the root CA certificate from **login**.
 
-### 5. Add your domain to hosts
+### 5. Add your domain to `hosts` file
 If your domain does not exist in DNS system, you may add it to the `hosts` file on your client machine to resolve IP of the host that is meant to be pointed by the domain. 
 
 Windows: `C:\Windows\System32\drivers\etc\hosts`
@@ -149,13 +150,13 @@ Windows: `C:\Windows\System32\drivers\etc\hosts`
 <your host IP> my.domain.com
 ```
 
-## Public Key Infrastructure (PKI)
+# Public Key Infrastructure (PKI)
 
 The dual role of the certificates that forms the foundation of the PKI is to:
 - encrypt communications,
 - authenticate the identity of the certificate owner. 
 
-### Chain of Trust (CoT)
+## Chain of Trust (CoT)
 
 Typical CoT looks like this:
 
@@ -167,13 +168,13 @@ where:
 - `Intermediate CA` has certificate signed by `Root CA`, but it's optional in CoT.
 - Your `Digital Certificate` is signed by `Intermediate CA`.
 
-### Revocation Services (CRL, OCSP)
+## Revocation Services (CRL, OCSP)
 
 Refer to [keyfactor.com](https://blog.keyfactor.com/certificate-revocation-list-crl-ocsp) for more details.
 
 Every certificate has a finite validity period, which as of September 1st, 2020 is set to 13 months. However, during that validity period, a certificate owner and/or CA that issued the certificate may declare it is no longer trusted. In these unfortunate cases, the untrusted certificates need to be revoked and users need to be informed. This is done by adding the untrusted TLS/SSL certificate to a Certificate Revocation List (CRL).
 
-#### Certificate Revocation List (CRL)
+### Certificate Revocation List (CRL)
 
 The CA Security Council [defines](https://casecurity.org/2013/03/08/the-importance-of-checking-for-certificate-revocation/) a CRL as *“a digitally-signed file containing a list of certificates that have been revoked and have not yet expired.”* The digital signature of the CRL files by the issuing CAs is important to prove the authenticity of the file and to prevent tampering.
 
@@ -183,12 +184,12 @@ Depending on a CAs internal policies, CRLs are published on a regular periodic b
 
 The format of a CRL is defined in the X.509 standard and in RFC 5280. Each entry in a Certificate Revocation List includes the identity of the revoked certificate and the revocation date. Optional information includes a time limit, if the revocation applies for a specific time period, and a reason for the revocation.
 
-#### Online Certificate Status Protocol (OCSP)
+### Online Certificate Status Protocol (OCSP)
 
 Instead of downloading the latest CRL and parsing it to check whether a requested certificate on the list, the browser requests the status for a particular certificate from the issuing CA's revocation server.
 
 Using the certificate's serial number (srl), the OCSP service checks for certificate status, then the CA replies with a digitally signed response containing the certificate status. An OCSP response contains one of three values: “good”, “revoked”, or “unknown”. OCSP responses are smaller than CRL files and are suitable for devices with limited memory.
 
-##### OSCP Stapling
+#### OSCP Stapling
 
 OCSP stapling is an enhancement to the standard OCSP protocol and is defined in [RFC 6066](https://tools.ietf.org/html/rfc6066). Enabling OCSP stapling eliminates the need for a browser to send OCSP requests directly to the CA. Instead, the web server caches the OSCP response from the CA and when a TLS handshake is initiated by the client, the web server “staples” the OSCP response to the certificate it sends to the browser.

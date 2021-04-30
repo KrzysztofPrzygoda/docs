@@ -50,7 +50,7 @@ $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
 
 # To automate input, you can add -subj option to the above command:
 $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem \
-    -subj "/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com/emailAddress=me@myca.com"
+    -subj "/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com"
 # [Optional] Generate self-signed CA certificate one-liner with subject.
 ```
 ```bash

@@ -20,8 +20,16 @@ That's it. Just follow the steps below.
 ```bash
 $ openssl genrsa -out myCA.key 4096
 # Generate CA private key.
+# Add -des3 option for extra password protection.
+
+# WARNING NOTICE!
+# This is the key used to sign the certificate requests.
+# Anyone holding this can sign certificates on your behalf.
+# So keep it in a safe place!
+
 $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
-# Generate CA self-signed certificate.
+# Generate self-signed CA certificate.
+
 $ openssl x509 -in myCA.pem -text -noout
 # View certificate.
 ```
@@ -30,6 +38,7 @@ $ openssl x509 -in myCA.pem -text -noout
 ```bash
 $ openssl genrsa -out my.domain.com.key 2048
 # Generate site private key.
+
 $ openssl req -new -key my.domain.com -out my.domain.com.csr
 # Generate CSR for site certification.
 ```
@@ -54,15 +63,19 @@ DNS.2 = my2.domain.com
 $ openssl x509 -req -in my.domain.com.csr -days 825 -sha256 \
     -CA myCA.pem -CAkey myCA.key -CAcreateserial \
     -out my.domain.com.crt -extfile my.domain.com.ext
-# Generate site certificate (CRT) signed by your own CA, using CA cert, CA key, site CSR and site ext file.
+# Generate site certificate (CRT) signed by your own CA,
+# using: CA cert, CA key, site CSR and site ext file.
+
+$ openssl verify -CAfile myCA.pem my.domain.com.crt
+# [Optional] Verify site certificate with CA certificate
 ```
 Sometimes you may need to convert your site cert to PEM format in case when app requires it:
 ```bash
 $ openssl x509 -in my.domain.com.crt -out my.domain.com.pem -outform PEM
-# Convert CRT to PEM format.
+# [Optional] Convert CRT to PEM format.
 ```
 
-### 4. Add your CA to OS database
+### 4. Add your CA certificate to OS database
 Now you need to add `myCA.pem` certificate to your OS collection of Trusted Root Certification Authorities (TRCA).
 
 Bear in mind that some apps (e.g. Firefox browser) may hold their own (OS independent) TRCA database.

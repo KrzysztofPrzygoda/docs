@@ -9,7 +9,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 Some similar guides:
 - [simba.com](https://www.simba.com/products/SEN/doc/Client-Server_user_guide/content/clientserver/configuringssl/signingca.htm): Generating a Certificate Authority (CA) Certificate for Self-Signing.
-- [gist.github.com/Soarez](https://gist.github.com/Soarez/9688998): How to setup your own CA with OpenSSL
+- [gist.github.com/Soarez](https://gist.github.com/Soarez/9688998): How to setup your own CA with OpenSSL.
 
 ## Problem
 
@@ -31,6 +31,7 @@ $ curl -fsSOL https://github.com/KrzysztofPrzygoda/docs/raw/master/linux/ssl/ssl
 ```
 
 ### 1. Create your own CA certificate
+
 ```bash
 $ openssl genrsa -out myCA.key 4096
 # Generate CA private key.
@@ -53,6 +54,8 @@ $ openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem \
     -subj "/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com"
 # [Optional] Generate self-signed CA certificate one-liner with subject.
 ```
+OpenSSL uses the information you specify to compile a X.509 certificate using the information prompted to the user, the public key that is extracted from the specified private key which is also used to generate the signature.
+
 Example of **Distinguished Names** (DN), defined in [RFC1779](https://tools.ietf.org/html/rfc1779):
 ```bash
 C = US
@@ -63,29 +66,39 @@ OU = My CA Organization Unit
 CN = myca.com
 ```
 ```bash
-$ openssl x509 -in myCA.pem -text -noout
+$ openssl x509 -text -noout -in myCA.pem
 # View certificate.
 ```
 
 ### 2. Create CSR for your domain
+
 ```bash
 $ openssl genrsa -out my.domain.com.key 2048
 # Generate site private key.
-
+```
+Now you can use [`ssl.conf`](ssl.conf) file, where full CSR setup is done, and generate it with:
+```bash
+$ openssl req -new -out my.domain.com.csr -config ssl.conf
+# Generate CSR for site certification with configuration file.
+```
+Or you can follow next steps manually with certificate extention file:
+```bash
 $ openssl req -new -key my.domain.com -out my.domain.com.csr
 # Generate CSR for site certification.
+# You will be prompted for Subject (organization info).
+# Provide meaningful information here.
+# You may skip (press ENTER) when asked for challenge password and optional company name.
 
 # To automate input, you can add -subj option to the above command:
 $ openssl req -new -key my.domain.com -out my.domain.com.csr \
     -subj "/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/emailAddress=me@gmail.com"
 # [Optional] Generate CSR for site certification one-liner with subject.
-
 ```
-Prepare ext file with SSL cert extensions (X509v3):
+Prepare ext file with SSL cert extension (X.509v3):
 ```bash
 $ nano my.domain.com.ext
 ```
-And paste content:
+And paste following content:
 ```
 authorityKeyIdentifier = keyid, issuer
 basicConstraints = CA:FALSE
@@ -107,13 +120,20 @@ DNS.4 = *.my.domain.com
 ```
 
 ### 3. Create SSL certificate for your domain
+
 ```bash
-$ openssl x509 -req -in my.domain.com.csr -days 825 -sha256 \
+$ openssl x509 -req -days 825 -sha256 \
+    -in my.domain.com.csr \
     -CA myCA.pem -CAkey myCA.key -CAcreateserial \
-    -out my.domain.com.crt -extfile my.domain.com.ext
+    -out my.domain.com.crt \
+    -extfile my.domain.com.ext
 # Generate site certificate (CRT) signed by your own CA,
 # using: CA cert, CA key, site CSR and site ext file.
-
+# Skip -extfile option if you've used ssl.conf file to create CSR.
+```
+> **Certificate Serial Number**  
+> Each issued certificate must contain a unique serial number assigned by the CA. It must be unique for each certificate given by a given CA. OpenSSL keeps the used serial numbers on a file (by default it has the same name as the CA certificate file with the extension replaced by srl). So a file named `myCA.srl` is created here too.
+```bash
 $ openssl verify -CAfile myCA.pem my.domain.com.crt
 # [Optional] Verify site cert with CA cert.
 ```
@@ -124,11 +144,13 @@ $ openssl x509 -in my.domain.com.crt -out my.domain.com.pem -outform PEM
 ```
 
 ### 4. Add your CA certificate to OS database
+
 Now you need to add `myCA.pem` certificate to your OS collection of Trusted Root Certification Authorities (TRCA).
 
 Bear in mind that some apps (e.g. Firefox browser) may hold their own (OS independent) TRCA database.
 
 #### Windows
+
 Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate):
 1. Launch **MMC** (mmc.exe).
 2. Choose **File** > **Add/Remove Snap-ins**.
@@ -142,6 +164,7 @@ Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/ar
 7. Relaunch your browser(s) or even you may need to restart OS to make changes to take effect.
 
 #### macOS
+
 1. Double-click the root CA certificate to open it in **Keychain Access**. The root CA certificate appears in **login**.
 2. Copy the root CA certificate to **System**. You must copy the certificate to System to ensure that it is trusted by all users and local system processes.
 3. Open the root CA certificate, expand **Trust**, select **Use System Defaults**, and save your changes.

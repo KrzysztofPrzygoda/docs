@@ -80,6 +80,13 @@ Follow [Microsoft instruction](https://docs.microsoft.com/en-us/skype-sdk/sdn/ar
    **Certificates (Local Computer)** > **Trusted Root Certification Authorities**.
 7. Relaunch your browser(s) or even you may need to restart OS to make changes to take effect.
 
+#### macOS
+1. Double-click the root CA certificate to open it in **Keychain Access**. The root CA certificate appears in **login**.
+2. Copy the root CA certificate to **System**. You must copy the certificate to System to ensure that it is trusted by all users and local system processes.
+3. Open the root CA certificate, expand **Trust**, select **Use System Defaults**, and save your changes.
+4. Reopen the root CA certificate, expand **Trust**, select **Always Trust**, and save your changes.
+5. Delete the root CA certificate from **login**.
+
 ### 5. Add your domain to hosts
 If your domain does not exist in DNS system, you may add it to the `hosts` file on your client machine to resolve IP of the host that is meant to be pointed by the domain. 
 

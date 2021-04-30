@@ -31,7 +31,7 @@ CA_subject="/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My C
 
 # Configuration for site
 site="domain.com"
-site_subject="/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/E=me@gmail.com"
+site_subject="/C=PL/ST=My State/L=My City/O=My Organization, Inc./OU=My Organization Unit/CN=domain.com/emailAddress=me@gmail.com"
 # X509 V3 certificate extension configuration format:
 # https://www.openssl.org/docs/manmaster/man5/config.html
 site_extention="

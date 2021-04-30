@@ -27,7 +27,7 @@
 
 # Configuration for CA
 CA_name="myCA"
-CA_subject="/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com/emailAddress=me@myca.com"
+CA_subject="/C=US/ST=My CA State/L=My CA City/O=My CA Organization, Inc./OU=My CA Organization Unit/CN=myca.com"
 
 # Configuration for site
 site="domain.com"
@@ -118,4 +118,4 @@ openssl x509 -in ${site}.crt -out ${site}.pem -outform PEM
 ## 8. On your client machine add your site domain to the hosts file
 # Add line:
 # <your host IP> domain.com
-# Windows: `C:\Windows\System32\drivers\etc\hosts`:
+# Windows: `C:\Windows\System32\drivers\etc\hosts`

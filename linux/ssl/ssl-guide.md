@@ -20,7 +20,12 @@ The solution to the above problem is to follow *Public Key Infrastructure* schem
 
 In short, instead of self-signed cert you use signed one, but by your own CA, which you need to add manually to Trusted CAs on your OS database.
 
-That's it. Just follow the steps below.
+That's it. Just follow the steps below or download [`ssl-generate.sh`](ssl-generate.sh) script file:
+```bash
+$ wget https://github.com/KrzysztofPrzygoda/docs/raw/master/linux/ssl/ssl-generate.sh
+# or
+$ curl -fsSOL https://github.com/KrzysztofPrzygoda/docs/raw/master/linux/ssl/ssl-generate.sh
+```
 
 ### 1. Create your own CA certificate
 ```bash

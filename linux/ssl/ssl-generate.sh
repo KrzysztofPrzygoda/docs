@@ -23,7 +23,7 @@
 # Author:
 #   (c) 2021 Krzysztof Przygoda, MIT License
 #######################################
-# TODO(author): Nothing to do.
+# TODO(author): Split into two separate scripts: for CA and for site cert.
 
 # Configuration for CA
 CA_name="myCA"

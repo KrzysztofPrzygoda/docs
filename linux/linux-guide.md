@@ -811,13 +811,40 @@ $ ls -ltr
 $ ls -l <file>
 # Show file permittions.
 
+$ chmod u+rwx <file>
+$ chmod u-rwx <file>
+# Allow/Disallow user to read, write and execute a file.
 $ chmod g+w <file>
-# Set group permission to write file.
+$ chmod g-w <file>
+# Allow/Disallow group to write a file.
+$ chmod o+r <file>
+$ chmod o-r <file>
+# Allow/Disallow others to read a file.
 $ chmod a+r <file>
-# Set read permission to all.
+$ chmod a-r <file>
+# Allow/Disallow all to read a file.
+
+$ chmod o-x <dir>
+# Disallow others to enter/cd to a directory.
+$ chmod o-r -R <dir>
+# Disallow others to read directory and its' contents (recursively).
+```
+
+**Access Control list (ACL)** package allows to give permissions for any user or group to any resource.
+
+```bash
+$ sudo apt install acl
+# Install ACL package.
+```
+
+```bash
+$ setfacl -m u:user:rwx <file>
+# Allow user read, write and execute a file.
 ```
 
 ### Ownership
+
+TODO
 
 ### Find
 
@@ -887,6 +914,13 @@ Hulk@MacBookPro /tmp $ ls -li file
 8655350742 lrwxr-xr-x  1 Hulk  wheel  18 Apr 26 00:10 file -> /Users/Hulk/file
 ```
 
+### Copy
+
+```bash
+$ scp -r <user>@<host>:<remote-path> <local-path>
+# Copy file/dir from the remote host to the local host.
+```
+
 ### Modify
 
 ```bash
@@ -905,6 +939,11 @@ $ find . -depth -name "*.html" -exec sh -c 'f="{}"; mv -- "$f" "${f%.html}.php"'
 ```bash
 $ cat file1 file2 > file3
 # Concatenate files (file3 = file1 + file2).
+```
+
+```bash
+$ echo "text" >> file.txt
+# Add text to file.txt.
 ```
 
 ### Delete

@@ -919,6 +919,8 @@ Hulk@MacBookPro /tmp $ ls -li file
 ```bash
 $ scp -r <user>@<host>:<remote-path> <local-path>
 # Copy file/dir from the remote host to the local host.
+$ scp -r kprzygoda@my.host.com:/home/kprzygoda/mydir C:\Users\krzysztof.przygoda\Desktop
+# Example for Windows PowerShell.
 ```
 
 ### Modify

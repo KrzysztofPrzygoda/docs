@@ -3,6 +3,7 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
+- [Public-key Cryptography](https://en.wikipedia.org/wiki/Public-key_cryptography) on Wikipedia.
 - X.509: [RFC5280](https://tools.ietf.org/html/rfc5280) (version 3) standard from the International Telecommunication Union for [PKI]((#Public-Key-Infrastructure-PKI)). Among other things, it defines the format for public key certificates.
 - [OpenSSL Documentation](https://www.openssl.org/docs/). OpenSSL is a cryptography toolkit. Contains many subcommands, each with a manpage of its own e.g. `ca(1)`, `req(1)` , `x509(1)`.
 - [OpenSSL CookBook](https://www.feistyduck.com/library/openssl-cookbook/): A Short Guide to the Most Frequently Used OpenSSL Features and Commands By Ivan Ristić.
@@ -200,6 +201,17 @@ where:
 - `Root CA` has self-signed certificate (it's inherently trusted).
 - `Intermediate CA` has certificate signed by `Root CA`, but it's optional in CoT.
 - Your `Digital Certificate` is signed by `Intermediate CA`.
+
+## SSL Communication
+
+Anything encrypted with public key can be decrypted only with its corresponding private key (it's a one-way function). That's why it is called **key pair** and **asymmetric cryptography**.
+
+1. **Browser** starts session by asking Server for its **public key**.
+2. **Server** sends **public key** back to the **Browser**.
+3. **Browser** checks Server's public key with **CA store** (database) if it is trusted (issued) by any CA. If not, then warns user that connection is **not trusted**.
+4. **Browser** encrypts new **symmetric key** with Server's public key, and sends this package to the Server.
+5. **Server** decrypts the package with its **private key** and gets **symmetric key** out the package.
+6. **Server** and **Browser** now encrypt and decrypt  all transmitted data with the **symmetric key** until the end of the sesion.
 
 ## Revocation Services (CRL, OCSP)
 

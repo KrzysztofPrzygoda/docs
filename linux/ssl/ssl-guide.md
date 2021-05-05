@@ -204,7 +204,7 @@ where:
 
 ## SSL Communication
 
-Anything encrypted with public key can be decrypted only with its corresponding private key (it's a one-way function). That's why it is called **key pair** and **asymmetric cryptography**.
+Anything encrypted with public key can be decrypted only with its corresponding (paired) private key (it's a one-way function). That's why it is called **key pair** and **asymmetric cryptography**.
 
 1. **Browser** starts session by asking Server for its **public key**.
 2. **Server** sends **public key** back to the **Browser**.

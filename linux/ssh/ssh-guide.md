@@ -3,6 +3,7 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
+- [SSH Academy](https://www.ssh.com/academy/ssh/)
 - Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
 
 ## General
@@ -68,7 +69,7 @@ $ ssh-keygen -p -f </path/to/ssh_key> -N <new_passphrase> -P <old_passphrase>
 ```
 ### Copy Keys
 
-#### Copy to Clipboard
+#### Copy Key to Clipboard
 
 ```bash
 $ tr -d '\n' < ~/.ssh/id_ed25519.pub | pbcopy
@@ -80,7 +81,7 @@ $ xclip -sel clip < ~/.ssh/id_ed25519.pub
 $ cat ~/.ssh/id_ed25519.pub | clip
 # Git Bash on Windows
 ```
-#### Copy to Server
+#### Copy Key to Server
 
 To use public key authentication, the public key must be copied to a server and installed in an `authorized_keys` file. This can be conveniently done using the `ssh-copy-id` tool ike this:
 

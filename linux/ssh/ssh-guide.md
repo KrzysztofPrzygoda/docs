@@ -49,6 +49,8 @@ $ ssh-keygen -t ed25519 -C "<comment>"
 # or
 $ ssh-keygen -t rsa -b 2048 -C "<comment>"
 # Comment is included in the .pub file. You may want to use an email address for the comment.
+$ ssh-keygen -f </path/to/ssh_key> -t rsa -b 2048 -C "<comment>"
+# To specify key filename.
 
 Generating public/private ed25519 key pair.
 Enter file in which to save the key (/home/user/.ssh/id_ed25519):

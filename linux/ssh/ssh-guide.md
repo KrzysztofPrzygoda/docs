@@ -66,7 +66,9 @@ $ ssh-keygen -p -f </path/to/ssh_key>
 # or
 $ ssh-keygen -p -f </path/to/ssh_key> -N <new_passphrase> -P <old_passphrase>
 ```
-### Copy Keys to Clipboard
+### Copy Keys
+
+#### Copy to Clipboard
 
 ```bash
 $ tr -d '\n' < ~/.ssh/id_ed25519.pub | pbcopy
@@ -78,7 +80,14 @@ $ xclip -sel clip < ~/.ssh/id_ed25519.pub
 $ cat ~/.ssh/id_ed25519.pub | clip
 # Git Bash on Windows
 ```
+#### Copy to Server
 
+To use public key authentication, the public key must be copied to a server and installed in an `authorized_keys` file. This can be conveniently done using the `ssh-copy-id` tool ike this:
+
+```bash
+$ ssh-copy-id -i ~/.ssh/<public-key-file> <user>@<host>
+# Copy the Public Key to the Server.
+```
 ### Config
 
 Save these settings in the `~/.ssh/config` file:

@@ -13,9 +13,9 @@ For **CentOS** you may use ready script [`jenkins-install-centos.sh`](jenkins-in
 $ sudo bash jenkins-install-centos.sh
 ```
 
-## Configuration
+## General Configuration
 
-### Locale
+### Language
 To change language you need to install **Locale** plugin:
 
 1. *Manage Jenkins* > *Manage Plugins* > *Available* > *Search:* **Locale**

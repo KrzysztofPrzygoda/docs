@@ -3,6 +3,7 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
+- Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
 
 ## General
 
@@ -90,5 +91,27 @@ Host gitlab.company.com
   PreferredAuthentications publickey
   IdentityFile ~/.ssh/example_com_rsa
 ```
+To use different accounts on a single host:
+```
+# User1 Account Identity
+Host <user_1.gitlab.com>
+  Hostname gitlab.com
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/<example_ssh_key1>
 
-### Upgrade Key
+# User2 Account Identity
+Host <user_2.gitlab.com>
+  Hostname gitlab.com
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/<example_ssh_key2>
+```
+## Connect
+
+### Test
+
+```bash
+$ ssh -T <user>@<host>
+# Test connection without pseudo-terminal allocation.
+$ ssh -Tvvv <user>@<host>
+# Test in verbose mode.
+```

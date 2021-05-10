@@ -3,9 +3,11 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
+
 - [Jenkins Documentation](https://www.jenkins.io/doc/)
 
 ## Installation
+
 Follow [Jenkins Installation Guide](https://www.jenkins.io/doc/book/installing/linux/).
 
 For **CentOS** you may use ready script [`jenkins-install-centos.sh`](jenkins-install-centos.sh) and:
@@ -13,9 +15,14 @@ For **CentOS** you may use ready script [`jenkins-install-centos.sh`](jenkins-in
 $ sudo bash jenkins-install-centos.sh
 ```
 
+## Update
+
+TODO
+
 ## General Configuration
 
 ### Language
+
 To change language you need to install **Locale** plugin:
 
 1. *Manage Jenkins* > *Manage Plugins* > *Available* > *Search:* **Locale**

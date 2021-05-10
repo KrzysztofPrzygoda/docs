@@ -948,6 +948,32 @@ $ echo "text" >> file.txt
 # Add text to file.txt.
 ```
 
+### Compress
+
+#### Zip
+
+```bash
+$ sudo [apt|yum] install zip unzip
+# Install zip/unzip package.
+```
+```bash
+$ zip -r <output_file> <folder>
+$ zip -r <output_file> <folder_1> <folder_2> ... <folder_n>
+# Zip folder(s) recursively.
+```
+```bash
+$ unzip <archive_file>
+$ unzip -q <archive_file>
+# Unzip archive (.zip extention is optional).
+# -q for quiet mode.
+
+$ unzip <archive_file> -d <directory>
+# Unzip to directory.
+$ sudo unzip latest.zip -d /var/www
+# Unzip latest.zip to default web server dir.
+# It will create dir in /var/www/<archive_dir>. 
+```
+
 ### Delete
 
 ```bash

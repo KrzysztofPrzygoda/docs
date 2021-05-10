@@ -800,13 +800,14 @@ $ ls -ltr
 # Types:
 # r : read
 # w : write
-# x : execute (run program)
+# x : execute (or enter to/search for dirs)
 # - : not permitted
 
 # Control levels (permission triplets):
 # u : user (owner)
 # g : group (of users)
 # o : others (everyone else on the system)
+# a : all users
 
 $ ls -l <file>
 # Show file permittions.
@@ -828,6 +829,8 @@ $ chmod o-x <dir>
 # Disallow others to enter/cd to a directory.
 $ chmod o-r -R <dir>
 # Disallow others to read directory and its' contents (recursively).
+$ chmod go-w <dir>
+# Deny all, except the user (owner), to write in dir.
 ```
 
 **Access Control list (ACL)** package allows to give permissions for any user or group to any resource.
@@ -962,16 +965,25 @@ $ zip -r <output_file> <folder_1> <folder_2> ... <folder_n>
 # Zip folder(s) recursively.
 ```
 ```bash
+$ unzip -l <archive_file>
+# List archive contents.
+```
+```bash
 $ unzip <archive_file>
-$ unzip -q <archive_file>
 # Unzip archive (.zip extention is optional).
+$ unzip -q <archive_file>
 # -q for quiet mode.
 
 $ unzip <archive_file> -d <directory>
 # Unzip to directory.
+$ unzip -o <archive_file> -d <directory>
+# -o for overwrite existing files
+$ unzip -n <archive_file> -d <directory>
+# -n for not to overwrite existing files
+
 $ sudo unzip latest.zip -d /var/www
 # Unzip latest.zip to default web server dir.
-# It will create dir in /var/www/<archive_dir>. 
+# It will create dir in /var/www/<archive_dir>.
 ```
 
 ### Delete

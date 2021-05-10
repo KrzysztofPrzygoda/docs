@@ -8,6 +8,8 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## General
 
+TODO
+
 ## SSH Keys
 
 ### View Keys
@@ -67,6 +69,18 @@ $ ssh-keygen -p -f </path/to/ssh_key>
 # or
 $ ssh-keygen -p -f </path/to/ssh_key> -N <new_passphrase> -P <old_passphrase>
 ```
+
+### Secure Keys
+
+```bash
+$ chmod go-w ~/
+# Deny all, except the owner, to write in home directory.
+$ chmod 700 ~/.ssh
+# Reading, login and writes are available only for the owner with .ssh settings.
+$ chmod 600 ~/.ssh/authorized_keys
+# Only the owner can read and save changes to file ~/.ssh/authorized_keys.
+```
+
 ### Copy Keys
 
 #### Copy Key to Clipboard

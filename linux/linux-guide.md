@@ -16,6 +16,7 @@ Mainly based on:
     - [Keys](#keys)
     - [Help](#help)
     - [Debug](#debug)
+    - [Standard Streams](#standard-streams)
     - [Execute](#execute)
 - [System](#system)
     - [Version](#version)

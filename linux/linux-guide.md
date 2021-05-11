@@ -135,7 +135,71 @@ $ set -x
 $ set +x
 # Turn off each command print-out before its run.
 ```
+### Standard Streams
 
+```bash
+>
+1>
+# Overwrite standard output.
+<
+0<
+# Overwrite standard input.
+2>
+# Overwrite standard error (stderr).
+2>&1
+>&
+# Redirect stderr to stdout.
+# Point file descriptor #2 to file descriptor #1.
+```
+```bash
+$ <cmd> 1>/dev/null 2>/dev/null
+$ <cmd> 1>/dev/null 2>&1
+$ <cmd> >/dev/null 2>&1
+$ <cmd> >&- 2>&-
+# Redirect stdout and stderr to null.
+```
+The rule is that any redirection sets the handle to the output stream independently:
+```bash
+$ <cmd> 2>&1 > <file>
+# Redirect stderr to stdout but only stdout to file.
+# Note: 2>&1 sets handle 2 to whatever handle 1 points to,
+# which at that point usually is stdout.
+# Then > redirects handle 1 to something else, e.g. a file,
+# but it does not change handle 2, which still points to stdout.
+
+$ <cmd> > <file> 2>&1
+# Redirect both stderr and stdout to file.
+# Note: stdout would first be redirected to the file,
+# then stderr would additionally be redirected to stdout
+# that has already been changed to point at the file.
+```
+Chained pipelines:
+```bash
+$ <cmd1> | <cmd2> | <cmd3>
+# Redirects cmd1 stdout to cmd2 stdin, and cmd2 stdout to cmd3 stdin.
+
+$ <cmd1> 2>$1 | <cmd2>
+$ <cmd1> |& <cmd2>
+# Pipe cmd1 stdrr and stdout to cmd2 stdin.
+```
+Redirect to multiple outputs:
+```bash
+$ <cmd> | tee <file>
+# Redirects cmd output to both stdout and the file.
+```
+```bash
+$ command < infile
+$ cat infile | command
+# Pass infile contents to command.
+
+$ echo $string | command
+$ command <<< $string
+# Pass var contents to command.
+
+$ echo -e 'user\npass' | ftp localhost
+$ ftp localhost <<< $'user\npass'
+# Pass string to command.
+```
 ### Execute
 
 #### General

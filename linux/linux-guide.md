@@ -995,14 +995,20 @@ $ rm *.<ext>
 # Remove file(s).
 $ rm -f <file>
 # Force to remove file without confirmation, even if is write-protected.
+$ rm -ri <file>
+# Remove file with confirmation (-i overrides -f).
+```
+```bash
 $ rmdir <dir>
 $ rm -d <dir>
 # Remove directory.
 $ rm -r <dir>
 $ rm -rf <dir>
 # Remove all dir contents without asking (recursively, i.e. the file hierarchy rooted in dir argument).
-$ rm -ri <file>
-# Remove file with confirmation (-i overrides -f).
+$ rm -rf /path/to/dir/*
+# Remove all files and subdirs except hidden files in a dir.
+$ rm -rf /path/to/dir1/{*,.*}
+# Remove all files including hidden files.
 ```
 ```bash
 $ shopt -s extglob

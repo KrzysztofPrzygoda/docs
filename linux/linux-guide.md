@@ -140,15 +140,15 @@ $ set +x
 ```bash
 >
 1>
-# Overwrite standard output.
+# Overwrite standard output (STDOUT).
 <
 0<
-# Overwrite standard input.
+# Overwrite standard input (STDIN).
 2>
-# Overwrite standard error (stderr).
+# Overwrite standard error (STDERR).
 2>&1
 >&
-# Redirect stderr to stdout.
+# Redirect STDERR to STDOUT.
 # Point file descriptor #2 to file descriptor #1.
 ```
 ```bash
@@ -156,36 +156,36 @@ $ <cmd> 1>/dev/null 2>/dev/null
 $ <cmd> 1>/dev/null 2>&1
 $ <cmd> >/dev/null 2>&1
 $ <cmd> >&- 2>&-
-# Redirect stdout and stderr to null.
+# Redirect STDOUT and STDERR to null.
 ```
 The rule is that any redirection sets the handle to the output stream independently:
 ```bash
 $ <cmd> 2>&1 > <file>
-# Redirect stderr to stdout but only stdout to file.
+# Redirect STDERR to STDOUT but only STDOUT to file.
 # Note: 2>&1 sets handle 2 to whatever handle 1 points to,
-# which at that point usually is stdout.
+# which at that point usually is STDOUT.
 # Then > redirects handle 1 to something else, e.g. a file,
-# but it does not change handle 2, which still points to stdout.
+# but it does not change handle 2, which still points to STDOUT.
 
 $ <cmd> > <file> 2>&1
-# Redirect both stderr and stdout to file.
-# Note: stdout would first be redirected to the file,
-# then stderr would additionally be redirected to stdout
+# Redirect both STDERR and STDOUT to file.
+# Note: STDOUT would first be redirected to the file,
+# then STDERR would additionally be redirected to STDOUT
 # that has already been changed to point at the file.
 ```
 Chained pipelines:
 ```bash
 $ <cmd1> | <cmd2> | <cmd3>
-# Redirects cmd1 stdout to cmd2 stdin, and cmd2 stdout to cmd3 stdin.
+# Redirects cmd1 STDOUT to cmd2 STDIN, and cmd2 STDOUT to cmd3 STDIN.
 
 $ <cmd1> 2>$1 | <cmd2>
 $ <cmd1> |& <cmd2>
-# Pipe cmd1 stdrr and stdout to cmd2 stdin.
+# Pipe cmd1 stdrr and STDOUT to cmd2 STDIN.
 ```
 Redirect to multiple outputs:
 ```bash
 $ <cmd> | tee <file>
-# Redirects cmd output to both stdout and the file.
+# Redirects cmd output to both STDOUT and the file.
 ```
 ```bash
 $ command < infile
@@ -200,6 +200,15 @@ $ echo -e 'user\npass' | ftp localhost
 $ ftp localhost <<< $'user\npass'
 # Pass string to command.
 ```
+Switch `STDOUT` and `STDERR`:
+```bash
+$ <cmd> 3>&1 1>&2 2>&3
+# 3>&1 will create a new file descriptor 3 and redirect it to 1 which is STDOUT.
+# 1>&2 will redirect the fd 1 to STDERR.
+# 2>&3 will redirect fd 2 to 3 which is STDOUT.
+# So, if cmd prints something to the fd 1, it will be printed to the fd 2 and vice versa.
+```
+
 ### Execute
 
 #### General

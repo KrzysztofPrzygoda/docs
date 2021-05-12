@@ -649,9 +649,27 @@ $ ssh -i <private-key-file> <user>@<host>
 ### List
 ### Repository
 ### Install
-Where to install (see FHS)?
+
+```bash
+$ sudo [apt|apt-get] install <package>
+# Install package in Debian based distros (apt for newest).
+$ sudo yum install <package>
+# Install package in Enterprise Linux based distros.
+$ sudo [apt|yum] install -y <package1> <package2>
+# Install packages list without prompting for confirmation.
+```
 ### Update
+
 ### Remove
+
+```bash
+$ sudo [apt|apt-get] remove <package>
+# Remove package in Debian based distros (apt for newest).
+$ sudo yum remove <package>
+# Remove package in Enterprise Linux based distros.
+$ sudo [apt|yum] remove -y <package1> <package2>
+# Remove packages list without prompting for confirmation.
+```
 
 ## Users
 

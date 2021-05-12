@@ -909,6 +909,22 @@ $ chmod o-r -R <dir>
 $ chmod go-w <dir>
 # Deny all, except the user (owner), to write in dir.
 ```
+**Default permissions** are based on the user file-creation mode mask (umask), which is used to determine the file permission for newly created files. You can setup `umask` in `/etc/bashrc` or `/etc/profile` file for all users.
+```bash
+$ umask -S
+u=rwx,g=rx,o=rx
+# Display file mode mask (with default setup).
+# Based on umask example above:
+$ chmod +r <file>
+$ chmod -r <file>
+# Allow/Disallow to read file based on umask (changes ugo).  
+$ chmod +w <file>
+$ chmod -w <file>
+# Allow/Disallow to read file based on umask (changes only u).
+$ chmod +x <file>
+$ chmod -x <file>
+# Allow/Disallow to execute file based on umask (changes ugo).
+```
 
 **Access Control list (ACL)** package allows to give permissions for any user or group to any resource.
 

@@ -451,12 +451,14 @@ $ fuser -l
 $ kill <PID>
 # Kill process with PID.
 $ kill -SIGTERM $(pidof <program-name>)
+$ kill -SIGTERM $(pidof "npm run start")
 # Send termination signal to processes found by pidof.
 $ kill -SIGTERM $(pidof tmux)
 # Quit all tmux processes
 $ pkill -f "python manage.py runserver"
 # Kill all processes with CMD containing string.
 $ sudo fuser -k 80/tcp
+$ kill $(lsof -t -i :80)
 # Just kill whatever PID is using port 80 tcp.
 ```
 

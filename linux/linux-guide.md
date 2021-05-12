@@ -39,7 +39,7 @@ Mainly based on:
 
 ### Command Types
 
-There are 4 types of commands utilised in this document.
+There are 4 types of commands used in this document.
 
 #### Internal Builtin Commands
 
@@ -150,25 +150,26 @@ $ set +x
 2>&1
 >&
 # Redirect STDERR to STDOUT.
-# Point file descriptor #2 to file descriptor #1.
+# Point (reference) file descriptor 2 to file descriptor 1.
+# 2>1 (without reference &) would just redirect STDERR to a plain file named 1.
 ```
 ```bash
-$ <cmd> 1>/dev/null 2>/dev/null
-$ <cmd> 1>/dev/null 2>&1
-$ <cmd> >/dev/null 2>&1
-$ <cmd> >&- 2>&-
+$ <command> 1>/dev/null 2>/dev/null
+$ <command> 1>/dev/null 2>&1
+$ <command> >/dev/null 2>&1
+$ <command> >&- 2>&-
 # Redirect STDOUT and STDERR to null.
 ```
 The rule is that any redirection sets the handle to the output stream independently:
 ```bash
-$ <cmd> 2>&1 > <file>
+$ <command> 2>&1 > <file>
 # Redirect STDERR to STDOUT but only STDOUT to file.
 # Note: 2>&1 sets handle 2 to whatever handle 1 points to,
 # which at that point usually is STDOUT.
 # Then > redirects handle 1 to something else, e.g. a file,
 # but it does not change handle 2, which still points to STDOUT.
 
-$ <cmd> > <file> 2>&1
+$ <command> > <file> 2>&1
 # Redirect both STDERR and STDOUT to file.
 # Note: STDOUT would first be redirected to the file,
 # then STDERR would additionally be redirected to STDOUT
@@ -179,22 +180,24 @@ Chained pipelines:
 $ <cmd1> | <cmd2> | <cmd3>
 # Redirects cmd1 STDOUT to cmd2 STDIN, and cmd2 STDOUT to cmd3 STDIN.
 
-$ <cmd1> 2>$1 | <cmd2>
+$ <cmd1> 2>&1 | <cmd2>
 $ <cmd1> |& <cmd2>
 # Pipe cmd1 stdrr and STDOUT to cmd2 STDIN.
 ```
 Redirect to multiple outputs:
 ```bash
-$ <cmd> | tee <file>
-# Redirects cmd output to both STDOUT and the file.
+$ <command> | tee <file>
+# Redirects command output to both STDOUT and the file.
+$ <command> 2>&1 | tee <file>
+# Redirects command STDERR to STDOUT and to the file.
 ```
 ```bash
-$ command < infile
-$ cat infile | command
+$ <command> < <infile>
+$ cat <infile> | <command>
 # Pass infile contents to command.
 
-$ echo $string | command
-$ command <<< $string
+$ echo $string | <command>
+$ <command> <<< $string
 # Pass var contents to command.
 
 $ echo -e 'user\npass' | ftp localhost

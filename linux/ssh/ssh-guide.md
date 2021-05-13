@@ -102,7 +102,11 @@ To use public key authentication, the public key must be copied to a server and 
 ```bash
 $ ssh-copy-id -i ~/.ssh/<public-key-file> <user>@<host>
 # Copy the Public Key to the Server.
+
+> type ~\.ssh\<public-key-file> | ssh <user>@<host> "cat >> ~/.ssh/authorized_keys"
+# Windows 10 PowerShell version.
 ```
+
 ### Config
 
 Save these settings in the `~/.ssh/config` file:

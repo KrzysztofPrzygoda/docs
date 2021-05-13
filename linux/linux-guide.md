@@ -228,6 +228,47 @@ $ <command> [options]; <command> [options]; ...
 # Run commands' chain.
 ```
 
+#### Run in Background
+
+```bash
+$ <command> [options] &
+# Run command in background.
+$ <command> [options] >/dev/null 2>&1 &
+# Run command in background and suppress STDOUT and STDERR.
+```
+```bash
+$ jobs
+$ jobs -l
+# Show commands run in background.
+```
+```bash
+$ fg
+# Bring last background command back to foreground.
+$ fg %<id>
+$ fg %1
+# Bring background command of id back to foreground.
+```
+```bash
+CTRL+Z
+bg
+# Move foreground process in the background.
+```
+```bash
+$ disown
+$ disown %<id>
+# Keep last background process (or of id) running after a shell exits.
+```
+
+Alternatively:
+```bash
+$ nohup <command> &
+# Run command in background and ignore all SIGHUP signals.
+# SIGHUP (hangup) signal is sent to a process when its controlling terminal is closed.
+# If you log out or close the terminal, the process is not terminated.
+# The command output is redirected to the nohup.out file.
+```
+To list all running processes, including the disowned use the `ps aux` command. See [System / Processes](#processes) section for more.
+
 #### Output Capture
 
 ```bash

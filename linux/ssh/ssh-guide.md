@@ -124,16 +124,21 @@ Host gitlab.company.com
 To use different accounts on a single host:
 ```
 # User1 Account Identity
-Host <user_1.gitlab.com>
+Host user1-gitlab
   Hostname gitlab.com
   PreferredAuthentications publickey
-  IdentityFile ~/.ssh/<example_ssh_key1>
+  IdentityFile ~/.ssh/<private-key-file-1>
 
 # User2 Account Identity
-Host <user_2.gitlab.com>
+Host user2-gitlab
   Hostname gitlab.com
   PreferredAuthentications publickey
-  IdentityFile ~/.ssh/<example_ssh_key2>
+  IdentityFile ~/.ssh/<private-key-file-2>
+```
+Then:
+```bash
+$ ssh user2-gitlab
+# Use Host field as credentials.
 ```
 ## Connect
 

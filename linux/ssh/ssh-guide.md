@@ -147,7 +147,7 @@ $ nano ~/.ssh/config
 #### Host vs Hostname
 
 See `man 5 ssh_config` for more info:
-- `Hostname` is the real host name to log into (IP or FQDN) and it's optional. 
+- `Hostname` is the real host name to log into (IP or FQDN) and it's optional.
 - `Host` is a pattern that matches different configs and is provided as an argument in `ssh <host>` command.
 
 ```bash
@@ -177,6 +177,30 @@ Host github.com
 # Usage:
 $ ssh <username>@github.com
 ```
+```bash
+Host github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key>
+# No Hostname provided.
+# Matchess github.com and authenticates with private-key.
+
+# Usage:
+$ ssh <username>@github.com
+```
+If the hostname contains the character sequence `%h`, then this will be replaced with the host name specified on the command line (this is useful for manipulating unqualified names):
+```bash
+Host dev
+    Hostname %h.gitlab.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key>
+# Matchess dev and connect to dev.github.com, authenticating with private-key.
+
+# Usage:
+$ ssh <username>@dev
+# Equivalent to:
+$ ssh -i ~/.ssh/<private-key> <username>@dev.gitlab.com
+```
+
 #### Example: Wildcard
 ```bash
 Host *

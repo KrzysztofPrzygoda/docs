@@ -3,13 +3,35 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Reference
+- SSH manual: `man ssh`.
 - [SSH Academy](https://www.ssh.com/academy/ssh/)
 - Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
 
 ## General
 
-TODO
+## Files
 
+These are the most popular SSH files. For locations more go to SSH manual (`man ssh`).
+
+### User Files
+
+Location | Description
+---|---
+`~/.ssh/` | This directory is the default location for all user-specific configuration and authentication information.  There is no general requirement to keep the entire contents of this directory secret, but the recommended permissions are read/write/execute for the user, and not accessible by others.
+`~/.ssh/authorized_keys` | Lists the public keys (DSA, ECDSA, Ed25519, RSA) that can be used for logging in as this user.  The format of this file is described in the sshd(8) manual page.  This file is not highly sensitive, but the recommended permissions are read/write for the user, and not accessible by others.
+`~/.ssh/config` |  This is the per-user configuration file.  The file format and configuration options are described in ssh_config(5).  Because of the potential for abuse, this file must have strict permissions: read/write for the user, and not writable by others.  It may be group-writable provided that the group in question contains only the user.
+`~/.ssh/id_<algorithm>` | Contains the private key for authentication.  These files contain sensitive data and should be readable by the user but not accessible by others (read/write/execute). `ssh` will simply ignore a private key file if it is accessible by others.  It is possible to specify a passphrase when generating the key which will be used to encrypt the sensitive part of this file using AES-128.
+`~/.ssh/id_<algorithm>.pub` | Contains the public key for authentication.  These files are not sensitive and can (but need not) be readable by anyone.
+`~/.ssh/known_hosts` |  Contains a list of host keys for all hosts the user has logged into that are not already in the systemwide list of known host keys.  See sshd(8) for further details of the format of this file.
+`~/.ssh/rc` | Commands in this file are executed by ssh when the user logs in, just before the user's shell (or command) is started.  See the sshd(8) manual page for more information.
+
+### Systemwide Files
+Location | Description
+---|---
+`/etc/ssh/ssh_config` | Systemwide configuration file.  The file format and configuration options are described in ssh_config(5).
+`/etc/ssh/ssh_host_key` <br /> `/etc/ssh/ssh_host_<algorithm>_key` | These files contain the private parts of the host keys and are used for host-based authentication.
+`/etc/ssh/ssh_known_hosts` | Systemwide list of known host keys.  This file should be prepared by the system administrator to contain the public host keys of all machines in the organization. It should be world-readable.  See sshd(8) for further details of the format of this file.
+`/etc/ssh/sshrc` | Commands in this file are executed by ssh when the user logs in, just before the user's shell (or command) is started.  See the sshd(8) manual page for more information.
 ## Keys
 
 ### View Keys
@@ -25,13 +47,6 @@ To get there you may:
 ```bash
 $ ls -l ~/.ssh
 # List .ssh dir contents in home dir (tilde sign ~ means user home dir).
-```
-or
-```bash
-$ cd
-# Bare cd takes you to your home dir.
-$ ls -l .ssh
-# List .ssh dir contents
 ```
 See if a file with one of the following formats exists:
 Algorithm | Public Key | Private Key
@@ -129,18 +144,43 @@ $ nano ~/.ssh/config
 # Edit SSH client configuration.
 ```
 
+#### Host vs Hostname
+
+`Hostname` is the real host name to log into (IP or FQDN).  
+`Host` is a keyword (pattern) that matches different configs and is provided in `ssh <host>` command.
+
+```bash
+Host <pattern>
+    Hostname <IP-or-FQDN>
+```
+```bash
+Host *
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key>
+# Matchess all hosts and authenticates all with private-key.
+
+Host *
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key-1>
+    IdentityFile ~/.ssh/<private-key-2>
+# Matchess all hosts and autenticates using:
+# private-key-1 at first,
+# private-key-2 if first have failed.
+```
+
+
 #### Example 1
 
 ```bash
 # GitLab.com
 Host gitlab.com
-  PreferredAuthentications publickey
-  IdentityFile ~/.ssh/<private-key-file-1>
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key-file-1>
 
 # Private GitLab instance
 Host gitlab.company.com
-  PreferredAuthentications publickey
-  IdentityFile ~/.ssh/<private-key-file-2>
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key-file-2>
 ```
 
 #### Example 2
@@ -149,15 +189,15 @@ Different accounts on a single host:
 ```bash
 # User1 Account Identity
 Host gitlab-user1
-  Hostname gitlab.com
-  PreferredAuthentications publickey
-  IdentityFile ~/.ssh/<private-key-file-1>
+    Hostname gitlab.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key-file-1>
 
 # User2 Account Identity
 Host gitlab-user2
-  Hostname gitlab.com
-  PreferredAuthentications publickey
-  IdentityFile ~/.ssh/<private-key-file-2>
+    Hostname gitlab.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key-file-2>
 ```
 Then:
 ```bash

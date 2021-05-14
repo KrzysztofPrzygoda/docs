@@ -189,16 +189,16 @@ $ ssh <username>@github.com
 ```
 If the hostname contains the character sequence `%h`, then this will be replaced with the host name specified on the command line (this is useful for manipulating unqualified names):
 ```bash
-Host dev
+Host dev*
     Hostname %h.gitlab.com
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/<private-key>
 # Matchess dev and connect to dev.github.com, authenticating with private-key.
 
 # Usage:
-$ ssh <username>@dev
+$ ssh <username>@dev-new
 # Equivalent to:
-$ ssh -i ~/.ssh/<private-key> <username>@dev.gitlab.com
+$ ssh -i ~/.ssh/<private-key> <username>@dev-new.gitlab.com
 ```
 
 #### Example: Wildcard

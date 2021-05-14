@@ -11,7 +11,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 ## Files
 
-These are the most popular SSH files. For locations more go to SSH manual (`man ssh`).
+These are the most popular SSH files. For more locations go to SSH manual (`man ssh`).
 
 ### User Files
 
@@ -154,10 +154,20 @@ Host <pattern>
     Hostname <IP-or-FQDN>
 ```
 ```bash
+Host dev
+    Hostname gitlab.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key>
+# Matchess dev and connects to gitlab.com authenticating with private-key.
+
+# Usage:
+$ ssh <user>@dev
+```
+```bash
 Host *
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/<private-key>
-# Matchess all hosts and authenticates all with private-key.
+# Matchess all hosts and authenticates with private-key.
 
 Host *
     PreferredAuthentications publickey

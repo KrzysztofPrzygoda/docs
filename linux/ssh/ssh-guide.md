@@ -146,8 +146,9 @@ $ nano ~/.ssh/config
 
 #### Host vs Hostname
 
-`Hostname` is the real host name to log into (IP or FQDN).  
-`Host` is a keyword (pattern) that matches different configs and is provided in `ssh <host>` command.
+See `man 5 ssh_config` for more info:
+- `Hostname` is the real host name to log into (IP or FQDN) and it's optional. 
+- `Host` is a pattern that matches different configs and is provided as an argument in `ssh <host>` command.
 
 ```bash
 Host <pattern>
@@ -155,20 +156,35 @@ Host <pattern>
 ```
 ```bash
 Host dev
-    Hostname gitlab.com
+    Hostname <hostname>
+    User <username>
     PreferredAuthentications publickey
-    IdentityFile ~/.ssh/<private-key>
-# Matchess dev and connects to gitlab.com authenticating with private-key.
+    IdentityFile /path/to/<private-key>
+# Matchess dev and connects to hostname authenticating with private-key.
 
 # Usage:
-$ ssh <user>@dev
+$ ssh dev
+# Equivalent to:
+$ ssh -i /path/to/<private-key> <username>@<hostname>
 ```
+```bash
+Host github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key>
+# No Hostname provided.
+# Matchess github.com and authenticates with private-key.
+
+# Usage:
+$ ssh <username>@github.com
+```
+#### Example: Wildcard
 ```bash
 Host *
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/<private-key>
 # Matchess all hosts and authenticates with private-key.
-
+```
+```bash
 Host *
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/<private-key-1>
@@ -177,9 +193,12 @@ Host *
 # private-key-1 at first,
 # private-key-2 if first have failed.
 ```
+```bash
+Host * !github.com
+# Matchess all hosts except github.com.
+```
 
-
-#### Example 1
+#### Example: Two hosts
 
 ```bash
 # GitLab.com
@@ -193,9 +212,8 @@ Host gitlab.company.com
     IdentityFile ~/.ssh/<private-key-file-2>
 ```
 
-#### Example 2
+#### Example: Two accounts on single host
 
-Different accounts on a single host:
 ```bash
 # User1 Account Identity
 Host gitlab-user1
@@ -208,14 +226,13 @@ Host gitlab-user2
     Hostname gitlab.com
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/<private-key-file-2>
-```
-Then:
-```bash
+
+# Usage:
 $ ssh gitlab-user2
 # Login using Host field in config as credentials.
 ```
 
-#### Example 3
+#### Example: Agent Forwarding
 
 **SSH Agent Forwarding** allows to use SSH authentication when you don’t want put your private keys on remote server that connects to the other one, but only on your machine.
 

@@ -335,6 +335,7 @@ $ if <command1> [options]; then <command2> [options] else <command3> [options] f
 
 ```bash
 $ alias <alias>='<command> [options]'
+$ alias ll='ls -l'
 $ alias la='ls -la'
 # Create/change command alias in the current environment.
 $ unalias <alias>

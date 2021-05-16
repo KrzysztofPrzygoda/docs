@@ -271,7 +271,14 @@ To list all running processes, including the disowned use the `ps aux` command. 
 
 #### Output Capture
 
-[Command substitution](https://tldp.org/LDP/abs/html/commandsub.html):
+```bash
+$ echo $?
+# Print last command exit code (0 on success, failure otherwise).
+$ result=$?
+# Store last command exit code in result variable.
+```
+
+[Command substitution](https://tldp.org/LDP/abs/html/commandsub.html) - replace command with its output:
 ```bash
 $ output=`<command> [options]`
 # Old/classic form (backticks)...
@@ -284,9 +291,14 @@ $ output=$(<command> [options])
 <command> `echo`         # no arg
 <command> "`echo`"       # one empty arg
 # Provide command argument from the output of another command.
+
+$ $(cat <file>)
+# or faster
+$ $(< <file>)
+# Replace command with file contents.
 ```
 
-[Process substitution](https://tldp.org/LDP/abs/html/process-sub.html):
+[Process substitution](https://tldp.org/LDP/abs/html/process-sub.html) - command output as a file:
 ```bash
 >(command_list)
 <(command_list)
@@ -304,12 +316,6 @@ $ diff <(<command1>) <(<command2>)
 # Gives difference in command output.
 $ diff <(ls $first_directory) <(ls $second_directory)
 # Compare the contents of two directories -- to see which filenames are in one, but not the other.
-```
-```bash
-$ echo $?
-# Print last command exit code (0 on success, failure otherwise).
-$ result=$?
-# Store last command exit code in result variable.
 ```
 
 #### Conditional Execution

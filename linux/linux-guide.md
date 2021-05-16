@@ -271,13 +271,40 @@ To list all running processes, including the disowned use the `ps aux` command. 
 
 #### Output Capture
 
+[Command substitution](https://tldp.org/LDP/abs/html/commandsub.html):
 ```bash
 $ output=`<command> [options]`
-# Run command in the current shell (backticks) and store output in the variable.
+# Old/classic form (backticks)...
 $ output=$(<command> [options])
-# Run command in subshell and store output in the variable.
+# New form $() of the command substitution.
+# Run command in a subshell and store output in the variable.
+
+<command> `echo a b`     # 2 args: a and b
+<command> "`echo a b`"   # 1 arg: "a b"
+<command> `echo`         # no arg
+<command> "`echo`"       # one empty arg
+# Provide command argument from the output of another command.
 ```
 
+[Process substitution](https://tldp.org/LDP/abs/html/process-sub.html):
+```bash
+>(command_list)
+<(command_list)
+# Process substitution feeds the output of a process (or processes) into the stdin of another process.
+
+$ echo >(true) <(true)
+/dev/fd/63 /dev/fd/62
+# Process substitution uses /dev/fd/<n> files to send the results of the process(es) within parentheses to another process.
+
+$ cat <(ls -l)
+# Same as:
+$ ls -l | cat
+
+$ diff <(<command1>) <(<command2>)
+# Gives difference in command output.
+$ diff <(ls $first_directory) <(ls $second_directory)
+# Compare the contents of two directories -- to see which filenames are in one, but not the other.
+```
 ```bash
 $ echo $?
 # Print last command exit code (0 on success, failure otherwise).

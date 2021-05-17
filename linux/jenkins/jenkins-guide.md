@@ -107,6 +107,9 @@ Setup your **Job**:
 
     npm install
     # Install project dependencies.
+
+    npm run build
+    # Build project.
     ```
 
 > **NOTE ON APP DEPLOYMENT SERVER**  
@@ -114,12 +117,15 @@ Setup your **Job**:
 
 ## Examples
 
-### NodeJS Example
+### 1. NodeJS Example
 
 #### Build Actions
 Execute shell:
 ```bash
+# Step: Build NodeJS Project
+
 node -v
+npm -v
 npm config ls
 # Check NodeJS version.
 
@@ -128,9 +134,14 @@ rm -rf node_modules package-lock.json
 
 npm install
 # Install project dependencies.
+
+npm run build
+# Build project.
 ```
 Execute shell:
 ```bash
+# Step: Create deploy package
+
 deploy_file="deploy.zip"
 exclude=".*"
 # Exclude hidden files .git like.
@@ -147,11 +158,17 @@ zip -q -r ${deploy_file} ./ -x "${exclude}"
 #### Post-build Actions
 Send build artifacts over SSH:
 ```bash
+# Step: Deploy package
 
 deploy_file="deploy.zip"
 app_dir="/var/www/nodejs1"
 
-sudo kill -SIGTERM $(pidof "npm run start")
+node -v
+npm -v
+npm config ls
+# Check NodeJS version.
+
+sudo kill -SIGTERM $(pidof node) >/dev/null 2>&1
 # Stop current app.
 
 sudo rm -rf ${app_dir}/{*,.*}
@@ -164,6 +181,6 @@ rm -f ${deploy_file}
 # Clear deployment files.
 
 cd ${app_dir}
-npm run start
-# Run app.
+npm run start:prod > /dev/null 2>&1 &
+# Run app in background.
 ```

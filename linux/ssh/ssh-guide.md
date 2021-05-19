@@ -6,6 +6,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 - SSH manual: `man ssh`.
 - [SSH Academy](https://www.ssh.com/academy/ssh/)
 - Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
+- Digital Ocean: [How To Configure Custom Connection Options for your SSH Client?](https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client)
 
 ## General
 

@@ -126,6 +126,11 @@ $ help set
 # List shell options.
 ```
 
+```bash
+$ bc
+# Simple calculator.
+```
+
 ### Debug
 
 https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
@@ -552,6 +557,25 @@ $ kill -SIGKILL $(lsof -t -i :80)
 # Just kill whatever PID is using port 80 tcp.
 ```
 
+```bash
+$ man at
+# at, batch, atq, atrm -- queue, examine, or delete jobs for later execution.
+
+$ at
+# Executes commands at a specified time.
+$ atq
+# Lists the user's pending jobs, unless the user is the superuser; in that case, everybody's jobs are listed.
+$ atrm
+# Deletes jobs.
+$ batch
+# Executes commands when system load levels permit; in other words, when the load average drops below _LOADAVG_MX (1.5), or the value specified in the invocation of atrun.
+```
+
+```bash
+$ crontab
+
+```
+
 ### CPU
 
 ```bash
@@ -574,6 +598,9 @@ $ uptime
 
 $ date
 # Show current date.
+
+$ cal
+# Show calendar.
 ```
 ```bash
 $ timedatectl

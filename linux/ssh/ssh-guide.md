@@ -332,6 +332,38 @@ If you wish to not use multiplexing for a specific connection, you can select no
 ssh -S none <user>@<host>
 ```
 
+#### Example: General Tweaks
+
+Some other tweaks that you may wish to configure on a broad level, perhaps in the `Host *` section, are below.
+
+- `ServerAliveInterval`: This option can be configured to let SSH know when to send a packet to test for a response from the sever. This can be useful if your connection is unreliable and you want to know if it is still available.
+- `LogLevel`: This configures the level of detail in which SSH will log on the client-side. This can be used for turning off logging in certain situations or increasing the verbosity when trying to debug. From least to most verbose, the levels are QUIET, FATAL, ERROR, INFO, VERBOSE, DEBUG1, DEBUG2, and DEBUG3.
+- `StrictHostKeyChecking`: This option configures whether ssh SSH will ever automatically add hosts to the ~/.ssh/known_hosts file. By default, this will be set to “ask” meaning that it will warn you if the Host Key received from the remote server does not match the one found in the known_hosts file. If you are constantly connecting to a large number of ephemeral hosts, you may want to turn this to “no”. SSH will then automatically add any hosts to the file. This can have security implications, so think carefully before enabling it.
+- `UserKnownHostsFile`: This option specifies the location where SSH will store the information about hosts it has connected to. Usually you do not have to worry about this setting, but you may wish to set this to /dev/null if you have turned off strict host checking above.
+- `VisualHostKey`: This option can tell SSH to display an ASCII representation of the remote host’s key upon connection. Turning this on can be an easy way to get familiar with your host’s key, allowing you to easily recognize it if you have to connect from a different computer sometime in the future.
+- `Compression`: Turning compression on can be helpful for very slow connections. Most users will not need this.
+With the above configuration items in mind, we could make a number of useful configuration tweaks.
+
+With the above configuration items in mind, we could make a number of useful configuration tweaks. For instance, if we are creating and destroying hosts very quickly at a cloud provider, something like this may be useful:
+
+```bash
+Host home
+    VisualHostKey yes
+
+Host cloud*
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    LogLevel QUIET
+
+Host *
+    StrictHostKeyChecking ask
+    UserKnownHostsFile ~/.ssh/known_hosts
+    LogLevel INFO
+    ServerAliveInterval 120
+```
+
+This will turn on your visual host key for your home connection, allowing you to become familiar with it so you can recognize if it changes or when connecting from a different machine. We have also set up any host that begins with cloud* to not check hosts and not log failures. For other hosts, we have sane fallback values.
+
 ### Config SSH Server
 
 ```bash

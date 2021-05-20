@@ -565,6 +565,39 @@ $ free
 $ cat /proc/meminfo
 $ vmstat
 ```
+
+### Time
+
+```bash
+$ uptime
+# Show system running time.
+
+$ date
+# Show current date.
+```
+```bash
+$ timedatectl
+$ ls -l /etc/localtime
+$ cat /etc/timezone
+# Show system time zone.
+
+$ ls /usr/share/zoneinfo/
+$ ls /usr/share/zoneinfo/<zone>/<city>
+$ timedatectl list-timezones
+# List time zones.
+```
+```bash
+$ sudo timedatectl set-timezone <your_time_zone>
+# Set system time zone using timedatactl package.
+
+$ TZ="Europe/Warsaw"
+$ apt-get install -y tzdata 
+$ ln -fns /usr/share/zoneinfo/${TZ} /etc/localtime
+$ echo ${TZ} > /etc/timezone
+$ dpkg-reconfigure --frontend noninteractive tzdata
+# Set system time zone using tzdata package.
+```
+
 ### Drives
 TODO: Drives operations.
 

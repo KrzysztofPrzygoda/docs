@@ -203,12 +203,14 @@ $ ssh -i ~/.ssh/<private-key> <username>@dev-new.gitlab.com
 ```
 
 #### Example: Wildcard
+
 ```bash
 Host *
     PreferredAuthentications publickey
     IdentityFile ~/.ssh/<private-key>
 # Matchess all hosts and authenticates with private-key.
 ```
+
 ```bash
 Host *
     PreferredAuthentications publickey
@@ -218,10 +220,30 @@ Host *
 # private-key-1 at first,
 # private-key-2 if first have failed.
 ```
+
 ```bash
 Host * !github.com
 # Matchess all hosts except github.com.
 ```
+
+```bash
+Host hapollo
+    HostName example.com
+    Port 4567
+
+Host wapollo
+    HostName company.com
+
+Host *apollo
+    User apollo
+
+Host *
+    User zeus
+
+# Any connection not ending in apollo (and without its own Host section defining a User) will receive the username zeus.
+```
+
+Note that we have retained the ordering from most specific to least specific in our file. It is best to think of less specific Host sections as fallbacks as opposed to defaults due to the order in which the file is interpreted.
 
 #### Example: Two hosts
 

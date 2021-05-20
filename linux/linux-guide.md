@@ -793,6 +793,7 @@ $ id
 $ id <user>
 # Show user information.
 
+$ users
 $ who
 # Show logged-in users.
 $ w

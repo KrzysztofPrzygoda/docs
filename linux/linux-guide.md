@@ -784,6 +784,7 @@ $ cat /etc/login.defs
 $ usermod -s /usr/sbin/nologin <user>
 # Turn off login possibility for the user.
 ```
+
 ### Read
 
 ```bash
@@ -791,10 +792,19 @@ $ id
 # Show current user information (uid, gid, groups).
 $ id <user>
 # Show user information.
+
 $ who
 # Show logged-in users.
+$ w
+# Show logged-in users and their performance stats.
+
 $ whoami
 # Show current user name.
+
+$ last
+# Show users login history.
+$ last | awk 'print $1)' | sort | uniq
+# Show only users names from login history.
 ```
 ```bash
 $ uid=`id -u`
@@ -826,6 +836,7 @@ $ man 5 shadow
 $ chage -l <user>
 # Show user password expiry information.
 ```
+
 ### Create
 
 ```bash

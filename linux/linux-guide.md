@@ -560,7 +560,6 @@ $ kill -SIGKILL $(lsof -t -i :80)
 ```bash
 $ man at
 # at, batch, atq, atrm -- queue, examine, or delete jobs for later execution.
-
 $ at
 # Executes commands at a specified time.
 $ atq
@@ -573,7 +572,69 @@ $ batch
 
 ```bash
 $ crontab
+# Maintain crontab files for individual users.
+```
+### Services
+Manage Systemd Services and Units:
+```bash
+$ systemctl <command> <service>
+# Manage system services.
+$ systemctl status <service>
+# Show service status.
+$ systemctl start|stop <service>
+# Start/Stop service.
+$ systemctl enable|disable <service>
+# De/Activate service to be run at boot.
+$ systemctl restart <service>
+# Restart service.
+```
+```bash
+$ systemctl cat <servicename>.service
+# Show service unit file.
+```
+Unit example:
+```bash
+# Systemd Unit Configuration File
+# /etc/systemd/system/docker-app.service
+# Runs docker container every time system starts.
+# Register it with:
+# systemctl enable docker-app
+# Tutorial: https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files
 
+[Unit]
+Description=Docker App Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=0
+
+# Docker Setup
+# Default Docker Compose installation folder is /usr/local/bin/
+
+# Dockerfile folder (this is where docker-compose will look up for yml config file)
+WorkingDirectory=/home/appuser/docker
+# Service starting up command
+# ExecStart=/usr/local/bin/docker-compose up -d
+ExecStart=bash start.sh prod
+# Service shutting down command
+# ExecStop=/usr/local/bin/docker-compose down
+ExecStop=bash stop.sh prod
+
+[Install]
+WantedBy=multi-user.target
+```
+Unit installation:
+```bash
+service="service-name"
+# Copy in systemd unit file
+sudo cp ${service}.service /etc/systemd/system/${service}.service
+# and register it
+sudo systemctl enable ${service}
+# To unregister
+sudo systemctl disable ${service}
 ```
 
 ### CPU

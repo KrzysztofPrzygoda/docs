@@ -302,6 +302,36 @@ Host remote_to_local
     RemoteForward 7777 internal.com:443
 ```
 
+#### Example: Multiple Connections
+
+SSH has the ability to use a single TCP connection for multiple SSH connections to the same host machine. This can be useful if it takes awhile to establish a TCP handshake to the remote end as it removes this overhead from additional SSH connections.
+
+The following options can be used to configure multiplexing with SSH:
+
+- `ControlMaster`: This option tells SSH whether to allow multiplexing when possible. Generally, if you wish to use this option, you should set it to “auto” in either the host section that is slow to connect or in the generic `Host *` section.
+- `ControlPath`: This option is used to specify the socket file that is used to control the connections. It should be to a location on the filesystem. Generally, this is given using SSH variables to easily label the socket by host. To name the socket based on username, remote host, and port, you can use `/path/to/socket/%r@%h:%p`.
+- `ControlPersist`: This option establishes the amount of time in seconds that the TCP connection should remain open after the final SSH connection has been closed. Setting this to a high number will allow you to open new connections after closing the first, but you can usually set this to something low like “1” to avoid keeping an unused TCP connection open.
+
+Generally, you can set this up using a section that looks something like this:
+
+```bash
+Host *
+    ControlMaster auto
+    ControlPath ~/.ssh/multiplex/%r@%h:%p
+    ControlPersist 1
+```
+
+Afterwards, you should make sure that the directory is created:
+
+```bash
+$ mkdir -p ~/.ssh/multiplex
+```
+If you wish to not use multiplexing for a specific connection, you can select no multiplexing on the command line like this:
+
+```bash
+ssh -S none <user>@<host>
+```
+
 ### Config SSH Server
 
 ```bash

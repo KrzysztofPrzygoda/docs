@@ -1033,6 +1033,8 @@ $ ls -lt
 # Sort in time order.
 $ ls -ltr
 # Sort in time reverse order.
+$ ls -l | wc -l
+# Files count.
 ```
 
 ### Permissions

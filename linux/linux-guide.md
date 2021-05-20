@@ -830,7 +830,7 @@ $ chage -l <user>
 
 ```bash
 $ sudo useradd -m <user>
-# Create user.
+# Create user with home dir.
 # -m|--create-home Create home folder.
 $ sudo useradd -o -u <uid> -g <gid> -m <user>
 # Create user with home folder and specific uid:gid.
@@ -873,6 +873,15 @@ $ usermod -G "" <user>
 # Remove user from all supplementary groups.
 $ deluser <user> <group>
 # Remove user from the group.
+```
+#### Shell
+
+```bash
+$ usermod -s /bin/bash <user>
+# Change shell to bash for the user.
+
+$ chsh -s /bin/bash
+# Change your shell to bash.
 ```
 
 #### Activity

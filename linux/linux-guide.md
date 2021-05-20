@@ -258,7 +258,21 @@ $ disown
 $ disown %<id>
 # Keep last background process (or of id) running after a shell exits.
 ```
-
+```bash
+#!/bin/bash
+echo "Job 1" &
+# Run 1 job in background
+pid=$!
+# Store last running in background process id ($!) in var
+echo "Job 2" &
+# Run 2 job in background
+wait $pid
+# Wait until 1 job completed
+echo Job 1 exited with status $?
+wait $!
+# Wait until 2 job completed
+echo Job 2 exited with status $?
+```
 Alternatively:
 ```bash
 $ nohup <command> &

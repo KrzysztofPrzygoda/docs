@@ -115,11 +115,18 @@ $ cat ~/.ssh/id_ed25519.pub | clip
 ```
 #### Copy Key to Server
 
-To use public key authentication, the public key must be copied to a server and installed in an `authorized_keys` file. This can be conveniently done using the `ssh-copy-id` tool ike this:
+To use public key authentication, the public key must be copied to a server and installed in an `authorized_keys` file.
+
+```bash
+$ cat <public-key-file> >> ~/.ssh/authorized_keys
+# Copy locally the Public Key.
+```
+
+This can be conveniently done using the `ssh-copy-id` tool ike this:
 
 ```bash
 $ ssh-copy-id -i ~/.ssh/<public-key-file> <user>@<host>
-# Copy the Public Key to the Server.
+# Copy the Public Key to the remote Server.
 
 > type ~\.ssh\<public-key-file> | ssh <user>@<host> "cat >> ~/.ssh/authorized_keys"
 # Windows 10 PowerShell version.

@@ -90,6 +90,7 @@ $ ssh-keygen -p -f </path/to/ssh_private_key> -P <old_passphrase> -N <new_passph
 
 Private and public keys contain sensitive data. Ensure the permissions on the files to make them readable to you but not accessible to others.
 
+Linux:
 ```bash
 $ chmod go-w ~/
 # Deny all, except the owner, to write in home directory.
@@ -98,7 +99,16 @@ $ chmod 700 ~/.ssh
 $ chmod 600 ~/.ssh/authorized_keys
 # Only the owner can read and save changes to file ~/.ssh/authorized_keys.
 ```
-
+Windows PowerShell:
+```bash
+$path = ".\path\to\private-key-file"
+icacls.exe $path /reset
+# Reset to remove explict permissions.
+icacls.exe $path /GRANT:R "$($env:USERNAME):(R)"
+# Give current user explicit read-permission.
+icacls.exe $path /inheritance:r
+# Disable inheritance and remove inherited permissions.
+```
 ### Copy Keys
 
 #### Copy Key to Clipboard

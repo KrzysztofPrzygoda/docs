@@ -280,6 +280,28 @@ Host <remote-server>
     ForwardAgent yes
 ```
 
+#### Example: Connection Forwarding
+
+One common use of SSH is forwarding connections, either allowing a local connection to tunnel through the remote host, or allowing the remote machine access to tunnel through the local machine. SSH can also do dynamic forwarding using protocols like SOCKS5 which include the forwarding information for the remote host.
+
+The options that control this behavior are:
+
+- `LocalForward`: This option is used to specify a connection that will forward a local port’s traffic to the remote machine, tunneling it out into the remote network. The first argument should be the local port you wish to direct traffic to and the second argument should be the address and port that you wish to direct that traffic to on the remote end.
+- `RemoteForward`: This option is used to define a remote port where traffic can be directed to in order to tunnel out of the local machine. The first argument should be the remote port where traffic will be directed on the remote system. The second argument should be the address and port to point the traffic to when it arrives on the local system.
+- `DynamicForward`: This is used to configure a local port that can be used with a dynamic forwarding protocol like SOCKS5. Traffic using the dynamic forwarding protocol can then be directed at this port on the local machine and on the remote end, it will be routed according to the included values.
+
+```bash
+# This will allow us to use port 8080 on the local machine
+# in order to access example.com at port 80 from the remote machine
+Host local_to_remote
+    LocalForward 8080 example.com:80
+
+# This will allow us to offer access to internal.com at port 443
+# to the remote machine through port 7777 on the other side
+Host remote_to_local
+    RemoteForward 7777 internal.com:443
+```
+
 ### Config SSH Server
 
 ```bash

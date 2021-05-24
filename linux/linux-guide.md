@@ -575,7 +575,7 @@ $ crontab
 # Maintain crontab files for individual users.
 ```
 ### Services
-Manage Systemd Services and Units:
+Manage Systemd Services and Units (see [more](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units)):
 ```bash
 $ systemctl <command> <service>
 # Manage system services.

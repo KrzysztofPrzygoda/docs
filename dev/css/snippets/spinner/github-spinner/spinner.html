@@ -1,0 +1,98 @@
+<div class="circle position-relative mx-auto build-in-animate" style="width: 164px; height: 164px;">
+    <div class="home-actions-success circle position-absolute text-left top-0 right-0 bottom-0 left-0 z-1">
+      <img src="https://github.githubassets.com/images/modules/site/home/icons/actions-check.svg" class="home-actions-success-check" alt="Large representation of the indicator that a workflow is successfully completed" loading="lazy">
+    </div>
+    <img src="https://github.githubassets.com/images/modules/site/home/actions-spinner.svg" class="width-full home-actions-spinner" alt="Large representation of the indicator that a workflow is running" loading="lazy">
+</div>
+
+<style>
+    /* Spinner */
+    @keyframes spin {
+        0% {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+        100% {
+            opacity: 1;
+            transform: rotate(360deg);
+        }
+    }
+    .build-in-animate .home-actions-spinner {
+        animation: .4s linear spin infinite;
+    }
+
+    /* Success */
+    @keyframes home-actions-success {
+        0% {
+            box-shadow: inset 0 0 0 0 var(--color-success-emphasis);
+        }
+        100% {
+            box-shadow: inset 0 0 0 170px var(--color-success-emphasis);
+        }        
+    }
+    @keyframes home-actions-success-check {
+        0% {
+            opacity: 0;
+            transform: translate(50%, 87%) scale3d(0.9, 0.9, 0.9);
+        }
+        90% {
+            transform: translate(50%, 87%) scale3d(1.2, 1.2, 1.2);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(50%, 87%) scale3d(1, 1, 1);
+        }
+    }
+    .home-actions-success {
+        box-shadow: inset 0 0 0 0 var(--color-success-emphasis);
+        transition: transform .4s, opacity .4s;
+    }
+    .home-actions-success .home-actions-success-check {
+        width: 50%;
+        opacity: 0;
+        transition: transform .4s, opacity .4s;
+        transform: translate(50%, 87%) scale(0.9);
+    }
+    .build-in-animate .home-actions-success {
+        animation: .5s ease-in-out home-actions-success 3.5s forwards;
+    }
+    .build-in-animate .home-actions-success .home-actions-success-check {
+        animation: .2s ease-in-out home-actions-success-check 4s forwards;
+    }
+
+    /* Layout */
+    :root {
+        --color-success-emphasis: #2da44e;
+    }
+    .circle {
+        border-radius: 50% !important;
+    }
+    .mx-auto {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+    .position-relative {
+        position: relative !important;
+    }
+    .position-absolute {
+        position: absolute !important;
+    }
+    .left-0 {
+        left: 0 !important;
+    }
+    .right-0 {
+        right: 0 !important;
+    }
+    .top-0 {
+        top: 0 !important;
+    }
+    .bottom-0 {
+        bottom: 0 !important;
+    }
+    .z-1 {
+        z-index: 1 !important;
+    }
+    .width-full {
+        width: 100% !important;
+    }
+</style>

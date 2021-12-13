@@ -1,3 +1,11 @@
+# Certs and keys
+*.pem
+*.key
+*.ext
+*.csr
+*.crt
+*.srl
+
 # Backups
 *~
 *.DS_Store

@@ -131,16 +131,6 @@ $ bc
 # Simple calculator.
 ```
 
-### Debug
-
-https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
-
-```bash
-$ set -x
-# Turn on...
-$ set +x
-# Turn off each command print-out before its run.
-```
 ### Standard Streams
 
 ```bash
@@ -699,6 +689,62 @@ $ cat /proc/modules
 # Show the status of loaded modules in the Linux Kernel.
 # Linux kernel use a term modules for all hardware device drivers.
 # Please note that `lsmod` is a trivial program which nicely formats the contents of the /proc/modules, showing what kernel modules are currently loaded.
+```
+### Log Files
+
+https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
+
+#### Log Types
+
+```bash
+$ cat /var/log/messages
+# Generic system activity logs.
+# Informational and non-critical system messages.
+$ cat /var/log/syslog
+# In Debian-based systems, directory serves the same purpose.
+```
+
+Usage:
+- Track non-kernel boot errors, application-related service errors and the messages that are logged during system startup.
+- Investigate issues with hardware (e.g. the sound card) during the system startup.
+- This is the first log file that the Linux administrators should check if something goes wrong.
+
+```bash
+$ cat /var/log/auth.log
+# All authentication related events (Debian, Ubuntu).
+$ cat /var/log/secure
+# In RedHat and CentOS-based systems.
+```
+Usage:
+- Investigate failed login attempts or brute-force attacks.
+
+```bash
+$ cat /var/log/boot.log
+# Booting related information and messages logged during system startup process.
+# The system initialization script, `/etc/init.d/bootmisc.sh`, sends all bootup messages to this log file.
+```
+Usage:
+- Investigate issues related to improper shutdown, unplanned reboots or booting failures.
+- Determine the duration of system downtime caused by an unexpected shutdown.
+
+```bash
+$ dmesg
+$ cat /var/log/dmesg
+# Kernel ring buffer messages.
+# Information related to hardware devices and their drivers.
+```
+Usage:
+- If a certain hardware is functioning improperly or not getting detected, then you can rely on this log file to troubleshoot the issue.
+
+#### Inspect
+
+```bash
+$ grep -hnr "string" <logfile>
+# Filter log lines that contain "string"
+$ grep -hnr -A2 -B2 "string" <logfile>
+# ... and include lines preceding and following matched lines
+$ grep -hnr -A2 -B2 --no-group-separator "string" <logfile>
+# ... and suppress a separator between matches
 ```
 
 ## Networking
@@ -1411,6 +1457,15 @@ $ sudo lsof -u ^<user>
 - Variables
 - Special Variables
 - [Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
+
+### Debug
+
+```bash
+$ set -x
+# Turn on...
+$ set +x
+# Turn off each command print-out before its run.
+```
 
 ### Arguments Parsing
 

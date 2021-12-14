@@ -739,11 +739,13 @@ Usage:
 #### Inspect
 
 ```bash
-$ grep -hnr "string" <logfile>
-# Filter log lines that contain "string"
-$ grep -hnr -A2 -B2 "string" <logfile>
+$ grep -hnr "pattern" <directory>
+$ grep -hnr "pattern" <logfile>
+# Filter log (or many files in directory) lines that contain "pattern"
+$ grep -hnr -A2 -B2 "pattern" <logfile>
 # ... and include lines preceding and following matched lines
-$ grep -hnr -A2 -B2 --no-group-separator "string" <logfile>
+# (-A for After, -B for Before, which only give the specified number of lines after or before a match)
+$ grep -hnr -A2 -B2 --no-group-separator "pattern" <logfile>
 # ... and suppress a separator between matches
 ```
 

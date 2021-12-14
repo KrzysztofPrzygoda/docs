@@ -743,8 +743,9 @@ $ grep -hnr "pattern" <directory>
 $ grep -hnr "pattern" <logfile>
 # Filter log (or many files in directory) lines that contain "pattern"
 $ grep -hnr -A2 -B2 "pattern" <logfile>
+$ grep -hnr -C2 "pattern" <logfile>
 # ... and include lines preceding and following matched lines
-# (-A for After, -B for Before, which only give the specified number of lines after or before a match)
+# (-A for After, -B for Before, -C for Context, which only give the specified number of lines after or before a match)
 $ grep -hnr -A2 -B2 --no-group-separator "pattern" <logfile>
 # ... and suppress a separator between matches
 ```

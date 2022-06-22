@@ -1,0 +1,173 @@
+<!--
+    A responsive button with cut corners and animated hover.
+
+    YT: https://www.youtube.com/watch?v=aW6qEAQSctY
+    CP: https://codepen.io/kevinpowell/pen/bGLmORx
+-->
+
+<!--
+    Button part.
+-->
+<html>
+    <body>
+
+        <button class="button">click me</button>
+
+        <style>
+        :root {
+            font-size: 16px;
+        }
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-content: center;
+            font-size: clamp(2rem, 1rem + 5vw, 4rem);
+        }
+
+        .button {
+            --background-color: white;
+            --border-color: linear-gradient(to bottom right, red, blue);
+            --border-width: 0.5em;
+            --edge-size: 0.5em;
+
+            font-size: 100%;
+            cursor: pointer;
+            background: var(--background-color);
+            padding: 0.5em 1.5em;
+            border: 0;
+            position: relative;
+            isolation: isolate;
+            display: inline-grid;
+            place-content: center;
+            clip-path: polygon(
+                var(--edge-size) 0%,
+                100% 0,
+                100% calc(100% - var(--edge-size)),
+                calc(100% - var(--edge-size)) 100%,
+                0 100%,
+                0% var(--edge-size)
+            );
+            transition: color 250ms;
+        }
+
+        button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--border-color);
+            z-index: -2;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--background-color);
+            z-index: -1;
+            clip-path: polygon(
+                /* // top left 1 */
+                var(--border-width) calc(var(--edge-size) + var(--border-width) * 0.5),
+                /* // top left 2 */
+                calc(var(--edge-size) + var(--border-width) * 0.5) var(--border-width),
+                /* // top right */
+                calc(100% - var(--border-width)) var(--border-width),
+                /* //bottom right - 1 */
+                calc(100% - var(--border-width))
+                calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5)),
+                /* // bottom right - 2 */
+                calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5))
+                calc(100% - var(--border-width)),
+                /* // bottom left */
+                calc(var(--border-width)) calc(100% - var(--border-width))
+            );
+            transition: clip-path 500ms;
+        }
+
+        button:hover {
+            color: white;
+        }
+
+        button:hover::after {
+            /* // clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); */
+
+            clip-path: polygon(
+                /* // top left 1 */
+                calc(100% - var(--border-width))
+                calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5)),
+                /* // top left 2 */
+                calc(100% - var(--border-width)) var(--border-width),
+                /* // top right */
+                calc(100% - var(--border-width)) var(--border-width),
+                /* //bottom right - 1 */
+                calc(100% - var(--border-width))
+                calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5)),
+                /* // bottom right - 2 */
+                calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5))
+                calc(100% - var(--border-width)),
+                /* // bottom left */
+                calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5))
+                calc(100% - var(--border-width))
+            );
+        }
+        </style>
+
+        <!--
+            Style controls part.
+        -->
+
+        <div class="controls">
+            <div>
+                <label for="border-width">Border width: </label>
+                <input id="border-width" type="range" min=".05" max=".6" step="0.01" value="0.5"><br>
+                <code class="bw">--border-width: <output>0.5em</output></code>
+            </div>
+        
+            <div>
+                <label for="edge-size">Edge size: </label>
+                <input id="edge-size" type="range" min=".25" max="1.25" step="0.01" value="0.50"><br>
+                <code class="es">--edge-size: <output>0.5em</output></code>
+            </div>
+        </div>
+
+        <style>
+        .controls {
+            position: absolute;
+            inset: auto 0 5rem;
+            width: fit-content;
+            margin-inline: auto;
+            font-size: 1.125rem;
+
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        code {
+            display: block;
+            margin-top: 1em;
+            background: rgb(0 0 0 / 0.1);
+            padding: 0.25em 0.5em;
+        }
+        </style>
+
+        <script>
+        const button = document.querySelector(".button");
+        const borderWidth = document.querySelector("#border-width");
+        const edgeSize = document.querySelector("#edge-size");
+        const borderWidthOutput = document.querySelector(".bw output");
+        const edgeSizeOutput = document.querySelector(".es output");
+
+        borderWidth.addEventListener("input", () => {
+            button.style.setProperty("--border-width", borderWidth.value + "em");
+            borderWidthOutput.innerText = borderWidth.value + "em";
+        });
+
+        edgeSize.addEventListener("input", () => {
+            button.style.setProperty("--edge-size", edgeSize.value + "em");
+            edgeSizeOutput.innerText = edgeSize.value + "em";
+        });
+        </script>
+
+    </body>
+</html>

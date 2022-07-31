@@ -797,6 +797,12 @@ $ sudo lsof -U | grep '^<command>'
 $ sudo netstat -apx | grep '<command>'
 # List UNIX sockets opened by a command/process.
 ```
+#### DNS
+
+```bash
+$ scutil --dns
+# [macOS] List DNS servers config
+```
 
 ## Secure Shell
 

@@ -11,7 +11,7 @@
 	 * @return {void}
 	 */
 	async function loadContentIntoElement( url, element ) {
-		if ( !url || !element ) return;
+		if ( ! url || ! element ) return;
 		
 		await fetch( url, {
 			mode: 'cors', // Response requires header('Access-Control-Allow-Origin: *');
@@ -22,13 +22,11 @@
 			element.innerHTML = content;
 		})
 		.catch(( error ) => {
-			console.error('Error: ', error);
+			console.error( 'Error: ', error );
 		});
 	}
 	
-	const page = window.location.pathname;
-
-	switch ( page ) {
+	switch ( window.location.pathname ) {
 		case '/panel/cms-texts.php':
 			// Skip these pages
 			return;
@@ -38,7 +36,7 @@
 			const contentUrl = 'https://bitsmodo.com/idosell/cms/load-content.php';
 			
 			// Find this <script> tag
-			const scriptElement = document.querySelector('script[src*="' + scriptName + '"]');
+			const scriptElement = document.querySelector( 'script[src*="' + scriptName + '"]' );
 			if ( ! scriptElement ) {
 				console.error( 'Error:', scriptName, '<script> tag not found.' );
 				return;

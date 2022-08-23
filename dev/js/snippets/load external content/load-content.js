@@ -26,22 +26,31 @@
 		});
 	}
 	
-	const scriptName = 'load-content.js';
-	const contentUrl = 'https://bitsmodo.com/idosell/cms/load-content.php';
-	
-	// Find this <script> tag
-	const scriptElement = document.querySelector('script[src*="' + scriptName + '"]');
-	if ( ! scriptElement ) {
-		console.error( 'Error:', scriptName, '<script> tag not found.' );
-		return;
+	const page = window.location.pathname;
+
+	switch ( page ) {
+		case '/panel/cms-texts.php':
+			// Skip these pages
+			return;
+		
+		default:
+			const scriptName = 'load-content.js';
+			const contentUrl = 'https://bitsmodo.com/idosell/cms/load-content.php';
+			
+			// Find this <script> tag
+			const scriptElement = document.querySelector('script[src*="' + scriptName + '"]');
+			if ( ! scriptElement ) {
+				console.error( 'Error:', scriptName, '<script> tag not found.' );
+				return;
+			}
+			
+			// Find this <script> tag parent
+			const contentElement = scriptElement.parentElement;
+			if ( ! contentElement ) {
+				console.error( 'Error:', scriptName, '<script> tag parent element not found.' );
+				return;
+			}
+			
+			loadContentIntoElement( contentUrl, contentElement );
 	}
-	
-	// Find this <script> tag parent
-	const contentElement = scriptElement.parentElement;
-	if ( ! contentElement ) {
-		console.error( 'Error:', scriptName, '<script> tag parent element not found.' );
-		return;
-	}
-	
-	loadContentIntoElement( contentUrl, contentElement );
 })();

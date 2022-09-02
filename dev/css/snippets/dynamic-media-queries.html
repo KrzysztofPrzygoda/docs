@@ -1,0 +1,83 @@
+<!--
+    Dynamic media queries JS workaround.
+    
+    @see: https://stackoverflow.com/questions/40722882/css-native-variables-not-working-in-media-queries
+
+    As of 2022 there is no possibility to use CSS var in media query definition like this:
+
+    :root {
+        --mobile-breakpoint: 642px;
+    }
+
+    @media (max-width: var(--mobile-breakpoint)) {
+
+    }
+-->
+
+<style>
+    :root {
+        --mobile-breakpoint: 642px;
+
+        --replace-media-1px: var(--mobile-breakpoint);
+        --replace-media-2px: ...;
+    }
+
+    @media (max-width: 1px) { /* replaced by 642px */
+        /* ... */
+    }
+
+    @media (max-width: 2px) {
+        /* ... */
+    }    
+</style>
+
+<script>
+    /**
+     * Script replaces every media rule with a value of 1px with the value of the css variable --replace-media-1px, rules with value 2px with --replace-media-2px and so on.
+     * This works for the media queries with, min-width, max-width, height, min-height and max-height even when they are connected using and.
+    */
+
+    function* visitCssRule(cssRule) {
+        // Visit imported stylesheet
+        if (cssRule.type == cssRule.IMPORT_RULE)
+            yield* visitStyleSheet(cssRule.styleSheet);
+
+        // Yield media rule
+        if (cssRule.type == cssRule.MEDIA_RULE)
+            yield cssRule;
+    }
+
+    function* visitStyleSheet(styleSheet) {
+        try {
+            // Visit every rule in the stylesheet
+            var cssRules = styleSheet.cssRules;
+            for (var i = 0, cssRule; cssRule = cssRules[i]; i++)
+                yield* visitCssRule(cssRule);
+        } catch (ignored) {}
+    }
+
+    function* findAllMediaRules() {
+        // Visit all stylesheets
+        var styleSheets = document.styleSheets;
+        for (var i = 0, styleSheet; styleSheet = styleSheets[i]; i++)
+            yield* visitStyleSheet(styleSheet);
+    }
+
+    // Collect all media rules
+    const mediaRules = Array.from(findAllMediaRules());
+
+    // Read replacement values
+    var style = getComputedStyle(document.documentElement);
+    var replacements = [];
+    for (var k = 1, value; value = style.getPropertyValue('--replace-media-' + k + 'px'); k++)
+        replacements.push(value);
+
+    // Update media rules
+    for (var i = 0, mediaRule; mediaRule = mediaRules[i]; i++) {
+        for (var k = 0; k < replacements.length; k++) {
+            var regex = RegExp('\\((width|min-width|max-width|height|min-height|max-height): ' + (k+1) + 'px\\)', 'g');
+            var replacement = '($1: ' + replacements[k] + ')';
+            mediaRule.media.mediaText = mediaRule.media.mediaText.replace(regex, replacement);
+        }
+    }
+</script>

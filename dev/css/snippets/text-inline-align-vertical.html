@@ -1,0 +1,115 @@
+<!--
+    By default it's not posible to vertically center inline-blocks with vertical-align (red box).
+    But if you add a pseudo-element, it works (orange box).
+    It also works if you just add line-height for the container with the same value as height (green box).
+
+    Partially inspired by https://css-tricks.com/centering-in-the-unknown/
+    @see: https://codepen.io/edge0703/pen/DzaEex
+-->
+
+<h3>Vertical-align of multiple elements by default not possible</h3>
+<div class="block">
+    <div class="inner inner1">Inline-Block</div>
+    <div class="inner inner2">Inline-Block</div>
+</div>
+
+
+<h3>With an added pseudo element it's possible</h3>
+<div class="block2">
+    <div class="inner">Inline-Block</div>
+    <div class="inner">Inline-Block</div>
+</div>
+
+
+<h3>It also works with just an added line-height and nothing else</h3>
+<div class="block3">
+    <div class="inner inner3">Inline-Block with some lengthy text to show that it also works with multiple lines.</div>
+    <div class="inner inner3">Inline-Block.</div>
+</div>
+
+<h3>Button with vertically centered mult-line text</h3>
+<div class="block4">
+    <div class="inner inner4">Inline-Block with centered text.</div>
+</div>
+
+<style>
+    /* By default vertical-align ist not possible, only different elements can be vertically aligned among eachother */
+    .block {
+        background: red;
+        height: 100px;
+    }
+
+    .inner {
+        display: inline-block;
+        vertical-align: middle;
+        background: yellow;
+        padding: 3px 5px;
+    }
+
+    .inner1 {
+        height: 30px;
+    }
+
+    .inner2 {
+        height: 20px;
+    }
+
+    /* With an added fake (pseudo) element it works. IMPORTANT: There must be no spaces between the elements in the source, else it doesn't work! */
+    .block2 {
+        background: orange;
+        height: 80px;
+    }
+
+    /* Fake (pseudo) element, that enables vertical-align */
+        .block2:before {
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+    }
+
+    /* Also works if you set line-height instead of the height (or together with the same value as the height). No pseudo-element needed.  */
+    .block3 {
+        background: green;
+        /*height: 120px;*/
+        line-height: 120px;
+    }
+
+    .inner3 {
+        width: 30%;
+        line-height: normal; /* Reset line-height for the child. IMPORTANT: Must be "normal", no integer value allowed! */
+    }
+
+    .block4 {
+        background: magenta;
+        line-height: 60px;
+    }
+
+    .inner4 {
+        line-height: normal; /* Reset line-height for the child. */
+        background: none;
+    }
+
+    /* Miscellaneous styling */
+    @import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700);
+
+    h3, div {
+        font-family: 'PT Sans', sans-serif;
+    }
+
+    .block, .block2, .block3 {
+        border: 5px dotted rgba(0,0,0,.4); 
+        background-clip: padding-box;
+        width: 50%;
+    }
+
+    .block4 {
+        text-align: center;
+        width: 20%;
+        box-shadow: 3px 3px 0 black;
+    }
+
+    h3 {
+        margin: 40px 0 7px;
+    }
+</style>

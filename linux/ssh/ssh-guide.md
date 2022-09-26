@@ -12,6 +12,10 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 @todo
 
 ## Shorts
+
+The most popular operations cheat sheet.
+
+### Create and deploy keys
 ```bash
 $ ssh-keygen -t ed25519
 # (preferred algorithm) or
@@ -22,8 +26,24 @@ $ ssh-keygen -t rsa
 $ ssh-copy-id -i ~/.ssh/id_ed25519.pub <user>@<host>
 # or
 $ ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@<host>
-# Copy the Public Key to the remote Server.
+# Copy the Public Key to the remote Server ~/.ssh/authorized_keys file.
 # Provide SSH <user> password while asked for.
+```
+### Login with key
+```bash
+$ nano ~/.ssh/config
+# Add the following connection config:
+Host myserver
+    Hostname <hostname>
+    User <username>
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/<private-key>
+# Matchess `myserver` and connects to hostname (host address) authenticating with private-key.
+
+# Usage:
+$ ssh myserver
+# Equivalent to:
+$ ssh -i ~/.ssh/<private-key> <username>@<hostname>
 ```
 
 ## Files
@@ -438,6 +458,7 @@ PasswordAuthentication no
 $ sudo systemctl restart sshd
 # Restart SSH Server daemon.
 ```
+
 ## Connect
 
 ```bash

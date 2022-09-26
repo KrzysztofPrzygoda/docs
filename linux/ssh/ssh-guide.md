@@ -1,12 +1,15 @@
 # Secure SHell (SSH) Guide
 
-Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
+Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021-2022.
 
 ## Reference
 - SSH manual: `man ssh`.
 - [SSH Academy](https://www.ssh.com/academy/ssh/)
 - Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
 - Digital Ocean: [How To Configure Custom Connection Options for your SSH Client?](https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client)
+
+Some SSH cheat sheets:
+- https://www.marcobehler.com/guides/ssh-cheat-sheet
 
 ## General
 @todo
@@ -15,19 +18,25 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 
 The most popular operations cheat sheet.
 
-### Create and deploy keys
+### Create keys
 ```bash
 $ ssh-keygen -t ed25519
 # (preferred algorithm) or
 $ ssh-keygen -t rsa
 # Generate key pair files in ~/.ssh/ (i.e. private id_rsa and public id_rsa.pub).
 # Skip filename and passphrase with Enter for defaults.
-
+```
+### Deploy keys
+```bash
 $ ssh-copy-id -i ~/.ssh/id_ed25519.pub <user>@<host>
 # or
 $ ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@<host>
 # Copy the Public Key to the remote Server ~/.ssh/authorized_keys file.
 # Provide SSH <user> password while asked for.
+
+# Somewhat similar to:
+$ cat ~/.ssh/id_rsa.pub | ssh <user>@<host> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+# but more secure, duplicates proof and having several extra automations.
 ```
 ### Login with key
 ```bash
@@ -493,8 +502,32 @@ $ ssh -Tvvv <user>@<host>
 # Test in verbose mode.
 ```
 
-## Exit
+## Copy Files
+OpenSSH secure file copy `scp` copies files between hosts on a network.
+It uses `ssh(1)` for data transfer, and uses the same authentication and provides the same security as a login session.
+
 ```bash
+$ scp <local-file> [<user>@]<host>:[/<dir>]
+# or with URI form
+$ scp <local-file> scp://[<user>@]host[:<port>][/<dir>]
+# Upload a file to a remote server dir.
+
+$ scp -rp <local-dir> <user>@<host>:/<dir>
+# Recursively upload a local dir to a remote server dir.
+
+$ scp <user>@<host>:/<dir>/<file> <local-dir>
+# Download a file from a remote server.
+
+$ scp -rp <user>@<host>:/<dir> <local-dir>
+# Recursively download a remote server dir.
+```
+> Hint: When doing things recursively via SCP, you might want to consider rsync, which also runs over SSH and has [a couple of advantages over SCP](https://serverfault.com/a/264606).
+
+## Exit Session
+
+```bash
+$ exit
+
 # To kill an unresponsive SSH session, hit subsequently:
 Enter ~ .
 ```

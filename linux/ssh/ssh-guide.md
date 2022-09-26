@@ -9,6 +9,22 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021.
 - Digital Ocean: [How To Configure Custom Connection Options for your SSH Client?](https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client)
 
 ## General
+@todo
+
+## Shorts
+```bash
+$ ssh-keygen -t ed25519
+# (preferred algorithm) or
+$ ssh-keygen -t rsa
+# Generate key pair files in ~/.ssh/ (i.e. private id_rsa and public id_rsa.pub).
+# Skip filename and passphrase with Enter for defaults.
+
+$ ssh-copy-id -i ~/.ssh/id_ed25519.pub <user>@<host>
+# or
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@<host>
+# Copy the Public Key to the remote Server.
+# Provide SSH <user> password while asked for.
+```
 
 ## Files
 
@@ -33,6 +49,7 @@ Location | Description
 `/etc/ssh/ssh_host_key` <br /> `/etc/ssh/ssh_host_<algorithm>_key` | These files contain the private parts of the host keys and are used for host-based authentication.
 `/etc/ssh/ssh_known_hosts` | Systemwide list of known host keys.  This file should be prepared by the system administrator to contain the public host keys of all machines in the organization. It should be world-readable.  See sshd(8) for further details of the format of this file.
 `/etc/ssh/sshrc` | Commands in this file are executed by ssh when the user logs in, just before the user's shell (or command) is started.  See the sshd(8) manual page for more information.
+
 ## Keys
 
 ### View Keys

@@ -1167,6 +1167,7 @@ $ ls -la
 #    T   The sticky bit is set (mode 1000), but not execute or search permission. (See chmod(1) or sticky(8).)
 #    t   The sticky bit is set (mode 1000), and is searchable or executable. (See chmod(1) or sticky(8).)
 ```
+
 ```bash
 $ ls -lS
 # Sort by decreasing size.

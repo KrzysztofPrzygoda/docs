@@ -1180,6 +1180,22 @@ $ ls -l | wc -l
 # Files count.
 ```
 
+```bash
+$ du -d 1
+$ du -d 1 -h
+$ du -d 1 -h -all
+$ du --max-depth=1 --human-readable
+# Inspect directories size (disk usage).
+#    -h, --human-readable    Print sizes in human readable format (e.g., 1K 234M 2G).
+#                            SIZE is an integer and optional unit (example: 10M is 10*1024*1024).
+#                            Units are K, M, G, T, P, E, Z, Y (powers of 1024)
+#                            or KB, MB, ... (powers of 1000).
+#    -d, --max-depth=N       Print the total for a directory (or file, with --all)
+#                            only if it is N or fewer levels below the command
+#                            line argument;  --max-depth=0 is the same as
+#                            --summarize
+```
+
 ### Permissions
 
 ```bash

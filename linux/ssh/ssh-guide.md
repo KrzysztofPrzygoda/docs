@@ -203,12 +203,13 @@ $ nano ~/.ssh/config
 
 See `man 5 ssh_config` for more info:
 - `Hostname` is the real host name to log into (IP or FQDN) and it's optional.
-- `Host` is a pattern that matches different configs and is provided as an argument in `ssh <host>` command.
+- `Host` is a pattern that matches one of many different configs and is provided as an argument in `ssh <host>` command. Plays the role of `Hostname` param when it hasn't been provided.
 
 ```bash
 Host <pattern>
     Hostname <IP-or-FQDN>
 ```
+
 ```bash
 Host dev
     Hostname <hostname>
@@ -222,6 +223,7 @@ $ ssh dev
 # Equivalent to:
 $ ssh -i /path/to/<private-key> <username>@<hostname>
 ```
+
 ```bash
 Host github.com
     PreferredAuthentications publickey
@@ -232,16 +234,7 @@ Host github.com
 # Usage:
 $ ssh <username>@github.com
 ```
-```bash
-Host github.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/<private-key>
-# No Hostname provided.
-# Matchess github.com and authenticates with private-key.
 
-# Usage:
-$ ssh <username>@github.com
-```
 If the hostname contains the character sequence `%h`, then this will be replaced with the host name specified on the command line (this is useful for manipulating unqualified names):
 ```bash
 Host dev*
@@ -333,11 +326,28 @@ $ ssh gitlab-user2
 # Login using Host field in config as credentials.
 ```
 
+```bash
+# User1 Account Identity
+Host github-work.com
+    Hostname github.com
+    IdentityFile ~/.ssh/<private-key-file-work>
+
+# User2 Account Identity
+Host github-personal.com
+    Hostname github.com
+    IdentityFile ~/.ssh/<private-key-file-personal>
+
+# Usage:
+$ git clone git@github-work.com:<user>/<repo>.git
+$ git clone git@github-personal.com:<user>/<repo>.git
+# Login github.com with SSH key using Host field in config as credentials.
+```
+
 #### Example: Agent Forwarding
 
 **SSH Agent Forwarding** allows to use SSH authentication when you don’t want put your private keys on remote server that connects to the other one, but only on your machine.
 
-For example, imagine you’re connecting to a remote server, and you want to `git pull` some code there that you’re storing on GitHub:
+For example, imagine you’re connecting to a remote server, and you want to `git pull` or `git clone` some code there that you’re storing on GitHub:
 
 `Local Machine (priv key) > Remote Server (pub key) > GitHub Server (pub key)`  
 
@@ -377,6 +387,21 @@ Host local_to_remote
 Host remote_to_local
     RemoteForward 7777 internal.com:443
 ```
+
+CLI equivalent of SSH tunnel (forwarding):
+```bash
+$ ssh <user>@<jump-host> -N -f -L <local-port>:<target-host>:<target-port>
+```
+You may use it if you want to connect to a server (`<target-host>`) that is hidden from the outside world, but accessible from a box (`<jump-host>`) you have SSH access to. Like an Amazon RDS database, which is only reachable from inside an AWS network:
+```bash
+# The following command establishes an SSH tunnel between local machine (@port 3307) and an RDS database (@port 3306), via an EC2 jump host (18.11.11.11).
+$ ssh ec2-user@18.11.11.11 -N -f -L 3307:somehost.12345.eu-central-1.rds.amazonaws.com:3306
+
+# You could now, for example, use the mysql client to connect to localhost:3307, which will be transparently tunneled to RDS for you.
+$ mysql -h localhost -P 3307
+```
+
+Note: A lot of tools/IDEs like [IntelliJ IDEA](https://www.jetbrains.com/idea/), support opening up SSH tunnels by just clicking a checkbox in the UI
 
 #### Example: Multiple Connections
 
@@ -466,4 +491,10 @@ $ ssh -T <user>@<host>
 # Test connection without pseudo-terminal allocation.
 $ ssh -Tvvv <user>@<host>
 # Test in verbose mode.
+```
+
+## Exit
+```bash
+# To kill an unresponsive SSH session, hit subsequently:
+Enter ~ .
 ```

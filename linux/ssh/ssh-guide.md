@@ -501,6 +501,11 @@ $ ssh -T <user>@<host>
 $ ssh -Tvvv <user>@<host>
 # Test in verbose mode.
 ```
+### Git
+```bash
+$ git config --global core.sshcommand "C:/Windows/System32/OpenSSH/ssh.exe"
+# Make Git use Window’s OpenSSH (and not the one it bundles).
+```
 
 ## Copy Files
 OpenSSH secure file copy `scp` copies files between hosts on a network.
@@ -531,3 +536,7 @@ $ exit
 # To kill an unresponsive SSH session, hit subsequently:
 Enter ~ .
 ```
+## Password Managers & SSH Agents
+Password Managers like [1Password](https://developer.1password.com/docs/ssh/agent/) or [Keepass](https://lechnology.com/software/keeagent/) can not only store your SSH keys, but they also come with their own ssh-agent, replacing your system’s ssh-agent.
+
+This means, whenever you unlock your password manager on any machine that you have it installed on, you’ll have all your SSH identities instantly available.

@@ -71,7 +71,7 @@ Location | Description
 `~/.ssh/known_hosts` |  Contains a list of host keys for all hosts the user has logged into that are not already in the systemwide list of known host keys.  See sshd(8) for further details of the format of this file.
 `~/.ssh/rc` | Commands in this file are executed by ssh when the user logs in, just before the user's shell (or command) is started.  See the sshd(8) manual page for more information.
 
-### Systemwide Files
+### System-wide Files
 Location | Description
 ---|---
 `/etc/ssh/ssh_config` | Systemwide configuration file.  The file format and configuration options are described in ssh_config(5).
@@ -84,10 +84,10 @@ Location | Description
 ### View Keys
 Before you create a key pair, check if a key pair already exists in your user home directory (it's defuult location):
 
-OS | Home
---- | ---
-**Linux** | `/home/<username>/.ssh/`
-**macOS** | `/Users/<username>/.ssh/`
+OS             | Home
+-------------- | ---------------------------
+**Linux**      | `/home/<username>/.ssh/`
+**macOS**      | `/Users/<username>/.ssh/`
 **Windows 10** | `C:\Users\<username>\.ssh\`
 
 To get there you may:
@@ -96,12 +96,13 @@ $ ls -l ~/.ssh
 # List .ssh dir contents in home dir (tilde sign ~ means user home dir).
 ```
 See if a file with one of the following formats exists:
-Algorithm | Public Key | Private Key
---- | --- | ---
-**ED25519** (preferred) | `id_ed25519.pub` | `id_ed25519`
-**RSA** (at least 2048-bit key size) | `id_rsa.pub` | `id_rsa`
-**DSA** (deprecated) | `id_dsa.pub` | `id_dsa`
-**ECDSA** (deprecated) | `id_ecdsa.pub` | `id_ecdsa`
+
+Algorithm                            | Public Key       | Private Key
+------------------------------------ | ---------------- | ------------  
+**ED25519** (preferred)              | `id_ed25519.pub` | `id_ed25519`
+**RSA** (at least 2048-bit key size) | `id_rsa.pub`     | `id_rsa`
+**DSA** (deprecated)                 | `id_dsa.pub`     | `id_dsa`
+**ECDSA** (deprecated)               | `id_ecdsa.pub`   | `id_ecdsa`
 
 ### Create Keys
 

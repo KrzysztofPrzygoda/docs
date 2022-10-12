@@ -7,6 +7,7 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021-2022
 - [SSH Academy](https://www.ssh.com/academy/ssh/)
 - Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
 - Digital Ocean: [How To Configure Custom Connection Options for your SSH Client?](https://www.digitalocean.com/community/tutorials/how-to-configure-custom-connection-options-for-your-ssh-client)
+- Digital Ocean: [How To Use SSHFS to Mount Remote File Systems Over SSH?](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh)
 
 Some SSH cheat sheets:
 - https://www.marcobehler.com/guides/ssh-cheat-sheet
@@ -541,3 +542,30 @@ Enter ~ .
 Password Managers like [1Password](https://developer.1password.com/docs/ssh/agent/) or [Keepass](https://lechnology.com/software/keeagent/) can not only store your SSH keys, but they also come with their own ssh-agent, replacing your system’s ssh-agent.
 
 This means, whenever you unlock your password manager on any machine that you have it installed on, you’ll have all your SSH identities instantly available.
+
+## Mount Remote Filesystem
+@todo
+https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh
+
+## Security
+
+### One vs Multiple SSH key-pairs
+Is it reasonable to have multiple SSH keys?
+
+Ultimately this is up to you. You need to evaluate your threat model:
+- How likely is it that one of your keys is compromised?
+- If one key is compromised, how likely is it that the other keys will be compromised? Especially, if all of them are used from the same machine and are located in the same `~/.ssh` path.
+- What are the consequences of your keys being compromised?
+- What is the cost (including time) of managing multiple keys?
+
+Considering factors such as these should help you decide if you really need separate keys.
+
+### Connvenience vs Security Perspective
+In general situation, if we have to trade off with security and convenience at the same time, we can multiply the two scores, and maybe One SSH key-pair (WITH passwd) is the good one to choose.
+
+    Convenient  Security  Ways to go
+       5           1      One   SSH key-pair  (NO passwd)
+       4           2      One   SSH key-pair  (WITH passwd)
+       3           1      Multi SSH key-pairs (NO passwd)
+       2           2      Multi SSH key-pairs (WITH passwd) (SAME passwd)
+       1           3      Multi SSH key-pairs (WITH passwd) (DIFF passwds)

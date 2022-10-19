@@ -9,6 +9,11 @@ Mainly based on:
 - **Bash** (shell for GNU operating systems) and
 - **GNU/Linux** distribution systems (Debian, Ubuntu, Mint etc.).
 
+## Reference
+
+- [ Linux Documentation Project Guides ](https://tldp.org/guides.html)
+- Apple [Shell Scripting Primer](https://developer.apple.com/library/archive/documentation/OpenSource/Conceptual/ShellScripting/Introduction/Introduction.html)
+ 
 ## Table of Contents
 
 - [General](#general)
@@ -1049,6 +1054,7 @@ $ usermod -aG <group1>,<group2>,<group3> <user>
 # Add user to the group.
 # -a|--append Append w/o removing from other groups.
 # -G|--groups Supplementary groups list.
+
 $ usermod -aG sudo <user>
 # Add user to sudoers group.
 
@@ -1061,6 +1067,13 @@ $ usermod -G "" <user>
 # Remove user from all supplementary groups.
 $ deluser <user> <group>
 # Remove user from the group.
+```
+macOS
+```bash
+$ dscl . read /Groups/<group> GroupMembership
+# Read group users.
+$ dscl . append /Groups/<group> GroupMembership <user>
+# Add user to the group.
 ```
 #### Shell
 

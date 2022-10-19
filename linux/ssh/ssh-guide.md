@@ -538,68 +538,6 @@ $ exit
 # To kill an unresponsive SSH session, hit subsequently:
 Enter ~ .
 ```
-## Password Managers & SSH Agents
-Password Managers like [1Password](https://developer.1password.com/docs/ssh/agent/) or [Keepass](https://lechnology.com/software/keeagent/) can not only store your SSH keys, but they also come with their own ssh-agent, replacing your system’s ssh-agent.
-
-This means, whenever you unlock your password manager on any machine that you have it installed on, you’ll have all your SSH identities instantly available.
-
-## Mount Remote Filesystem
-
-Transferring files over an SSH connection, by using either SFTP or SCP, is a popular method of moving small amounts of data between servers. In some cases, however, it may be necessary to share entire directories, or entire filesystems, between two remote environments. While this can be accomplished by configuring an SMB or NFS mount, both of these require additional dependencies and can introduce security concerns or other overhead.
-
-As an alternative, you can install SSHFS to mount a remote directory by using SSH alone. This has the significant advantage of requiring no additional configuration, and inheriting permissions from the SSH user on the remote system. SSHFS is particularly useful when you need to read from a large set of files interactively on an individual basis.
-
-### Install SSHFS
-```bash
-$ sudo apt update
-$ sudo apt install sshfs
-# Install SSHFS on Linux/Debian.
-
-https://osxfuse.github.io/
-# Install SSHFS on macOS.
-
-https://github.com/winfsp/sshfs-win
-# Install SSHFS on Windows.
-```
-### Mount
-```bash
-$ sudo sshfs [<user>@]<host>:[<dir>] <local-dir> [<options>]
-# Mount remote host <dir> to <local-dir> mount point.
-
-$ sudo sshfs [<user>@]<host>:~/ <local-dir> -o allow_other,default_permissions
-# Mount remote host user home folder to <local-dir> mount point with options as follows:
-# -o     precedes miscellaneous mount options (this is the same as when running the mount command normally
-#        for non-SSH disk mounts). In this case, you are using:
-# allow_other
-#        to allow other users to have access to this mount (so that it behaves like
-#        a normal disk mount, as sshfs prevents this by default), and
-# default_permissions
-#        so that it otherwise uses regular filesystem permissions.
-```
-> **Note:** On Windows, remote filesystems are sometimes mounted with their own drive letter like `G:`, and on Mac, they are usually mounted in the `/Volumes` directory.
-
-> **Note:** If you receive a `Connection reset by peer` message, make sure that you have copied your public SSH key to the remote system.
-
-> **Note:** If you need to mount a remote directory using SSHFS without requiring `sudo` permissions, you can create a user group called `fuse` on your local machine, by using `sudo groupadd fuse`, and then adding your local user to that group, by using `sudo usermod -a -G fuse <user>`.
-
-### Permanent Mount
-```bash
-$ sudo nano /etc/fstab
-
-# Add this line at the end of 
-<user>@<host>:<dir> <local-dir> fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/<user>/.ssh/<private-key>,allow_other,default_permissions 0 0
-
-# Mount remote host permanently with options:
-# fuse.sshfs
-#        specifies the driver being used to mount this remote directory.
-# noauto,x-systemd.automount,_netdev,reconnect
-#        are a set of options that work together to ensure that permanent mounts to network drives
-#        behave gracefully in case the network connection drops from the local machine
-#        or the remote machine.
-# 0 0    signifies that the remote filesystem should never be dumped or validated by
-#        the local machine in case of errors. These options may be different
-#        when mounting a local disk.
-```
 
 ## Security
 
@@ -623,3 +561,138 @@ In general situation, if we have to trade off with security and convenience at t
        3           1      Multi SSH key-pairs (NO passwd)
        2           2      Multi SSH key-pairs (WITH passwd) (SAME passwd)
        1           3      Multi SSH key-pairs (WITH passwd) (DIFF passwds)
+
+### Password Managers & SSH Agents
+Password Managers like [1Password](https://developer.1password.com/docs/ssh/agent/) or [Keepass](https://lechnology.com/software/keeagent/) can not only store your SSH keys, but they also come with their own ssh-agent, replacing your system’s ssh-agent.
+
+This means, whenever you unlock your password manager on any machine that you have it installed on, you’ll have all your SSH identities instantly available.
+
+## Mount Remote Filesystem
+
+Transferring files over an SSH connection, by using either SFTP or SCP, is a popular method of moving small amounts of data between servers. In some cases, however, it may be necessary to share entire directories, or entire filesystems, between two remote environments. While this can be accomplished by configuring an SMB or NFS mount, both of these require additional dependencies and can introduce security concerns or other overhead.
+
+As an alternative, you can install SSHFS to mount a remote directory by using SSH alone. This has the significant advantage of requiring no additional configuration, and inheriting permissions from the SSH user on the remote system. SSHFS is particularly useful when you need to read from a large set of files interactively on an individual basis.
+
+### Install SSHFS
+```bash
+$ sudo apt update
+$ sudo apt install sshfs
+# Install SSHFS on Linux/Debian.
+
+https://osxfuse.github.io/
+# Install SSHFS on macOS.
+
+https://github.com/winfsp/sshfs-win
+# Install SSHFS on Windows.
+```
+### Mount
+> **Note:** If you use `sudo sshfs` then SSH config and key-pair are taken from the `root` user account, not your own (compare `whoami` vs `sudo whoami` to find that out). If you need to mount a remote directory using SSHFS without requiring `sudo` permissions, you can create a user group called `fuse` on your local machine, by using `sudo groupadd fuse`, and then adding your local user to that group, by using `sudo usermod -a -G fuse <user>`.
+
+```bash
+$ sshfs [<user>@]<host>:[<dir>] <local-dir> [<options>]
+$ sshfs <host-pattern>:[<dir>] <local-dir> [<options>]
+# Mount remote host <dir> to <local-dir> mount point.
+# Use SSH config with <host-pattern>.
+
+$ sshfs [<user>@]<host>:~/ <local-dir> -o allow_other,default_permissions,direct_io,reconnect,volname=<volume-name>
+# Mount remote host user home folder to <local-dir> mount point with options as follows:
+# -o     precedes miscellaneous mount options (this is the same as when running the mount command normally
+#        for non-SSH disk mounts). In this case, you are using:
+# allow_other
+#        to allow other users to have access to this mount (so that it behaves like
+#        a normal disk mount, as sshfs prevents this by default), and
+# default_permissions
+#        so that it otherwise uses regular filesystem permissions.
+```
+An example:
+```bash
+$ mkdir -p ~/Mounts/bitsmodo.com
+# Create mount point in user folder.
+
+$ sshfs bitsmodo:/home/klient.dhosting.pl/bitsmodo ~/Mounts/bitsmodo.com -o allow_other,default_permissions,direct_io,reconnect,volname=bitsmodo.com
+# Mount using ssh config Host pattern.
+```
+> **Note:** On Windows, remote filesystems are sometimes mounted with their own drive letter like `G:`, and on Mac, they are usually mounted in the `/Volumes` directory.
+
+> **Note:** If you receive a `Connection reset by peer` message, make sure that you have copied your public SSH key to the remote system.
+
+> **Note:** If you need to mount a remote directory using SSHFS without requiring `sudo` permissions, you can create a user group called `fuse` on your local machine, by using `sudo groupadd fuse`, and then adding your local user to that group, by using `sudo usermod -a -G fuse <user>`.
+
+### Unmount
+```bash
+$ unmount <local-dir>
+# Unmount on Linux while error (mount_macfuse: mount point <local-dir> is itself on a macFUSE volume).
+
+$ diskutil unmount <local-dir>
+# Unmount on macOS.
+# Alternatively, click Eject in Finder.
+```
+
+### Permanent Mount
+
+#### Linux `fstab`
+```bash
+$ sudo nano /etc/fstab
+
+# Add this line at the end of 
+<user>@<host>:<dir> <local-dir> fuse.sshfs noauto,x-systemd.automount,_netdev,reconnect,identityfile=/home/<user>/.ssh/<private-key>,allow_other,default_permissions,volname=<volume-name> 0 0
+
+# Mount remote host permanently with options:
+# fuse.sshfs
+#        specifies the driver being used to mount this remote directory.
+# noauto,x-systemd.automount,_netdev,reconnect
+#        are a set of options that work together to ensure that permanent mounts to network drives
+#        behave gracefully in case the network connection drops from the local machine
+#        or the remote machine.
+# 0 0    signifies that the remote filesystem should never be dumped or validated by
+#        the local machine in case of errors. These options may be different
+#        when mounting a local disk.
+```
+
+#### macOS `launchd`
+Follow Apple [Terminal User Guide / launchd](https://support.apple.com/guide/terminal/script-management-with-launchd-apdc6c1077b-5d5d-4d35-9c19-60f2397b2369/mac) and [Creating Launch Daemons and Agents](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html) developer documentation archive.
+
+In most cases, this is the way to go:
+
+1. Create a `com.bitsmodo.MountSSHFS.plist` file.
+2. Place in `~/Library/LaunchAgents`.
+3. Log in or run manually via `launchctl load com.bitsmodo.MountSSHFS.plist`.
+4. Open `System Settings.app` > `General` > `Login Items` > Find your service under `Allow in the Background` and turn it `On`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.bitsmodo.MountSSHFS</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/bin/sshfs</string>
+		<string>bitsmodo:/home/klient.dhosting.pl/bitsmodo ~/Mounts/bitsmodo.com -o allow_other,default_permissions,direct_io,reconnect,volname=bitsmodo.com</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>
+```
+```bash
+$ tail /var/log/system.log
+# Look for any error messages.
+```
+
+#### macOS `Automator.app`
+Create an app that can be run via System Settings > Login Items for specific user.
+1. Open `Automator.app` > Choose `Workflow` > Add `Run Shell Script` action to the workflow.
+2. Paste your command (requires full path to `sshfs` that can be found with `command -v sshfs`):
+```bash
+REMOTE_DIR="bitsmodo:/home/klient.dhosting.pl/bitsmodo"
+LOCAL_DIR="Mounts/bitsmodo.com"
+VOLUME_NAME="bitsmodo.com"
+
+diskutil unmount ${LOCAL_DIR}
+mkdir -p ~/${LOCAL_DIR}
+/usr/local/bin/sshfs ${REMOTE_DIR} ~/${LOCAL_DIR} -o allow_other,default_permissions,direct_io,reconnect,volname=${VOLUME_NAME}
+```
+3. Choose `File` > `Save...` > Set File Format: `Application` > Save As: `Mount bitsmodo.com.app` > `Save`.
+4. Open `System Settings.app` > `General` > `Login Items` > Click `+` icon below `Open at Login` table > Choose your app.

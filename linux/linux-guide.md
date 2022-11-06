@@ -764,6 +764,10 @@ $ curl ifconfig.me
 # Get your public IP.
 ```
 ```bash
+$ hostname
+# Get name of the host/machine/computer.
+```
+```bash
 $ ifconfig
 $ ip a [addr|a]
 # List all network interfaces.
@@ -778,8 +782,13 @@ $ ipconfig <command> <args>
 $ ipconfig getsummary <interface-name>
 $ ipconfig getsummary en0
 # View en0 (primary) interface configuration.
-
 ```
+```bash
+$ arp -a
+# View all known IP adresses in the LAN (resolved MAC to IP mappings).
+```
+
+#### Connections
 ```bash
 $ netstat
 # List all network connections.
@@ -788,10 +797,6 @@ $ sudo lsof -i
 $ sudo lsof -i [ip-version][protocol][@hostname|hostaddr][:service|port]
 $ sudo lsof -i TCP:80
 # Find out process listening on tcp/ip port 80.
-```
-```bash
-$ hostname
-# Get name of the host/machine/computer.
 ```
 
 #### Sockets

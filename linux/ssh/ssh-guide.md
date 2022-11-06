@@ -652,9 +652,9 @@ $ sudo nano /etc/fstab
 #### macOS `launchd`
 Follow Apple [Terminal User Guide / launchd](https://support.apple.com/guide/terminal/script-management-with-launchd-apdc6c1077b-5d5d-4d35-9c19-60f2397b2369/mac) and [Creating Launch Daemons and Agents](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html) developer documentation archive.
 
-In most cases, this is the way to go:
+In most cases, this is the way to go (file naming is an example):
 
-1. Create a `com.bitsmodo.MountSSHFS.plist` file.
+1. Create a `com.bitsmodo.MountSSHFS.plist` file (contents below).
 2. Place in `~/Library/LaunchAgents`.
 3. Log in or run manually via `launchctl load com.bitsmodo.MountSSHFS.plist`.
 4. Open `System Settings.app` > `General` > `Login Items` > Find your service under `Allow in the Background` and turn it `On`.

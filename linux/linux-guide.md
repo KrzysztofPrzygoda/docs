@@ -760,12 +760,25 @@ $ grep -hnr -A2 -B2 --no-group-separator "pattern" <logfile>
 ### Inspect
 
 ```bash
+$ curl ifconfig.me
+# Get your public IP.
+```
+```bash
 $ ifconfig
 $ ip a [addr|a]
 # List all network interfaces.
 # Use ip instead of ifconfig on CentOS/RHEL >= v7.
 # You may install ifconfig via:
 $ yum install net-tools
+```
+```bash
+$ ipconfig
+$ ipconfig <command> <args>
+# View and control IP configuration state.
+$ ipconfig getsummary <interface-name>
+$ ipconfig getsummary en0
+# View en0 (primary) interface configuration.
+
 ```
 ```bash
 $ netstat

@@ -1,0 +1,38 @@
+<!--
+    Pure CSS notification animation (fade-in and fade-out) with fixed position on the viewport.
+    WordPress Contact Form 7 example.
+-->
+
+<div role="form" class="wpcf7" lang="pl-PL" dir="ltr">
+    <form action="/someaction" method="post" class="wpcf7-form invalid wpcf7-acceptance-as-validation" novalidate="novalidate" data-status="invalid">
+        <!-- ... -->
+        <div class="wpcf7-response-output" aria-hidden="true">Notification text.</div>
+    </form>
+</div>
+
+<style>
+    /* Fix response */
+    .wpcf7 form .wpcf7-response-output {
+        display: block;
+        position: fixed;
+        inset: auto;
+        top: 0;
+        height: fit-content;
+        max-width: 740px;
+        width: 90%;
+        z-index: 9999;
+        margin-left: 0 !important;
+        left: 50%;
+        transform: translateX(-50%);
+    }    
+    /* Animate response */
+    .wpcf7 form .wpcf7-response-output {
+        top: -100vh;
+        opacity: 0;
+        animation: wpcf7-response-output-hide 7s ease .1s 1 normal;
+    }
+    @keyframes wpcf7-response-output-hide {
+        0, 10%, 90%, 100% { opacity: 0; top: -100vh; }
+        11%, 89% { opacity: 1; top: 5vh; }
+    }
+</style>

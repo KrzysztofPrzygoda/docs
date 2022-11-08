@@ -23,9 +23,26 @@ http {
         '$status $body_bytes_sent "$http_referer" '
         '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log  off;
+    #access_log  off;
     #access_log syslog:server=unix:/dev/log,facility=local7,tag=nginx_access,nohostname main;
     error_log   syslog:server=unix:/dev/log,facility=local7,tag=nginx_error,nohostname error;
+
+    #<KPrzygoda> Custom access log
+    access_log  on;
+
+    #Set custom log format
+    log_format  accesslog  '$remote_addr - $remote_user [$time_local] $server_name|$host:$server_port "$request" '
+        '$status $body_bytes_sent "$http_referer" '
+    
+    #Exclude traffic from ports started with 10
+    map $server_port $loggable {
+        ~^10 0;
+        default 1;
+    }
+
+    #Add log entries to the local Log Center app
+    access_log  syslog:server=127.0.0.1:514,facility=local7,tag=nginx_access accesslog if=$loggable;
+    #</KPrzygoda>
 
     tcp_nopush  on;
     tcp_nodelay on;

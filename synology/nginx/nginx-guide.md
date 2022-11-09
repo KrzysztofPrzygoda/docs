@@ -3,9 +3,10 @@
 Author: Krzysztof Przygoda, 2022
 
 ## Reference
-- Nginx [Configuring Logging](https://docs.nginx.com/nginx/admin-guide/monitoring/logging/).
-- CloudFlare [Network ports](https://developers.cloudflare.com/fundamentals/get-started/reference/network-ports/).
-- CloudFlare [Proxies' IP Ranges](https://www.cloudflare.com/en-gb/ips/).
+- Nginx [Configuring Logging](https://docs.nginx.com/nginx/admin-guide/monitoring/logging/)
+- CloudFlare [What is a Reverse Proxy?](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/)
+- CloudFlare [Network ports](https://developers.cloudflare.com/fundamentals/get-started/reference/network-ports/)
+- CloudFlare [Proxies' IP Ranges](https://www.cloudflare.com/en-gb/ips/)
 
 ## Reverse Proxy
 
@@ -79,12 +80,20 @@ Subdomains like `my.app.domain.com` requires `DNS only` proxy status on free acc
 ## Logging
 
 For debug purposes you may need to know what's coming from CloudFlare to your Synology Reverse Proxy.
-The easiest way is to 
+The easiest way is to modify Nginx config template.
+
+Go to `Control Panel` > `Terminal & SNMP` > `Terminal` > `Enable SSH service`: `Yes` (remember to disable it when you finish).
 
 ```bash
-$ sudo vim /usr/syno/share/nginx/nginx.mustache
-# Edit config template.
+$ ssh <user-admin>@<dsm-ip>
+# Login to DSM SSH using your admin account.
 ```
+```bash
+$ sudo vim /usr/syno/share/nginx/nginx.mustache
+# Edit config template. Provide admin password if asked.
+```
+See [vim cheetsheet](https://devhints.io/vim) for editing hints.
+
 Add your custom log config under default one (look for `access_log  off;` line), for example:
 ```nginx
     #<KPrzygoda> Custom access log

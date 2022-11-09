@@ -49,9 +49,9 @@ Go to `Control Panel` > `Security` > `Certificate` > `Add`.
 
 Create one or import existing one.
 
-> Notice that Synology does not support Let's Encrypt wildcard certificates creation. Thus, perhaps, you are forced to create separate cert for every subdomain you need. Anyway, while getting certificate for particular subdomain, remember to paste its FQDN (e.g. app.domain.com) into `Domain name` as well as into `Subject Alternative Name` (SAN).
+> Notice that Synology does not support Let's Encrypt wildcard certificates creation. Thus, perhaps, you are forced to create separate cert for every subdomain you need. Anyway, while getting your own Let's Encrypt certificate for particular subdomain, remember to paste its FQDN (e.g. app.domain.com) into `Domain name` as well as into `Subject Alternative Name` (SAN).
 
-For `Proxied` domains you may use `CloudFlare Origin Certificate` created and downloaded from CloudFlare.
+For `Proxied` domains you may use `CloudFlare Origin Certificate` created and downloaded from CloudFlare. This way CF covers wildcard certificate for client and you don't have to create dedicated any more for new apps (just use the same orgin cert for every app at Reverse Proxy).
 
 #### Map certificate with the app
 Go to `Control Panel` > `Security` > `Certificate` > `Settings` and map your app (its domain) with certificate.

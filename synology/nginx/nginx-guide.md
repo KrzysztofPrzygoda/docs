@@ -35,9 +35,11 @@ These are optional and may be required to setup in some cases like these:
 Some of them are:
 ```
 X-Forwarded-Host: $host
-X-Forwarded-For: $proxy_add_x_forwarded_for
+X-Forwarded-For: $remote_addr
 X-Real-IP: $remote_addr
 ```
+> NOTICE: More info about headers on [Nginx: Using the Forwarded header](https://www.nginx.com/resources/wiki/start/topics/examples/forwarded/). `X-Forwarded-For` header security consideretions on [sekurak.pl](https://sekurak.pl/naglowek-x-forwarded-for-problemy-bezpieczenstwa/) (Polish language only).
+
 Add `Create` > `WebSocket` headers if your application uses [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol (Synology will add ready to use entries).
 
 #### Advanced Setting

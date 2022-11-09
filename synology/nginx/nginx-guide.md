@@ -59,7 +59,7 @@ Go to `Control Panel` > `Security` > `Certificate` > `Settings` and map your app
 ### 4. Setup routing
 - You need to forward port `443` (and/or `80` if it is relevant) on your router to your DSM machine with Reverse Proxy configured.
 - At the same time open corresponding ports on DSM `Control Panel` > `Security` > `Firewall` > `Edit Rules`.
-- You may also need to add [CloudFlare proxy servers' IPs](https://www.cloudflare.com/ips/) to your DSM `Control Panel` > `Security` > `Trusted Proxies`.
+- You may also need to add [CloudFlare proxy servers' IPs](https://www.cloudflare.com/ips/) to your DSM `Control Panel` > `Security` > `Trusted Proxies` (both IPv4 and IPv6 addresses).
 
 ## CloudFlare
 

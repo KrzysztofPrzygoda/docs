@@ -35,7 +35,7 @@ These are optional and may be required to setup in some cases like these:
 Some of them are:
 ```
 X-Forwarded-Host: $host
-X-Forwarded-For: $remote_addr
+X-Forwarded-For: $proxy_add_x_forwarded_for
 X-Real-IP: $remote_addr
 ```
 Add `Create` > `WebSocket` headers if your application uses [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol (Synology will add ready to use entries).

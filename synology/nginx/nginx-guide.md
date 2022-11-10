@@ -3,14 +3,35 @@
 Author: Krzysztof Przygoda, 2022
 
 ## Reference
-- Nginx [Configuring Logging](https://docs.nginx.com/nginx/admin-guide/monitoring/logging/)
-- CloudFlare [What is a Reverse Proxy?](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/)
+
+[CloudFlare Reverse Proxy]: https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/
+
+- Based on Synology DSM v7.1
+- Synology [Reverse Proxy setup](https://kb.synology.com/en-us/DSM/help/DSM/AdminCenter/system_login_portal_advanced?version=7).
+- CloudFlare [What is a Reverse Proxy?][CloudFlare Reverse Proxy]
 - CloudFlare [Network ports](https://developers.cloudflare.com/fundamentals/get-started/reference/network-ports/)
 - CloudFlare [Proxies' IP Ranges](https://www.cloudflare.com/en-gb/ips/)
+- Nginx [Configuring Logging](https://docs.nginx.com/nginx/admin-guide/monitoring/logging/)
 
 ## Reverse Proxy
 
-### 1. Setup access
+There are several benefits of using Reverse Proxy described in [Cloudflare guide][CloudFlare Reverse Proxy]. One of them is presented below.
+
+When you expose one or more apps to the Internet, typically you need to forward ports on your router to access them. For example:
+- App 1: `https://domain.com:8080` > `10.10.10.10:8069`,
+- App 2: `https://domain.com:8088` > `10.10.10.10:5050`,
+- App 3: `https://domain.com:443` > `10.10.10.10:443`,
+
+where `10.10.10.10` is your DSM LAN IP.
+
+With Reverse Proxy it is possible to change this scenario to (sub)domain forwarding, exposing only one port (here `443`):
+- App 1: `https://app1.domain.com` > `10.10.10.10:8069`,
+- App 2: `https://app2.domain.com` > `10.10.10.10:5050`,
+- App 3: `https://anotherdomain.com` > `10.10.10.10:443`.
+
+To setup Synology Reverse Proxy follow steps below.
+
+### 1. Setup access profile
 Prepare `Control Panel` > `Login Portal` > `Advanced` > `Access Control Profile` if you need other than default public access to your application.
 
 ### 2. Setup an application
@@ -40,7 +61,7 @@ X-Real-IP: $remote_addr
 ```
 > NOTICE: More info about headers on [Nginx: Using the Forwarded header](https://www.nginx.com/resources/wiki/start/topics/examples/forwarded/). `X-Forwarded-For` header security consideretions on [sekurak.pl](https://sekurak.pl/naglowek-x-forwarded-for-problemy-bezpieczenstwa/) (Polish language only).
 
-Add `Create` > `WebSocket` headers if your application uses [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol (Synology will add ready to use entries).
+Add `Create` > `WebSocket` headers if your application uses [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol (Synology will add ready to use header entries).
 
 #### Advanced Setting
 Adjust them to your liking. You may leave defaults.
@@ -90,13 +111,26 @@ Go to `Control Panel` > `Terminal & SNMP` > `Terminal` > `Enable SSH service`: `
 $ ssh <user-admin>@<dsm-ip>
 # Login to DSM SSH using your admin account.
 ```
+
+### Error Log
+```bash
+$ sudo tail -F /var/log/nginx/error.log
+# Mo
+```
+
+### Access Log
+By default Synology Nginx access log is off. See [Custom Log](#custom-log) section below to enable it.
+
+### Custom Log
 ```bash
 $ sudo vim /usr/syno/share/nginx/nginx.mustache
 # Edit config template. Provide admin password if asked.
 ```
 See [vim cheetsheet](https://devhints.io/vim) for editing hints.
 
-Add your custom log config under default one (look for `access_log  off;` line), for example:
+Add your custom log config under default one (look for `access_log  off;` line).
+
+Custom log config example:
 ```nginx
     #<KPrzygoda> Custom access log
     access_log  on;
@@ -115,6 +149,7 @@ Add your custom log config under default one (look for `access_log  off;` line),
     access_log  syslog:server=127.0.0.1:514,facility=local7,tag=nginx_access accesslog if=$loggable;
     #</KPrzygoda>
 ```
+To apply new config:
 ```bash
 $ sudo synosystemctl restart nginx
 # Restart Nginx webserver.

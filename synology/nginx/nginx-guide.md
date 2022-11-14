@@ -78,6 +78,8 @@ Go to `Control Panel` > `Security` > `Certificate` > `Add`.
 
 Create one or import existing one.
 
+For *Let's Encrypt* follow [How do I obtain a certificate from Let's Encrypt on my Synology NAS?](https://kb.synology.com/en-me/DSM/tutorial/How_to_enable_HTTPS_and_create_a_certificate_signing_request_on_your_Synology_NAS)
+
 > Notice that Synology does not support *Let's Encrypt* wildcard certificates creation. Thus, perhaps, you are forced to create separate cert for every subdomain you need. Anyway, while getting your own *Let's Encrypt* certificate for particular subdomain, remember to paste its FQDN (e.g. app.domain.com) into `Domain name` as well as into `Subject Alternative Name` (SAN).
 
 For `Proxied` domains you may use `CloudFlare Origin Certificate` created and downloaded from CloudFlare. This way CF covers wildcard certificate for client and you don't have to create dedicated any more for new apps (just use the same orgin cert for every app at Reverse Proxy).
@@ -115,7 +117,7 @@ $ ssh <user-admin>@<dsm-ip>
 ### Error Log
 ```bash
 $ sudo tail -F /var/log/nginx/error.log
-# Mo
+# Monitor error log.
 ```
 
 ### Access Log

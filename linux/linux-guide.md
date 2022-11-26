@@ -1245,6 +1245,8 @@ $ du --max-depth=1 --human-readable
 
 $ ls -l <file>
 # Show file permittions.
+$ stat <file>
+# Display file or file system status (including access/permissions info).
 
 $ chmod u+rwx <file>
 $ chmod u-rwx <file>

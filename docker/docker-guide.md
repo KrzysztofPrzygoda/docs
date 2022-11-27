@@ -13,11 +13,12 @@ $ sudo docker container ls
 # List existing containers.
 
 $ sudo docker exec -it <container-name> /bin/bash
-# SSH into container.
+# SSH into running container.
+$ sudo docker exec -it <container-name> <command>
+# Run command in running container.
 
-$ docker-compose run <container-name> <command>
-$ docker-compose run <container-yml-file> sh -c '<command-1> && <command-2> && <command-3>'
-# Run command in a container.
+$ docker logs [options] <container-name>
+# Show container log.
 
 $ sudo docker cp [options] <container-name>:<src-path> <dest-path>
 # Copy container contents to the host.

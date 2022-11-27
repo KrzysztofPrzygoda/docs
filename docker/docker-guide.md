@@ -1,9 +1,10 @@
 # Docker Guide
+
 Author: Krzysztof Przygoda, 2022
 
-## Refernece
+## Reference
 
-- Docker [docs](https://docs-stage.docker.com/reference/)
+- Docker [Docs](https://docs-stage.docker.com/reference/)
 
 ## Shorts
 
@@ -23,7 +24,7 @@ $ docker logs [options] <container-name>
 $ sudo docker cp [options] <container-name>:<src-path> <dest-path>
 # Copy container contents to the host.
 $ sudo docker cp [options] <container-name>:<src-path> - > contents.tar
-# Copy container contents to the uncompressed tar archive.
+# Copy container contents to the uncompressed tar archive file.
 $ sudo docker cp [options] <src-path> <container-name>:<dest-path>
 # Copy files to the container.
 ```

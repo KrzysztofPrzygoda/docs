@@ -6,6 +6,7 @@ It's neither deep-dive nor in-depth document.
 This guide is intended to support daily developer tasks and to be as concise as possible without any further ado.
 
 Mainly based on:
+
 - **Bash** (shell for GNU operating systems) and
 - **GNU/Linux** distribution systems (Debian, Ubuntu, Mint etc.).
 
@@ -273,7 +274,9 @@ wait $!
 # Wait until 2 job completed
 echo Job 2 exited with status $?
 ```
+
 Alternatively:
+
 ```bash
 $ nohup <command> &
 # Run command in background and ignore all SIGHUP signals.
@@ -281,6 +284,7 @@ $ nohup <command> &
 # If you log out or close the terminal, the process is not terminated.
 # The command output is redirected to the nohup.out file.
 ```
+
 To list all running processes, including the disowned use the `ps aux` command. See [System / Processes](#processes) section for more.
 
 #### Output Capture
@@ -293,6 +297,7 @@ $ result=$?
 ```
 
 [Command substitution](https://tldp.org/LDP/abs/html/commandsub.html) - replace command with its output:
+
 ```bash
 $ output=`<command> [options]`
 # Old/classic form (backticks)...
@@ -313,6 +318,7 @@ $ $(< <file>)
 ```
 
 [Process substitution](https://tldp.org/LDP/abs/html/process-sub.html) - command output as a file:
+
 ```bash
 >(command_list)
 <(command_list)
@@ -396,6 +402,7 @@ $ echo $var
 value
 # Prints var value
 ```
+
 ```bash
 $ var=value
 $ echo '${var}'
@@ -405,6 +412,7 @@ $ echo "${var}"
 value
 # Double quotes expands variables.
 ```
+
 ```bash
 $ env
 $ printenv
@@ -415,7 +423,9 @@ $ sudo sudo -V
 # The list of environment variables that sudo clears.
 # It is contained in the output of sudo -V when run as root).
 ```
+
 Some popular environment variables:
+
 ```bash
 $ echo $PATH
 # Show which directories to search for executable files in response to commands issued by a user.
@@ -425,6 +435,7 @@ $ echo $SHELL
 $ echo $HOME
 # Show user home dir path.
 ```
+
 ```bash
 $ (set -o posix; set) | less
 # List all defined variables and only variables (w/o functions using POSIX mode).
@@ -464,6 +475,7 @@ $ lsb_release -a
 $ lsb_release -sa
 # [Package] Show descriptive OS version.
 ```
+
 ```bash
 $ uname -s
 # Kernel name.
@@ -569,8 +581,11 @@ $ batch
 $ crontab
 # Maintain crontab files for individual users.
 ```
+
 ### Services
+
 Manage Systemd Services and Units (see [more](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units)):
+
 ```bash
 $ systemctl <command> <service>
 # Manage system services.
@@ -583,11 +598,14 @@ $ systemctl enable|disable <service>
 $ systemctl restart <service>
 # Restart service.
 ```
+
 ```bash
 $ systemctl cat <servicename>.service
 # Show service unit file.
 ```
+
 Unit example:
+
 ```bash
 # Systemd Unit Configuration File
 # /etc/systemd/system/docker-app.service
@@ -621,7 +639,9 @@ ExecStop=bash stop.sh prod
 [Install]
 WantedBy=multi-user.target
 ```
+
 Unit installation:
+
 ```bash
 service="service-name"
 # Copy in systemd unit file
@@ -638,6 +658,7 @@ sudo systemctl disable ${service}
 $ nproc
 # Print the number of processing units available to the current process, which may be less than the number of online processors.
 ```
+
 ### Memory
 
 ```bash
@@ -658,6 +679,7 @@ $ date
 $ cal
 # Show calendar.
 ```
+
 ```bash
 $ timedatectl
 $ ls -l /etc/localtime
@@ -669,6 +691,7 @@ $ ls /usr/share/zoneinfo/<zone>/<city>
 $ timedatectl list-timezones
 # List time zones.
 ```
+
 ```bash
 $ sudo timedatectl set-timezone <your_time_zone>
 # Set system time zone using timedatactl package.
@@ -682,6 +705,7 @@ $ dpkg-reconfigure --frontend noninteractive tzdata
 ```
 
 ### Drives
+
 TODO: Drives operations.
 
 ### Drivers
@@ -695,6 +719,7 @@ $ cat /proc/modules
 # Linux kernel use a term modules for all hardware device drivers.
 # Please note that `lsmod` is a trivial program which nicely formats the contents of the /proc/modules, showing what kernel modules are currently loaded.
 ```
+
 ### Log Files
 
 https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
@@ -710,6 +735,7 @@ $ cat /var/log/syslog
 ```
 
 Usage:
+
 - Track non-kernel boot errors, application-related service errors and the messages that are logged during system startup.
 - Investigate issues with hardware (e.g. the sound card) during the system startup.
 - This is the first log file that the Linux administrators should check if something goes wrong.
@@ -720,7 +746,9 @@ $ cat /var/log/auth.log
 $ cat /var/log/secure
 # In RedHat and CentOS-based systems.
 ```
+
 Usage:
+
 - Investigate failed login attempts or brute-force attacks.
 
 ```bash
@@ -728,7 +756,9 @@ $ cat /var/log/boot.log
 # Booting related information and messages logged during system startup process.
 # The system initialization script, `/etc/init.d/bootmisc.sh`, sends all bootup messages to this log file.
 ```
+
 Usage:
+
 - Investigate issues related to improper shutdown, unplanned reboots or booting failures.
 - Determine the duration of system downtime caused by an unexpected shutdown.
 
@@ -738,7 +768,9 @@ $ cat /var/log/dmesg
 # Kernel ring buffer messages.
 # Information related to hardware devices and their drivers.
 ```
+
 Usage:
+
 - If a certain hardware is functioning improperly or not getting detected, then you can rely on this log file to troubleshoot the issue.
 
 #### Inspect
@@ -763,10 +795,12 @@ $ grep -hnr -A2 -B2 --no-group-separator "pattern" <logfile>
 $ curl ifconfig.me
 # Get your public IP.
 ```
+
 ```bash
 $ hostname
 # Get name of the host/machine/computer.
 ```
+
 ```bash
 $ ifconfig
 $ ip a [addr|a]
@@ -775,6 +809,7 @@ $ ip a [addr|a]
 # You may install ifconfig via:
 $ yum install net-tools
 ```
+
 ```bash
 $ ipconfig
 $ ipconfig <command> <args>
@@ -783,12 +818,14 @@ $ ipconfig getsummary <interface-name>
 $ ipconfig getsummary en0
 # View en0 (primary) interface configuration.
 ```
+
 ```bash
 $ arp -a
 # View all known IP adresses in the LAN (resolved MAC to IP mappings).
 ```
 
 #### Connections
+
 ```bash
 $ netstat
 # List all network connections.
@@ -820,6 +857,7 @@ $ sudo lsof -U | grep '^<command>'
 $ sudo netstat -apx | grep '<command>'
 # List UNIX sockets opened by a command/process.
 ```
+
 #### DNS
 
 ```bash
@@ -844,7 +882,9 @@ $ man ssh_config
 $ man sshd_config
 # Show manual for SSH daemon (server) config file.
 ```
+
 Config files:
+
 ```bash
 ~/.ssh/config
 # This is the per-user configuration file.
@@ -856,7 +896,9 @@ Config files:
 /etc/ssh/sshd_config
 # Daemon (server) config file.
 ```
+
 Example of `~/.ssh/config` file:
+
 ```bash
 Host *
   ServerAliveInterval 120
@@ -907,7 +949,9 @@ The key's randomart image is:
 |          +o o+**|
 +----[SHA256]-----+
 ```
+
 On the host:
+
 ```bash
 # Create user on the host
 $ useradd -m <user>
@@ -929,7 +973,9 @@ PubkeyAuthentication yes
 # Restart SSH daemon (sshd) on the host
 $ sudo systemctl restart ssh.service
 ```
+
 On the private machine:
+
 ```bash
 $ ssh -i <private-key-file> <user>@<host>
 # Login user to host using indicated private key.
@@ -949,6 +995,7 @@ $ sudo yum install <package>
 $ sudo [apt|yum] install -y <package1> <package2>
 # Install packages list without prompting for confirmation.
 ```
+
 ### Update
 
 ### Remove
@@ -979,6 +1026,7 @@ $ exit
 $ cat /etc/login.defs
 # Show login control configuration file.
 ```
+
 ```bash
 $ usermod -s /usr/sbin/nologin <user>
 # Turn off login possibility for the user.
@@ -1006,6 +1054,7 @@ $ last
 $ last | awk 'print $1)' | sort | uniq
 # Show only users names from login history.
 ```
+
 ```bash
 $ uid=`id -u`
 $ gid=`id -g`
@@ -1014,12 +1063,14 @@ $ groupnames=`id -G -n`
 $ username=`id -u -n`
 # Read current user uid, gid, gids list, groups names list and user name.
 ```
+
 ```bash
 $ getent [options] <database> <key>
 # Get entries from Name Service Switch libraries:
 # database = [passwd|shadow|group]
 # key = [<user-name>|<group-name>]
 ```
+
 ```bash
 $ cat /etc/passwd
 $ getent passwd
@@ -1027,6 +1078,7 @@ $ getent passwd
 $ man 5 passwd
 # Show passwd manual.
 ```
+
 ```bash
 $ cat /etc/shadow
 $ getent shadow
@@ -1035,6 +1087,32 @@ $ man 5 shadow
 # Show shadow manual.
 $ chage -l <user>
 # Show user password expiry information.
+```
+
+```bash
+$ cat /etc/group
+$ getent group
+# List all groups.
+$ getent group <group-name>
+# Show all user members of the group.
+```
+
+#### Privilages
+
+```bash
+$ id
+$ gropus
+# Check current user groups.
+
+$ sudo -l
+# Check all the commands current user can run.
+# (ALL:ALL) ALL means you have unlimited access and you are almost capable of running any command.
+
+$ umask
+0002
+# Show default permission for current user to create files and directories.
+# Subtract this number from default 0666 for files (here it gives 0664).
+# Subtract this number from default 0777 for dirs (here it gives 0775).
 ```
 
 ### Create
@@ -1058,6 +1136,7 @@ $ passwd
 $ passwd <user>
 # Change other user password.
 ```
+
 ```bash
 $ passwd -d <user>
 # Delete user password.
@@ -1086,13 +1165,16 @@ $ usermod -G "" <user>
 $ deluser <user> <group>
 # Remove user from the group.
 ```
+
 macOS
+
 ```bash
 $ dscl . read /Groups/<group> GroupMembership
 # Read group users.
 $ dscl . append /Groups/<group> GroupMembership <user>
 # Add user to the group.
 ```
+
 #### Shell
 
 ```bash
@@ -1268,7 +1350,9 @@ $ chmod o-r -R <dir>
 $ chmod go-w <dir>
 # Deny all, except the user (owner), to write in dir.
 ```
+
 **Default permissions** are based on the user file-creation mode mask (umask), which is used to determine the file permission for newly created files. You can setup `umask` in `/etc/bashrc` or `/etc/profile` file for all users.
+
 ```bash
 $ umask -S
 u=rwx,g=rx,o=rx
@@ -1314,6 +1398,7 @@ $ find . -name "FileName*"
 # ?   (questionmark) represents a single character
 # []  (brackets) represents a range of characters
 ```
+
 ```bash
 $ locate <filename>
 # Find filenames quickly, using prebuilt files database (index/cache).
@@ -1411,15 +1496,18 @@ $ echo "text" >> file.txt
 $ sudo [apt|yum] install zip unzip
 # Install zip/unzip package.
 ```
+
 ```bash
 $ zip -r <output_file> <folder>
 $ zip -r <output_file> <folder_1> <folder_2> ... <folder_n>
 # Zip folder(s) recursively.
 ```
+
 ```bash
 $ unzip -l <archive_file>
 # List archive contents.
 ```
+
 ```bash
 $ unzip <archive_file>
 # Unzip archive (.zip extention is optional).
@@ -1450,6 +1538,7 @@ $ rm -f <file>
 $ rm -ri <file>
 # Remove file with confirmation (-i overrides -f).
 ```
+
 ```bash
 $ rmdir <dir>
 $ rm -d <dir>
@@ -1462,6 +1551,7 @@ $ rm -rf /path/to/dir/*
 $ rm -rf /path/to/dir1/{*,.*}
 # Remove all files including hidden files.
 ```
+
 ```bash
 $ shopt -s extglob
 # Enable shell pattern matching operators
@@ -1481,6 +1571,7 @@ $ rm !(*.zip)
 $ shopt -u extglob
 # Disable shell pattern matching operators
 ```
+
 ```bash
 $ find . -type f -not \(-name '*.zip' -or -name `*.jpg` \) -delete
 # Delete all files except .zip and .jpg
@@ -1534,21 +1625,28 @@ https://sookocheff.com/post/bash/parsing-bash-script-arguments-with-shopts/
 ### Running Scripts
 
 Let's say you created `get-github.sh` shell script:
+
 ```bash
 #!/bin/bash
 ...
 ```
+
 or downloaded it:
+
 ```bash
 $ curl -fsSOL https://github.com/krzysztofprzygoda/docs/raw/master/git/github/get-github.sh
 ```
+
 Usually you run it like:
+
 ```bash
 $ bash /path/to/get-github.sh [options]
 # or in the current folder
 $ bash get-github.sh [options]
 ```
+
 To skip `bash` part, you need to make it executable:
+
 ```bash
 $ sudo chmod u+x ./get-github.sh
 # Then run it like
@@ -1556,7 +1654,9 @@ $ /path/to/get-github.sh [options]
 # or in the current folder
 $ ./get-github.sh [options]
 ```
+
 To skip path part, you need move the script to your environment `PATH` location (usually `/usr/local/bin/`):
+
 ```bash
 $ sudo mv ./get-github.sh /usr/local/bin/
 # Then run it
@@ -1566,6 +1666,7 @@ $ get-github.sh [options]
 #### Create alias
 
 To shorten the script name like `get-gh` (to make your script a new command in fact), you need to define an alias like:
+
 ```bash
 $ alias get-gh='get-github.sh'
 # Then run it
@@ -1589,7 +1690,9 @@ if [ -f ~/.bash_aliases ]; then
 fi
 ...
 ```
+
 This way you redefine any predefined aliases to your liking and make it portable in one file. Taking this approach you simply make your alias permanent with:
+
 ```bash
 # Editing with
 $ nano ~/.bash_aliases
@@ -1627,13 +1730,14 @@ $ source ~/.bashrc
  - [Anybody can write good bash (with a little effort)](https://blog.yossarian.net/2020/01/23/Anybody-can-write-good-bash-with-a-little-effort)
  - The Bash Hackers Wiki [Scripting with style](https://wiki.bash-hackers.org/scripting/style)
  - [ShellCheck](https://github.com/koalaman/shellcheck) - A shell script static analysis tool
-    
+
 ### Tips & Cheetsheets
 
 - [devhints.io/bash](https://devhints.io/bash)
 - [Bash One-liner](https://github.com/onceupon/Bash-Oneliner)
 
 #### Temp
+
 - https://www.thegeekstuff.com/2010/11/50-linux-commands/
 
 ### Utilities

@@ -1,0 +1,47 @@
+<!--
+    Getting iframe size with Window.postMessage()
+    @see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+    @see: https://mdn.github.io/dom-examples/channel-messaging-basic/
+    @see: https://stackoverflow.com/questions/25098021/securityerror-blocked-a-frame-with-origin-from-accessing-a-cross-origin-frame
+-->
+
+<!-- iframe.html -->
+
+<script>
+    (function( w ) {
+        w.onload = function () {
+            const origin_target = '*'; // Any origin
+            // const origin_target = 'https://bitsmodo.com'; // Specific origin
+            parent.postMessage(
+                {
+                    event_id: 'document_size',
+                    size: {
+                        height: document.body.scrollHeight,
+                        width: document.body.scrollWidth
+                    }
+                },
+                origin_target
+            );
+        };
+    })( window );
+</script>
+
+<!-- parent.html -->
+
+<script>
+    (function( w ) {
+        function get_message( e ) {
+            const origin_allowed = '*'; // Any origin
+            // const origin_allowed = 'https://bitsmodo.pl, https://bitsmodo.com'; // Specific origin(s)
+            if ( origin_allowed !== '*' && ! origin_allowed.includes( e.origin ) ) {
+                return false;
+            }
+            const iframe = w.document.getElementById("outlet");
+            if ( iframe && 'document_size' === e.data.event_id ) {
+                iframe.style.height = e.data.size.height + 'px';
+            }
+        }
+        
+        w.addEventListener( 'message', get_message );
+    })( window );
+</script>

@@ -17,23 +17,48 @@
 
             const origin_target = '*'; // Any origin
             // const origin_target = 'https://bitsmodo.com'; // Specific origin
+            var last_height = 0;
 
-            // Send message to the parent on intervals
-            // to adjust height dynamically
-            setInterval(
-                function () {
+            setInterval( function () {
+                    // let height = document.body.scrollHeight;
+
+                    // Calculate semi-actual size with margins and padding
+                    // To get full space, you need to set iframe body { position: absolute; }
+                    let element = d.body,
+                        height = element.getBoundingClientRect().height,
+                        style = w.getComputedStyle( element );
+
+                    height = ["top", "bottom"]
+                        .map( function ( side ) {
+                            return parseInt( style['margin-' + side], 10 );
+                        })
+                        .reduce( function( total, side ) {
+                                return total + side;
+                            },
+                            height
+                        );
+                    
+                    // Skip no changes
+                    if ( height == last_height ) {
+                        return;
+                    }
+
+                    last_height = height;
+
+                    // Send message to the parent on intervals
+                    // to adjust height dynamically
                     parent.postMessage(
                         {
                             event_id: 'document_size',
                             size: {
-                                height: d.body.scrollHeight,
+                                height: height,
                             }
                         },
                         origin_target
                     );
                 },
                 200
-            );
+            );            
         };
     })( window, document );
 </script>

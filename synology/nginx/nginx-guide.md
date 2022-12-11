@@ -18,6 +18,7 @@ Author: Krzysztof Przygoda, 2022
 There are several benefits of using Reverse Proxy described in [Cloudflare guide][CloudFlare Reverse Proxy]. One of them is presented below.
 
 When you expose one or more apps to the Internet (*Docker* containers or native app like *VPN Plus Server*), typically you need to forward ports on your router to access them. For example:
+
 - App 1: `https://domain.com:8080` > `10.10.10.10:8069`,
 - App 2: `https://domain.com:8088` > `10.10.10.10:5050`,
 - App 3: `https://domain.com:443` > `10.10.10.10:443`,
@@ -25,6 +26,7 @@ When you expose one or more apps to the Internet (*Docker* containers or native 
 where `10.10.10.10` is your Synology LAN IP.
 
 With Reverse Proxy it is possible to change this scenario to (sub)domain forwarding, exposing only one port (here `443`):
+
 - App 1: `https://app1.domain.com` > `10.10.10.10:8069`,
 - App 2: `https://app2.domain.com` > `10.10.10.10:5050`,
 - App 3: `https://anotherdomain.com` > `10.10.10.10:443`.
@@ -32,41 +34,49 @@ With Reverse Proxy it is possible to change this scenario to (sub)domain forward
 To setup Synology Reverse Proxy follow steps below.
 
 ### 1. Setup access profile
+
 Prepare `Control Panel` > `Login Portal` > `Advanced` > `Access Control Profile` if you need other than default public access to your application.
 
 ### 2. Setup an application
+
 Go to `Control Panel` > `Login Portal` > `Advanced` > `Reverse Proxy` > `Create`.
 
 #### General
 
- - Source > Protocol: `HTTPS`
- - Source > Hostname: your domain FQDN like `app.domain.com`
- - Source > Port: `443`
- - Source > Enable HSTS: `Yes`
- - Source > Access control profile: `Not configured` for public access or choose your custom profile.
- - Destination > Protocol: `HTTP` or `HTTPS` depending on your needs.
- - Destination > Hostname: `IP` or FQDN of your app (machine, docker conatiner etc.)
- - Destination > Port: `Port` of your app.
+- Source > Protocol: `HTTPS`
+- Source > Hostname: your domain FQDN like `app.domain.com`
+- Source > Port: `443`
+- Source > Enable HSTS: `Yes`
+- Source > Access control profile: `Not configured` for public access or choose your custom profile.
+- Destination > Protocol: `HTTP` or `HTTPS` depending on your needs.
+- Destination > Hostname: `IP` or FQDN of your app (machine, docker conatiner etc.)
+- Destination > Port: `Port` of your app.
 
 #### Custom headers
+
 These are optional and may be required to setup in some cases like these:
+
 - mixed content SSL error,
 - tracking original client IP, etc.
 
 Some of them are:
+
 ```
 X-Forwarded-Host: $host
 X-Forwarded-For: $remote_addr
 X-Real-IP: $remote_addr
 ```
+
 > NOTICE: More info about headers on [Nginx: Using the Forwarded header](https://www.nginx.com/resources/wiki/start/topics/examples/forwarded/). `X-Forwarded-For` header security consideretions on [sekurak.pl](https://sekurak.pl/naglowek-x-forwarded-for-problemy-bezpieczenstwa/) (Polish language only).
 
 Add `Create` > `WebSocket` headers if your application uses [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol (Synology will add ready to use header entries).
 
 #### Advanced Setting
+
 Adjust them to your liking. You may leave defaults.
 
 ### 3. Setup routing
+
 - You need to forward port `443` and `80` (for *Let's Encrypt* cert creation) on your router to your DSM machine with Reverse Proxy configured.
 - At the same time open corresponding ports on DSM `Control Panel` > `Security` > `Firewall` > `Edit Rules`.
 - You may also need to add [CloudFlare proxy servers' IPs](https://www.cloudflare.com/ips/) to your DSM `Control Panel` > `Security` > `Trusted Proxies` (both IPv4 and IPv6 addresses).
@@ -74,6 +84,7 @@ Adjust them to your liking. You may leave defaults.
 ### 4. Setup SSL certificate
 
 #### 4.1. Add certificate
+
 Go to `Control Panel` > `Security` > `Certificate` > `Add`.
 
 Create one or import existing one.
@@ -85,12 +96,15 @@ For *Let's Encrypt* follow [How do I obtain a certificate from Let's Encrypt on 
 For `Proxied` domains you may use `CloudFlare Origin Certificate` created and downloaded from CloudFlare. This way CF covers wildcard certificate for client and you don't have to create dedicated any more for new apps (just use the same orgin cert for every app at Reverse Proxy).
 
 #### 4.2. Map certificate with the app
+
 Go to `Control Panel` > `Security` > `Certificate` > `Settings` and map your app (its domain) with certificate.
 
 ## CloudFlare
 
 ### Reverse Proxy behind CloudFlare
+
 You need to remember that CF, according to `Your SSL/TLS encryption mode` option, by default (and for free) always communicates with your origin server on port:
+
 - `80` for either `Off` or `Flexible` mode,
 - `443` for either `Full` or `Full (strict)` mode. 
 
@@ -99,6 +113,7 @@ So, if your app is set on port `443` at your Reverse Proxy, it will never be acc
 > Note that only `Full (strict)` encryption mode prevents you from the Man-In-The-Middle (MITM) attacks.
 
 ### Multi-level subdomains
+
 Unfortunately, only first level `Proxied` subdomains like `app.domain.com` are covered by universal (free) certificate.
 Subdomains like `my.app.domain.com` requires `DNS only` proxy status on free account or purchase of the **Advanced Certificate Manager to use Total TLS for full certificate coverage of proxied hostnames.
 
@@ -115,24 +130,29 @@ $ ssh <user-admin>@<dsm-ip>
 ```
 
 ### Error Log
+
 ```bash
 $ sudo tail -F /var/log/nginx/error.log
 # Monitor error log.
 ```
 
 ### Access Log
+
 By default Synology Nginx access log is off. See [Custom Log](#custom-log) section below to enable it.
 
 ### Custom Log
+
 ```bash
 $ sudo vim /usr/syno/share/nginx/nginx.mustache
 # Edit config template. Provide admin password if asked.
 ```
+
 See [vim cheetsheet](https://devhints.io/vim) for editing hints.
 
 Add your custom log config under default one (look for `access_log  off;` line).
 
 Custom log config example:
+
 ```nginx
     #<KPrzygoda> Custom access log
     access_log  on;
@@ -151,7 +171,9 @@ Custom log config example:
     access_log  syslog:server=127.0.0.1:514,facility=local7,tag=nginx_access accesslog if=$loggable;
     #</KPrzygoda>
 ```
+
 To apply new config:
+
 ```bash
 $ sudo synosystemctl restart nginx
 # Restart Nginx webserver.

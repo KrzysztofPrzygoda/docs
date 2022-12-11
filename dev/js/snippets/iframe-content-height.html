@@ -17,10 +17,11 @@
 
             /**
              * Calculate element semi-actual height with margins and padding.
-             * To get full space, you need to set also iframe body { position: absolute; }
+             * To get absolute space (to eliminate html and overlapping margins),
+             * you need to set also iframe body { position: absolute; }
              * 
              * @param {Element} e DOM Element 
-             * @returns string|bool Height as a string like 100px or false on empty element.
+             * @returns number|bool Height in pixels or false on empty element.
              */
             function elementHeight( e ) {
                 if ( ! e ) {
@@ -46,10 +47,10 @@
             /**
              * Send Window.postMessage with current body height.
              * 
-             * @param {string} height Height with unit like 100px
+             * @param {number} h Height in pixels.
              * @returns void
              */
-            function sendBodyHeight( height ) {
+            function sendBodyHeight( h ) {
                 const origin_target = '*'; // Any origin
                 // const origin_target = 'https://bitsmodo.com'; // Specific origin
                             
@@ -57,7 +58,7 @@
                     {
                         event_id: 'document_size',
                         size: {
-                            height: height,
+                            height: h,
                         }
                     },
                     origin_target
@@ -67,34 +68,34 @@
             /**
              * Monitor size changes.
              */
+            if ( 'ResizeObserver' in w ) {
+                // Post 2020 browsers,
+                // with ResizeObserver API (recommended)
+                // See: https://caniuse.com/?search=ResizeObserver
+                const bodySizeObserver = new ResizeObserver( entries => {
+                    for (const entry of entries) {
+                        // Each entry is an instance of ResizeObserverEntry
+                        if ( d.body == entry.target ) {
+                            // let height = document.body.scrollHeight;
+                            let height = elementHeight( d.body );
+                            sendBodyHeight( height );
+                        }
+                    }
+                }).observe( d.body );
+            } else {
+                // Pre 2020 browsers,
+                // when there is no ResizeObserver API (old solution, far less effective)
+                let lastHeight = 0;
+                setInterval( () => {
+                    let height = elementHeight( d.body );
 
-            // Pre 2020 browsers,
-            // when there is no ResizeObserver API (old solution before 2020, far less effective)
-            let lastHeight = 0;
-            setInterval( () => {
-                let height = elementHeight( d.body );
-
-                // Skip no changes
-                if ( height != lastHeight ) {
-                    lastHeight = height;
-                    sendBodyHeight( height );
-                }
-            }, 200 );
-
-            // Post 2020 browsers,
-            // with ResizeObserver API (recommended)
-            /*
-            const bodySizeObserver = new ResizeObserver( entries => {
-                for (const entry of entries) {
-                    // Each entry is an instance of ResizeObserverEntry
-                    if ( d.body == entry.target ) {
-                        // let height = document.body.scrollHeight;
-                        let height = elementHeight( d.body );
+                    // Skip no changes
+                    if ( height != lastHeight ) {
+                        lastHeight = height;
                         sendBodyHeight( height );
                     }
-                }
-            }).observe( d.body );
-            */
+                }, 200 );
+            }
         };
     })( window, document );
 </script>

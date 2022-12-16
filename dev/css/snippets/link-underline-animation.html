@@ -1,0 +1,78 @@
+<style>
+    a,
+    .strike {
+        color: #FF5151;
+        text-decoration: none;
+        display: inline;
+        background-image: linear-gradient(to bottom, transparent 20%, currentColor 21%);
+
+        background-position: 0 1em;
+        background-repeat: no-repeat;
+        background-size: 0% 6px;
+
+        transition: background-size 0.5s ease-in-out 0.2s;
+    }
+
+    a:hover,
+    a:focus {
+        background-size: 100% 6px;
+        transition-delay: 0s;
+    }
+
+    .strike {
+        color: #307672;
+        background-size: 0% 2px;
+        background-position: 0 0.5em;
+    }
+
+    .strike:hover,
+    .strike:focus {
+        background-size: 100% 2px;
+        transition-delay: 0s;
+    }
+
+    html {
+        background: #000249;
+        color: #FFF;
+        font-size: 62.5%;
+        display: flex;
+        height: 100%;
+    }
+
+    body {
+        font-size: 1.6rem;
+        line-height: 1.4;
+        max-width: 30em;
+        width: 90%;
+        margin: auto;
+        background: inherit;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: always;
+    }
+</style>
+
+https://codepen.io/shshaw/pen/pdyJBW
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent bibendum, lorem vel tincidunt imperdiet, nibh elit
+    laoreet felis, a bibendum nisl tortor non orci. Donec pretium fermentum felis, <a href="#">quis aliquet est rutrum
+        ut. Integer quis massa ut lacus viverra pharetra in eu lacus. Aliquam tempus odio adipiscing diam pellentesque
+        rhoncus.</a> Curabitur a bibendum est. Mauris vehicula cursus risus id luctus. Curabitur accumsan venenatis
+    nibh, non egestas ipsum vulputate ac. Vivamus consectetur dolor sit amet enim aliquet eu scelerisque ipsum
+    hendrerit. Donec lobortis suscipit vestibulum. Nullam luctus pellentesque risus in ullamcorper. Nam neque nunc,
+    mattis vitae ornare ut, feugiat a erat. Ut tempus iaculis augue vel pellentesque.</p>
+<p>Vestibulum nunc massa, gravida quis porta nec, feugiat id metus. <a href="#" class="strike">Strike me! Nunc ac arcu
+        dolor, quis vestibulum leo. Cras viverra mollis ipsum, non rhoncus lectus aliquam et.</a> Morbi faucibus purus
+    sit amet lacus aliquet elementum. Donec sit amet posuere enim. Cras in eros id tortor fringilla ultricies. Mauris
+    faucibus ullamcorper velit, pulvinar varius odio eleifend eu. Quisque id odio metus. Morbi adipiscing ultricies
+    posuere. Pellentesque elementum porttitor eros in molestie. Maecenas ut leo quis nisi tempor tincidunt.</p>
+<p>Donec nunc ligula, vulputate quis mollis eu, interdum quis libero. Donec nulla ante, facilisis sit amet vulputate at,
+    tincidunt a velit. Maecenas vestibulum, nulla sed tincidunt viverra, lorem turpis aliquam urna, ut pretium orci
+    purus consequat augue. Etiam a enim orci, vitae pulvinar odio. In elit urna, tincidunt a pellentesque et,
+    scelerisque at nibh. <a href="#">Sed nec est sapien. Aliquam ullamcorper eros eu quam ultrices vel faucibus eros
+        interdum. Etiam mattis eleifend sapien, eu iaculis massa feugiat sed. Aliquam erat volutpat.</a> Vivamus
+    facilisis ultricies eros, a pretium purus mollis id. Sed dapibus elit ut neque rutrum dignissim. Nulla eros nisl,
+    venenatis quis rhoncus sit amet, molestie nec nisl. Pellentesque vel neque sapien, et sagittis nulla.</p>
+<p>Aliquam eu iaculis mauris. Etiam arcu lectus, imperdiet sit amet volutpat vitae, commodo sed nibh. Fusce faucibus
+    tempor cursus. Donec ut ligula tortor. <a href="#">Maecenas malesuada, diam vitae pharetra dictum, erat ante iaculis
+        risus, sed sollicitudin nisl nisl vel metus.</a> Nulla libero augue, convallis nec luctus id, iaculis nec urna.
+    Cras vitae mi ut augue ultricies tempus.</p>

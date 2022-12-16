@@ -1,0 +1,31 @@
+<style>
+    .animated-gradient {
+        background-color: transparent;
+
+        background-image: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+        animation: animatedgradient 3s ease alternate infinite;
+        background-size: 300% 300%;  
+        background-repeat: repeat;
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent; 
+        -moz-background-clip: text;
+        -moz-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    @keyframes animatedgradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }    
+</style>
+
+<h1 class="animated-gradient">Text gradient example</h1>
+https://codepen.io/mike-schultz/pen/NgQvGO

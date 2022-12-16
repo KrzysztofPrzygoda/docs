@@ -1,0 +1,61 @@
+<style>
+    :root {
+        --background-color: white;
+        --lines: 3;
+        --line-height: 1.4;
+    }
+
+    p {
+        line-height: var(--line-height);
+        max-height: calc(var(--line-height) * var(--lines) * 1em);
+        overflow: hidden;
+        position: relative;
+        text-align: justify;
+        text-overflow: ellipsis;
+    }
+    /* Can IE 11 Exclusions provide a better line-clamp? */
+    p::before,
+    p::after {
+        content: '...';
+        line-height: 1;
+        position: absolute;
+        right: 0;
+        top: calc(var(--lines) * 1em);
+        -ms-wrap-flow: start;
+    }
+
+    p::after {
+        background: currentColor;
+        color: var(--background-color);
+        top: auto;
+    }
+
+    @supports (-webkit-line-clamp: var(--lines)) {
+        p {
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+            -webkit-line-clamp: var(--lines);
+        }
+
+        p::before,
+        p::after {
+            content: normal;
+        }
+    }
+</style>
+
+https://codepen.io/soluml/pen/KOKGmB
+
+<p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+    sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+
+<p style="--lines: 2;">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+    sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>

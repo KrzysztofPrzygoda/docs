@@ -3,6 +3,7 @@
 Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021-2022.
 
 ## Reference
+
 - SSH manual: `man ssh`.
 - [SSH Academy](https://www.ssh.com/academy/ssh/)
 - Gitlab Docs: [GitLab and SSH keys](https://docs.gitlab.com/ee/ssh/)
@@ -12,7 +13,9 @@ Created by [Krzysztof Przygoda](https://github.com/KrzysztofPrzygoda), 2021-2022
 Some SSH cheat sheets:
 - https://www.marcobehler.com/guides/ssh-cheat-sheet
 
+
 ## General
+
 @todo
 
 ## Shorts
@@ -20,6 +23,7 @@ Some SSH cheat sheets:
 The most popular operations cheat sheet.
 
 ### Create keys
+
 ```bash
 $ ssh-keygen -t ed25519
 # (preferred algorithm) or
@@ -27,7 +31,9 @@ $ ssh-keygen -t rsa
 # Generate key pair files in ~/.ssh/ (i.e. private id_rsa and public id_rsa.pub).
 # Skip filename and passphrase with Enter for defaults.
 ```
+
 ### Deploy keys
+
 ```bash
 $ ssh-copy-id -i ~/.ssh/id_ed25519.pub <user>@<host>
 # or
@@ -39,7 +45,9 @@ $ ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@<host>
 $ cat ~/.ssh/id_rsa.pub | ssh <user>@<host> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 # but more secure, duplicates proof and having several extra automations.
 ```
+
 ### Login with key
+
 ```bash
 $ nano ~/.ssh/config
 # Add the following connection config:
@@ -73,6 +81,7 @@ Location | Description
 `~/.ssh/rc` | Commands in this file are executed by ssh when the user logs in, just before the user's shell (or command) is started.  See the sshd(8) manual page for more information.
 
 ### System-wide Files
+
 Location | Description
 ---|---
 `/etc/ssh/ssh_config` | Systemwide configuration file.  The file format and configuration options are described in ssh_config(5).
@@ -92,10 +101,12 @@ OS             | Home
 **Windows 10** | `C:\Users\<username>\.ssh\`
 
 To get there you may:
+
 ```bash
 $ ls -l ~/.ssh
 # List .ssh dir contents in home dir (tilde sign ~ means user home dir).
 ```
+
 See if a file with one of the following formats exists:
 
 Algorithm                            | Public Key       | Private Key
@@ -123,11 +134,13 @@ Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 # Press Enter if you don't want to set extra password.
 ```
+
 **Passphrase** (if set) will be asked every time private key is used, but you may alleviate this with storing private key in [SSH Agent](#Store-Key-in-SSH-Agent) (described later).
 
 > **Passphrase is strongly recommended**, because it is used to encrypt and decrypt your private key, and this way adding extra protection against unauthorized use if someone gain access to your private key. However, some automation tools may not support passphrase.
 
 To change passphrase later, use:
+
 ```bash
 $ ssh-keygen -p -f </path/to/ssh_private_key>
 # or
@@ -139,6 +152,7 @@ $ ssh-keygen -p -f </path/to/ssh_private_key> -P <old_passphrase> -N <new_passph
 Private and public keys contain sensitive data. Ensure the permissions on the files to make them readable to you but not accessible to others.
 
 Linux:
+
 ```bash
 $ chmod go-w ~/
 # Deny all, except the owner, to write in home directory.
@@ -147,7 +161,9 @@ $ chmod 700 ~/.ssh
 $ chmod 600 ~/.ssh/authorized_keys
 # Only the owner can read and save changes to file ~/.ssh/authorized_keys.
 ```
+
 Windows PowerShell:
+
 ```bash
 $path = ".\path\to\private-key-file"
 icacls.exe $path /reset
@@ -157,6 +173,7 @@ icacls.exe $path /GRANT:R "$($env:USERNAME):(R)"
 icacls.exe $path /inheritance:r
 # Disable inheritance and remove inherited permissions.
 ```
+
 ### Copy Keys
 
 #### Copy Key to Clipboard
@@ -171,6 +188,7 @@ $ xclip -sel clip < ~/.ssh/id_ed25519.pub
 $ cat ~/.ssh/id_ed25519.pub | clip
 # Git Bash on Windows
 ```
+
 #### Copy Key to Server
 
 To use public key authentication, the public key must be copied to a server and installed in an `authorized_keys` file.
@@ -213,6 +231,7 @@ $ nano ~/.ssh/config
 #### Host vs Hostname
 
 See `man 5 ssh_config` for more info:
+
 - `Hostname` is the real host name to log into (IP or FQDN) and it's optional.
 - `Host` is a pattern that matches one of many different configs and is provided as an argument in `ssh <host>` command. Plays the role of `Hostname` param when it hasn't been provided.
 
@@ -247,6 +266,7 @@ $ ssh <username>@github.com
 ```
 
 If the hostname contains the character sequence `%h`, then this will be replaced with the host name specified on the command line (this is useful for manipulating unqualified names):
+
 ```bash
 Host dev*
     Hostname %h.gitlab.com
@@ -400,10 +420,13 @@ Host remote_to_local
 ```
 
 CLI equivalent of SSH tunnel (forwarding):
+
 ```bash
 $ ssh <user>@<jump-host> -N -f -L <local-port>:<target-host>:<target-port>
 ```
+
 You may use it if you want to connect to a server (`<target-host>`) that is hidden from the outside world, but accessible from a box (`<jump-host>`) you have SSH access to. Like an Amazon RDS database, which is only reachable from inside an AWS network:
+
 ```bash
 # The following command establishes an SSH tunnel between local machine (@port 3307) and an RDS database (@port 3306), via an EC2 jump host (18.11.11.11).
 $ ssh ec2-user@18.11.11.11 -N -f -L 3307:somehost.12345.eu-central-1.rds.amazonaws.com:3306
@@ -438,6 +461,7 @@ Afterwards, you should make sure that the directory is created:
 ```bash
 $ mkdir -p ~/.ssh/multiplex
 ```
+
 If you wish to not use multiplexing for a specific connection, you can select no multiplexing on the command line like this:
 
 ```bash
@@ -482,7 +506,9 @@ This will turn on your visual host key for your home connection, allowing you to
 $ sudo nano /etc/ssh/sshd_config
 # Edit the SSH daemon (sshd) configuration file.
 ```
+
 Example `sshd` settings to turn off password authentication:
+
 ```bash
 PubkeyAuthentication yes
 # Set yes to enable public key authentication.
@@ -490,6 +516,7 @@ PubkeyAuthentication yes
 PasswordAuthentication no
 # Set no to disable clear text password.
 ```
+
 ```bash
 $ sudo systemctl restart sshd
 # Restart SSH Server daemon.
@@ -503,13 +530,16 @@ $ ssh -T <user>@<host>
 $ ssh -Tvvv <user>@<host>
 # Test in verbose mode.
 ```
+
 ### Git
+
 ```bash
 $ git config --global core.sshcommand "C:/Windows/System32/OpenSSH/ssh.exe"
 # Make Git use Window’s OpenSSH (and not the one it bundles).
 ```
 
 ## Copy Files
+
 OpenSSH secure file copy `scp` copies files between hosts on a network.
 It uses `ssh(1)` for data transfer, and uses the same authentication and provides the same security as a login session.
 
@@ -528,6 +558,7 @@ $ scp <user>@<host>:/<dir>/<file> <local-dir>
 $ scp -rp <user>@<host>:/<dir> <local-dir>
 # Recursively download a remote server dir.
 ```
+
 > Hint: When doing things recursively via SCP, you might want to consider rsync, which also runs over SSH and has [a couple of advantages over SCP](https://serverfault.com/a/264606).
 
 ## Exit Session
@@ -542,9 +573,11 @@ Enter ~ .
 ## Security
 
 ### One vs Multiple SSH key-pairs
+
 Is it reasonable to have multiple SSH keys?
 
 Ultimately this is up to you. You need to evaluate your threat model:
+
 - How likely is it that one of your keys is compromised?
 - If one key is compromised, how likely is it that the other keys will be compromised? Especially, if all of them are used from the same machine and are located in the same `~/.ssh` path.
 - What are the consequences of your keys being compromised?
@@ -553,16 +586,18 @@ Ultimately this is up to you. You need to evaluate your threat model:
 Considering factors such as these should help you decide if you really need separate keys.
 
 ### Connvenience vs Security Perspective
+
 In general situation, if we have to trade off with security and convenience at the same time, we can multiply the two scores, and maybe One SSH key-pair (WITH passwd) is the good one to choose.
 
-    Convenient  Security  Ways to go
-       5           1      One   SSH key-pair  (NO passwd)
-       4           2      One   SSH key-pair  (WITH passwd)
-       3           1      Multi SSH key-pairs (NO passwd)
-       2           2      Multi SSH key-pairs (WITH passwd) (SAME passwd)
-       1           3      Multi SSH key-pairs (WITH passwd) (DIFF passwds)
+Convenient  Security  Ways to go
+    5           1      One   SSH key-pair  (NO passwd)
+    4           2      One   SSH key-pair  (WITH passwd)
+    3           1      Multi SSH key-pairs (NO passwd)
+    2           2      Multi SSH key-pairs (WITH passwd) (SAME passwd)
+    1           3      Multi SSH key-pairs (WITH passwd) (DIFF passwds)
 
 ### Password Managers & SSH Agents
+
 Password Managers like [1Password](https://developer.1password.com/docs/ssh/agent/) or [Keepass](https://lechnology.com/software/keeagent/) can not only store your SSH keys, but they also come with their own ssh-agent, replacing your system’s ssh-agent.
 
 This means, whenever you unlock your password manager on any machine that you have it installed on, you’ll have all your SSH identities instantly available.
@@ -574,6 +609,7 @@ Transferring files over an SSH connection, by using either SFTP or SCP, is a pop
 As an alternative, you can install SSHFS to mount a remote directory by using SSH alone. This has the significant advantage of requiring no additional configuration, and inheriting permissions from the SSH user on the remote system. SSHFS is particularly useful when you need to read from a large set of files interactively on an individual basis.
 
 ### Install SSHFS
+
 ```bash
 $ sudo apt update
 $ sudo apt install sshfs
@@ -585,7 +621,9 @@ https://osxfuse.github.io/
 https://github.com/winfsp/sshfs-win
 # Install SSHFS on Windows.
 ```
+
 ### Mount
+
 > **Note:** If you use `sudo sshfs` then SSH config and key-pair are taken from the `root` user account, not your own (compare `whoami` vs `sudo whoami` to find that out). If you need to mount a remote directory using SSHFS without requiring `sudo` permissions, you can create a user group called `fuse` on your local machine, by using `sudo groupadd fuse`, and then adding your local user to that group, by using `sudo usermod -a -G fuse <user>`.
 
 ```bash
@@ -604,21 +642,39 @@ $ sshfs [<user>@]<host>:~/ <local-dir> -o allow_other,default_permissions,direct
 # default_permissions
 #        so that it otherwise uses regular filesystem permissions.
 ```
+
 An example:
+
 ```bash
 $ mkdir -p ~/Mounts/bitsmodo.com
 # Create mount point in user folder.
 
 $ sshfs bitsmodo:/home/klient.dhosting.pl/bitsmodo ~/Mounts/bitsmodo.com -o allow_other,default_permissions,direct_io,reconnect,volname=bitsmodo.com
 # Mount using ssh config Host pattern.
+
+$ sshfs bitsmodo:/home/klient.dhosting.pl/bitsmodo ~/Mounts/bitsmodo.com -o allow_other,default_permissions,direct_io,reconnect,volname=bitsmodo.com,password_stdin <<< 'password'
+# Mount with password
 ```
+
 > **Note:** On Windows, remote filesystems are sometimes mounted with their own drive letter like `G:`, and on Mac, they are usually mounted in the `/Volumes` directory.
 
 > **Note:** If you receive a `Connection reset by peer` message, make sure that you have copied your public SSH key to the remote system.
 
 > **Note:** If you need to mount a remote directory using SSHFS without requiring `sudo` permissions, you can create a user group called `fuse` on your local machine, by using `sudo groupadd fuse`, and then adding your local user to that group, by using `sudo usermod -a -G fuse <user>`.
 
+Example script to connect sftp with `sshfs` and `ssh` password using `expect`:
+
+```bash
+#!/bin/bash
+expect <<END
+spawn sshfs <user>@<host>:<remote-dir> <local-dir> -p 22 -o password_stdin
+send "password\r"
+expect eof
+END
+```
+
 ### Unmount
+
 ```bash
 $ unmount <local-dir>
 # Unmount on Linux while error (mount_macfuse: mount point <local-dir> is itself on a macFUSE volume).
@@ -631,6 +687,7 @@ $ diskutil unmount <local-dir>
 ### Permanent Mount
 
 #### Linux `fstab`
+
 ```bash
 $ sudo nano /etc/fstab
 
@@ -650,6 +707,7 @@ $ sudo nano /etc/fstab
 ```
 
 #### macOS `launchd`
+
 Follow Apple [Terminal User Guide / launchd](https://support.apple.com/guide/terminal/script-management-with-launchd-apdc6c1077b-5d5d-4d35-9c19-60f2397b2369/mac) and [Creating Launch Daemons and Agents](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html) developer documentation archive.
 
 In most cases, this is the way to go (file naming is an example):
@@ -676,23 +734,28 @@ In most cases, this is the way to go (file naming is an example):
 </dict>
 </plist>
 ```
+
 ```bash
 $ tail /var/log/system.log
 # Look for any error messages.
 ```
 
 #### macOS `Automator.app`
+
 Create an app that can be run via System Settings > Login Items for specific user.
+
 1. Open `Automator.app` > Choose `Workflow` > Add `Run Shell Script` action to the workflow.
 2. Paste your command (requires full path to `sshfs` that can be found with `command -v sshfs`):
-```bash
-REMOTE_DIR="bitsmodo:/home/klient.dhosting.pl/bitsmodo"
-LOCAL_DIR="Mounts/bitsmodo.com"
-VOLUME_NAME="bitsmodo.com"
 
-diskutil unmount ${LOCAL_DIR}
-mkdir -p ~/${LOCAL_DIR}
-/usr/local/bin/sshfs ${REMOTE_DIR} ~/${LOCAL_DIR} -o allow_other,default_permissions,direct_io,reconnect,volname=${VOLUME_NAME}
-```
+    ```bash
+    REMOTE_DIR="bitsmodo:/home/klient.dhosting.pl/bitsmodo"
+    LOCAL_DIR="Mounts/bitsmodo.com"
+    VOLUME_NAME="bitsmodo.com"
+    
+    diskutil unmount ${LOCAL_DIR}
+    mkdir -p ~/${LOCAL_DIR}
+    /usr/local/bin/sshfs ${REMOTE_DIR} ~/${LOCAL_DIR} -o allow_other,default_permissions,direct_io,reconnect,volname=${VOLUME_NAME}
+    ```
+
 3. Choose `File` > `Save...` > Set File Format: `Application` > Save As: `Mount bitsmodo.com.app` > `Save`.
 4. Open `System Settings.app` > `General` > `Login Items` > Click `+` icon below `Open at Login` table > Choose your app.

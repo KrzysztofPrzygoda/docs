@@ -4,7 +4,8 @@
 <html>
     <body>
         <p>
-            <a href="#" class="btn btn-gradient">Button</a>
+            <a href="#" class="btn btn-gradient">Button Positive</a>
+            <a href="#" class="btn btn-gradient-invert">Button Negative</a>
         </p>
 
         <style>
@@ -46,25 +47,37 @@
                 padding: 10px 16px;
             }
         
-            .btn-gradient {
-                background: linear-gradient(258.33deg, #57D9A3 0%, #0065FF 100%);
+            .btn-gradient,
+            .btn-gradient-invert {
+                --gradient: linear-gradient(258.33deg, #57D9A3 0%, #0065FF 100%);
+            }
+
+            .btn-gradient,
+            .btn-gradient-invert:hover {
+                background: var(--gradient);
                 border: transparent;
             }
 
-            .btn-gradient:hover {
+            .btn-gradient:hover,
+            .btn-gradient-invert {
                 background: transparent;
             }
 
-            .btn-gradient:hover::before {
+            .btn-gradient:hover::before,
+            .btn-gradient-invert::before {
                 content: "";
                 position: absolute;
+                
                 inset: 0;
+                
                 border-radius: 6px;
                 padding: 2px;
-                background: linear-gradient(257.51deg, #57D9A3 0%, #0065FF 100%);
+                background: var(--gradient);
+                
                 -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
                 -webkit-mask-composite: xor;
                 mask-composite: exclude;
+                
                 pointer-events: none;
             }  
         </style>                

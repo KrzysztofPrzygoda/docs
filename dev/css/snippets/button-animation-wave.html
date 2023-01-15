@@ -1,0 +1,82 @@
+<!--
+    A button with wave animation.
+-->
+<html>
+    <body>
+        <p>
+            <a href="#" class="btn btn-wave">SHOP NOW</a>
+        </p>
+
+        <style>
+            .btn {
+                font-family: 'Helvetica', sans-serif;
+                font-weight: 600;
+                font-size: 16px;
+
+                line-height: 1.42857143;
+                letter-spacing: 2.75px;
+                
+                color: #fff;
+                
+                border-color: #0052cc;
+                border-radius: 6px;
+                box-sizing: border-box;
+                
+                display: inline-block;
+                position: relative;
+                
+                text-transform: none;
+                text-decoration: none;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: middle;
+
+                -ms-touch-action: manipulation;
+                touch-action: manipulation;
+                
+                padding: 10px 16px;
+            }
+        
+            .btn-wave {
+                -webkit-animation: wave 1.5s infinite;
+                animation: wave 1.5s infinite;
+                box-shadow: 0 0 0 0 rgb(0 0 0 / 50%);
+
+                background-color: #0b0c0d;
+                border: 1px solid #0b0c0d;
+
+                border-radius: 0;
+
+                cursor: pointer;
+                display: inline-block;
+
+                transition: color .3s ease, background-color .3s ease, border-color .3s ease;
+            }
+
+            .btn-wave:hover {
+                background-color: #393a3a;
+                border-color: #393a3a;
+            }
+
+            @keyframes wave {
+                70% {
+                    box-shadow: 0 0 0 10px transparent
+                }
+
+                to {
+                    box-shadow: 0 0 0 0 transparent
+                }
+            }
+
+            @-webkit-keyframes wave {
+                70% {
+                    box-shadow: 0 0 0 10px transparent
+                }
+
+                to {
+                    box-shadow: 0 0 0 0 transparent
+                }
+            }
+        </style>                
+    </body>
+</html>

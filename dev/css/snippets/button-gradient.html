@@ -4,8 +4,8 @@
 <html>
     <body>
         <p>
-            <a href="#" class="btn btn-gradient">Button Positive</a>
-            <a href="#" class="btn btn-gradient-invert">Button Negative</a>
+            <a href="#" class="btn btn-gradient-positive">Button Positive</a>
+            <a href="#" class="btn btn-gradient-negative">Button Negative</a>
         </p>
 
         <style>
@@ -47,34 +47,35 @@
                 padding: 10px 16px;
             }
         
-            .btn-gradient,
-            .btn-gradient-invert {
+            .btn-gradient-positive,
+            .btn-gradient-negative {
                 --gradient: linear-gradient(258.33deg, #57D9A3 0%, #0065FF 100%);
             }
 
-            .btn-gradient,
-            .btn-gradient-invert:hover {
+            .btn-gradient-positive,
+            .btn-gradient-negative:hover {
                 background: var(--gradient);
                 border: transparent;
             }
 
-            .btn-gradient:hover,
-            .btn-gradient-invert {
+            .btn-gradient-positive:hover,
+            .btn-gradient-negative {
                 background: transparent;
             }
 
-            .btn-gradient:hover::before,
-            .btn-gradient-invert::before {
+            .btn-gradient-positive:hover::before,
+            .btn-gradient-negative::before {
                 content: "";
                 position: absolute;
-                
                 inset: 0;
                 
                 border-radius: 6px;
                 padding: 2px;
                 background: var(--gradient);
                 
-                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                --gradient-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                -webkit-mask: var(--gradient-mask);
+                mask: var(--gradient-mask);
                 -webkit-mask-composite: xor;
                 mask-composite: exclude;
                 

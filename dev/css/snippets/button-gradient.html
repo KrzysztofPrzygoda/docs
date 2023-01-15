@@ -1,0 +1,72 @@
+<!--
+    A button with gradient background and border.
+-->
+<html>
+    <body>
+        <p>
+            <a href="#" class="btn btn-gradient">Button</a>
+        </p>
+
+        <style>
+            :after, :before {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #091E42;
+            }
+        
+            .btn {
+                font-family: 'Helvetica', sans-serif;
+                font-weight: 600;
+                font-size: 16px;
+
+                line-height: 1.42857143;
+                
+                color: #fff;
+                
+                border-color: #0052cc;
+                border-radius: 6px;
+                box-sizing: border-box;
+                
+                display: inline-block;
+                position: relative;
+                
+                text-transform: none;
+                text-decoration: none;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: middle;
+
+                -ms-touch-action: manipulation;
+                touch-action: manipulation;
+                
+                padding: 10px 16px;
+            }
+        
+            .btn-gradient {
+                background: linear-gradient(258.33deg, #57D9A3 0%, #0065FF 100%);
+                border: transparent;
+            }
+
+            .btn-gradient:hover {
+                background: transparent;
+            }
+
+            .btn-gradient:hover::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 6px;
+                padding: 2px;
+                background: linear-gradient(257.51deg, #57D9A3 0%, #0065FF 100%);
+                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                pointer-events: none;
+            }  
+        </style>                
+    </body>
+</html>

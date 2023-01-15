@@ -18,17 +18,18 @@
     <body>
         <style>
             :root {
-                --mobile-breakpoint: 642px;
+                --small-breakpoint: 642px;
+                --medium-breakpoint: 1199px;
 
-                --replace-media-1px: var(--mobile-breakpoint);
-                --replace-media-2px: ...;
+                --replace-media-1px: var(--small-breakpoint);
+                --replace-media-2px: var(--medium-breakpoint);
             }
 
             @media (max-width: 1px) { /* replaced by 642px */
                 /* ... */
             }
 
-            @media (max-width: 2px) {
+            @media (max-width: 2px) { /* replaced by 1199px */
                 /* ... */
             }    
         </style>
@@ -37,7 +38,7 @@
             /**
              * Script replaces every media rule with a value of 1px with the value of the css variable --replace-media-1px, rules with value 2px with --replace-media-2px and so on.
              * This works for the media queries with, min-width, max-width, height, min-height and max-height even when they are connected using and.
-            */
+             */
 
             function* visitCssRule(cssRule) {
                 // Visit imported stylesheet

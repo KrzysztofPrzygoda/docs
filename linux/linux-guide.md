@@ -862,7 +862,23 @@ $ sudo netstat -apx | grep '<command>'
 
 ```bash
 $ scutil --dns
-# [macOS] List DNS servers config
+# [macOS] List DNS servers config.
+```
+
+```bash
+$ whois <domain.name>
+# Show domain registration info (subscriber, registrar, nameservers etc.).
+```
+
+```bash
+$ dig <domain.name>
+# [macOS] DNS lookup.
+
+$ dig @<dns.server.name-or-ip> <domain.name>
+# [macOS] Check resolving in a specific DNS.
+
+$ dig -x <ip>
+# [macOS] Reverse DNS lookup.
 ```
 
 ## Secure Shell

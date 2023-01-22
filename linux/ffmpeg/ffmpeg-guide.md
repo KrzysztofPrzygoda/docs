@@ -5,6 +5,7 @@ Autor: Krzysztof Przygoda, 2022
 ## Reference
 
 - FFmpeg [Documentation](https://ffmpeg.org/documentation.html)
+- Convert video to animated gif example from [superuser.com](https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality)
 
 # Installation
 
@@ -34,7 +35,7 @@ More installation options on [FFmpeg macOS guide](https://trac.ffmpeg.org/wiki/C
     $ brew upgrade
     $ brew install ffmpeg
     ```
-    
+
 #### Homebrew issues
 
 ```bash
@@ -170,8 +171,6 @@ $ ffmpeg -i input.mov -c copy -movflags +faststart output.mp4
 [![GIF output from ffmpeg][1]][1]  
 <sub>183k</sub>
 
-`ffmpeg` can output high quality GIF. Before you start it is always recommended to use a recent version: [download][2] or [compile][3].
-
 ```bash
 $ ffmpeg -ss 30 -t 3 -i input.mp4 \
       -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
@@ -235,8 +234,6 @@ Set frame rate with a combination of the [fps][4] filter in `ffmpeg` and [`-dela
 Lastly, browsers and image viewers may implement a minimum delay, so your `-delay` may get ignored anyway.
 
 [1]: https://i.stack.imgur.com/umzXz.gif
-[2]: https://ffmpeg.org/download.html
-[3]: https://trac.ffmpeg.org/wiki/CompilationGuide
 [4]: https://ffmpeg.org/ffmpeg-filters.html#fps
 [5]: https://ffmpeg.org/ffmpeg-filters.html#scale
 [6]: https://ffmpeg.org/ffmpeg-scaler.html

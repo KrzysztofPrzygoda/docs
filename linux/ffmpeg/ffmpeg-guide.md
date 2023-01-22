@@ -6,6 +6,7 @@ Autor: Krzysztof Przygoda, 2022
 
 - FFmpeg [Documentation](https://ffmpeg.org/documentation.html)
 - Convert video to animated gif example from [superuser.com](https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality)
+- How to make GIFs with FFMPEG from [engineering.giphy.com](https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/)
 
 # Installation
 

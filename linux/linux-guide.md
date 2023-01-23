@@ -865,20 +865,36 @@ $ scutil --dns
 # [macOS] List DNS servers config.
 ```
 
+#### DNS Lookup
+
 ```bash
+$ sudo apt-get install whois
+# Install on Debian/Ubuntu.
+
 $ whois <domain.name>
-# Show domain registration info (subscriber, registrar, nameservers etc.).
+# Show domain registration info (subscriber, registrar, nameservers, billing dates etc.).
 ```
 
 ```bash
+$ sudo apt-get install dnsutils
+# Install DNS utils on Debian/Ubuntu.
+$ sudo yum install bind-utils
+# Install DNS utils on CentOS/RedHat.
+
 $ dig <domain.name>
-# [macOS] DNS lookup.
+$ nslookup <domain.name>
+# DNS lookup.
 
 $ dig @<dns.server.name-or-ip> <domain.name>
-# [macOS] Check resolving in a specific DNS.
+$ nslookup <domain.name> <dns.server.name-or-ip>
+# Check resolving in a specific DNS.
+
+$ dig <domain.name> <record>
+# Check specific DNS record.
 
 $ dig -x <ip>
-# [macOS] Reverse DNS lookup.
+$ nslookup <ip>
+# Reverse DNS lookup.
 ```
 
 ## Secure Shell

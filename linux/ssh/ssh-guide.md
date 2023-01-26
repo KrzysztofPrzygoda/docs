@@ -749,12 +749,19 @@ Create an app that can be run via System Settings > Login Items for specific use
 
     ```bash
     REMOTE_DIR="bitsmodo:/home/klient.dhosting.pl/bitsmodo"
-    LOCAL_DIR="Mounts/bitsmodo.com"
+    LOCAL_DIR="~/Mounts/bitsmodo.com"
     VOLUME_NAME="bitsmodo.com"
     
     diskutil unmount ${LOCAL_DIR}
     mkdir -p ~/${LOCAL_DIR}
-    /usr/local/bin/sshfs ${REMOTE_DIR} ~/${LOCAL_DIR} -o allow_other,default_permissions,direct_io,reconnect,volname=${VOLUME_NAME}
+
+    /usr/local/bin/sshfs ${REMOTE_DIR} ${LOCAL_DIR} -o allow_other,default_permissions,direct_io,reconnect,volname=${VOLUME_NAME}
+    ```
+
+    If you need sudo privilages add option: `-o sftp_server="sudo /usr/lib/openssh/sftp-server"` (note that your Linux distro may require diffent path). Full option argument then:
+
+    ```bash
+    /usr/local/bin/sshfs ${REMOTE_DIR} ${LOCAL_DIR} -o allow_other,default_permissions,direct_io,reconnect,sftp_server="sudo /usr/lib/openssh/sftp-server",volname=${VOLUME_NAME}
     ```
 
 3. Choose `File` > `Save...` > Set File Format: `Application` > Save As: `Mount bitsmodo.com.app` > `Save`.

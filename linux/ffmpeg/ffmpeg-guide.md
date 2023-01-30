@@ -116,6 +116,15 @@ $ ffmpeg -i input.mp4 -vf scale=-1:720 -c:v libx264 -crf 18 -preset veryslow -c:
 # You control the tradeoff between video encoding speed and compression efficiency with the -preset options. Those are ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow. Default is medium. The veryslow option offers the best compression efficiency (resulting in a smaller file size for the same quality) but it is very slow – as the name says.
 ```
 
+## Change video file size
+
+Copy [ffmpeg-size.sh](./ffmpeg-size.sh) script to `~/.local/bin` folder then:
+
+```bash
+$ ffmpeg-size.sh video.mp4 10
+# To get 10 MB output video-10MB.mp4 file.
+```
+
 ## Convert video mp4 to audio mp3
 
 ### Constant bitrate

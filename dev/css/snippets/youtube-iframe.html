@@ -1,7 +1,8 @@
 <!--
     This is responsive YT iframe with constant display ratio (here: 16:9 or 1:0.5625 or 56,25%).
+    You may want to adjust --ratio and --width.
 -->
-<div style="--ratio: calc(16/9); width: 100%; padding-bottom: calc(100%/var(--ratio)); position: relative; left: 0; height: 0;">
+<div style="--ratio: calc(16/9); --width: 100%; width: var(--width); padding-bottom: calc(var(--width)/var(--ratio)); position: relative; left: 0; height: 0;">
     <iframe
         style="position: absolute; border: 0; top: 0; left: 0; width: 100%; height: 100%;"
         src="https://www.youtube-nocookie.com/embed/q5D55G7Ejs8"

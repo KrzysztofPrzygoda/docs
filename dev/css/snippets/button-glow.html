@@ -1,0 +1,125 @@
+<!--
+    A button with glow effect.
+-->
+<html>
+    <body>
+            <a href="#" class="btn btn-glow btn-primary"><span>Primary</span></a>
+            <a href="#" class="btn btn-glow btn-secondary"><span>Secondary</span></a>
+
+        <style>
+            :root {
+                --corner-s: 0.4rem;
+                --corner-m: 0.5rem;
+                --corner-l: 1rem;
+
+                --button-corner: var(--corner-l);
+
+                --ease-1: cubic-bezier(.246,.75,.187,1);
+                --ease-2: cubic-bezier(.19,1,.22,1);
+                --ease-3: cubic-bezier(1,0,0,1);
+
+                --transition-glow: opacity 0.8s var(--ease-1);
+                --gradient-glow: linear-gradient(280.97deg, #c5ecfe, #298aff 50.81%, #eeb7e7);
+                --animation-glow: glow 4s linear infinite forwards;
+            }
+
+            :after, :before {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #0c1514;
+                text-rendering: optimizeLegibility;
+
+                display: grid;
+                gap: 2rem;
+                align-content: center;
+                justify-content: center;
+            }
+        
+            .btn {
+                font-family: 'Helvetica', sans-serif;
+                font-weight: 600;
+                font-size: 16px;
+
+                line-height: 1.42857143;                                
+                box-sizing: border-box;
+                
+                display: inline-block;
+                position: relative;
+                
+                text-transform: none;
+                text-decoration: none;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: middle;
+
+                -ms-touch-action: manipulation;
+                touch-action: manipulation;
+                cursor: pointer;
+            }
+
+            .btn span {
+                display: flex;
+                align-content: center;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                gap: 1rem;
+                border: 2px solid #fff;
+                border-radius: var(--button-corner);
+                padding: 12px 20px;
+                transition: var(--transition-glow);
+            }
+
+            .btn-primary span {
+                color: #000;
+                background-color: #fff;
+            }
+
+            .btn-secondary span {
+                color: #fff;
+                background-color: transparent;
+            }
+            
+            .btn-glow {
+                position: relative;
+                z-index: 1;
+                isolation: isolate;
+                transition: var(--transition-glow);
+            }
+
+            .btn-glow::before {
+                opacity: 0;
+                content: "";
+                position: absolute;
+                inset: 0;
+                display: block;
+                z-index: -1;
+
+                border-radius: var(--button-corner);
+                background: var(--gradient-glow);
+                background-size: 200%;
+                animation: var(--animation-glow);
+                transition: var(--transition-glow);
+            }
+
+            .btn-glow:hover::before {
+                opacity: 1;
+            }
+
+            @keyframes glow {
+                0% {
+                    filter: blur(16px);
+                    background-position: -200%;
+                }
+                100% {
+                    filter: blur(16px);
+                    background-position: 200%;
+                }
+            }
+        </style>                
+    </body>
+</html>

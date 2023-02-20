@@ -19,18 +19,24 @@
         </footer>
 
         <style>
+            :root {
+                --color-text: white;
+                --color-bg: #0e1416;
+                --color-grid: hsla(0, 0%, 100%, .3);
+                --color-grid: #ff000080;
+                --grid-thickness: 1px;
+                --grid-perspective: 450px;
+                --grid-speed: 15s;
+            }
+
             :after, :before {
                 -webkit-box-sizing: border-box;
                 -moz-box-sizing: border-box;
                 box-sizing: border-box;
             }
 
-            :root {
-                --color-bg: #0e1416;
-            }
-
             body {
-                color: white;
+                color: var(--color-text);
                 background: var(--color-bg);
                 font-family: 'Helvetica', sans-serif;
                 font-weight: 600;
@@ -71,27 +77,27 @@
                 height: 24rem;
                 overflow: hidden;
                 z-index: 10;
-                perspective: 450px;
+                perspective: var(--grid-perspective);
             }
             footer .anim-fade {
                 width: 100%;
                 height: 100%;
                 position: absolute;
                 z-index: 11;
-                background: radial-gradient(ellipse at 50% 50%,rgba(14,20,22,0) 0,#0e1416 80%);
+                background: radial-gradient(ellipse at 50% 50%,rgba(14,20,22,0) 0, var(--color-bg) 80%);
             }
             footer .anim-lines {
                 position: relative;
                 width: 100%;
                 height: 200%;
-                background-image: linear-gradient(90deg,hsla(0,0%,100%,.3) 1px,transparent 0),linear-gradient(180deg,hsla(0,0%,100%,.3) 1px,transparent 0);
+                background-image: linear-gradient(90deg, var(--color-grid) var(--grid-thickness), transparent 0), linear-gradient(180deg, var(--color-grid) var(--grid-thickness), transparent 0);
                 background-size: 45px 35px;
                 background-repeat: repeat;
                 transform-origin: 100% 0 0;
-                animation: grid 15s linear infinite;
+                animation: move-ahead var(--grid-speed) linear infinite;
             }
 
-            @keyframes grid {
+            @keyframes move-ahead {
                 0% {
                     transform: rotateX(45deg) translateY(-50%);
                 }

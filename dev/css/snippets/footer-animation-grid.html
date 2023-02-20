@@ -1,0 +1,104 @@
+<!--
+    Animated footer grid.
+-->
+<html>
+    <body>
+        <main>
+            <p>Main content</p>
+        </main>
+        <footer>
+            <div class="content">
+                <p>Footer content</p>
+            </div>
+            <div class="anim-overlay">
+                <div class="anim-grid">
+                    <div class="anim-fade"></div>
+                    <div class="anim-lines"></div>
+                </div>
+            </div>
+        </footer>
+
+        <style>
+            :after, :before {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --color-bg: #0e1416;
+            }
+
+            body {
+                color: white;
+                background: var(--color-bg);
+                font-family: 'Helvetica', sans-serif;
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 1.42857143;
+                text-rendering: optimizeLegibility;
+            }
+
+            main {
+                display: grid;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                height: 80vh;
+            }
+
+            footer {
+                display: block;
+                position: relative;
+            }
+            footer .content {
+                display: grid;
+                align-items: center;
+                align-content: center;
+                justify-content: center;
+                height: 50vh;
+            }
+            footer .anim-overlay {
+                position: absolute;
+                z-index: -1;
+                inset: 0;
+                top: auto;
+                background-color: var(--color-bg);
+            }
+            footer .anim-grid {
+                position: relative;
+                width: 100%;
+                height: 24rem;
+                overflow: hidden;
+                z-index: 10;
+                perspective: 450px;
+            }
+            footer .anim-fade {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: 11;
+                background: radial-gradient(ellipse at 50% 50%,rgba(14,20,22,0) 0,#0e1416 80%);
+            }
+            footer .anim-lines {
+                position: relative;
+                width: 100%;
+                height: 200%;
+                background-image: linear-gradient(90deg,hsla(0,0%,100%,.3) 1px,transparent 0),linear-gradient(180deg,hsla(0,0%,100%,.3) 1px,transparent 0);
+                background-size: 45px 35px;
+                background-repeat: repeat;
+                transform-origin: 100% 0 0;
+                animation: grid 15s linear infinite;
+            }
+
+            @keyframes grid {
+                0% {
+                    transform: rotateX(45deg) translateY(-50%);
+                }
+                100% {
+                    transform: rotateX(45deg) translateY(0);
+                }
+            }
+        </style>                
+    </body>
+</html>

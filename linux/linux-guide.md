@@ -793,7 +793,13 @@ $ grep -hnr -A2 -B2 --no-group-separator "pattern" <logfile>
 
 ```bash
 $ curl ifconfig.me
-# Get your public IP.
+$ dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com
+# Get your public IP (by asking external service).
+
+$ ipconfig getifaddr en0
+$ ifconfig -l | xargs -n1 ipconfig getifaddr
+$ ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'
+# Get your local IP (here on en0 interface).
 ```
 
 ```bash

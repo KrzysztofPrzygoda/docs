@@ -1,0 +1,73 @@
+<!--
+    A button with glow effect.
+-->
+<html>
+    <body>
+        <div class="chat-dots">
+            <strong>•</strong>
+            <strong>•</strong>
+            <strong>•</strong>
+        </div>
+
+        <style>
+            :after, :before {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #fff;
+                text-rendering: optimizeLegibility;
+
+                display: grid;
+                gap: 2rem;
+                align-content: center;
+                justify-content: center;
+            }
+            
+            .chat-dots {
+                display: flex;
+                padding: 0;
+                margin: 0;
+            }
+
+            .chat-dots strong {
+                display: block;
+                color: #ced0d4;
+                font-size: 1.5rem;
+                margin-left: 0.05em;
+                -webkit-animation: chatDots 1.5s linear infinite;
+                animation: chatDots 1.5s linear infinite;
+            }
+            .chat-dots strong:nth-child(2) {
+                -webkit-animation-delay: .25s;
+                animation-delay: .25s;
+            }
+            .chat-dots strong:nth-child(3) {
+                -webkit-animation-delay: .5s;
+                animation-delay: .5s;
+            }
+
+            @keyframes chatDots {
+                0% {
+                    opacity: .5;
+                }
+                15% {
+                    -webkit-transform: translateY(-0.25em);
+                    transform: translateY(-0.25em);
+                }
+                25% {
+                    -webkit-transform: translateY(0);
+                    transform: translateY(0);
+                }
+                50% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: .5;
+                }
+            }
+        </style>                
+    </body>
+</html>

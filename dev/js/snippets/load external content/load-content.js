@@ -19,7 +19,11 @@
 		})
 		.then( ( response ) => response.text() )
 		.then( ( content ) => {
-			element.innerHTML = content;
+			// Insert HTML with scripts execution using Range
+			// https://grrr.tech/posts/create-dom-node-from-html-string/
+			// https://developer.mozilla.org/en-US/docs/Web/API/Range
+			const contentFragment = document.createRange().createContextualFragment(content);
+			element.replaceChildren(contentFragment);
 		})
 		.catch(( error ) => {
 			console.error( 'Error: ', error );
@@ -33,7 +37,7 @@
 		
 		default:
 			const scriptName = 'load-content.js';
-			const contentUrl = 'https://bitsmodo.com/idosell/cms/load-content.php';
+			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php';
 			
 			// Find this <script> tag
 			const scriptElement = document.querySelector( 'script[src*="' + scriptName + '"]' );

@@ -1,27 +1,27 @@
 /**
- * Merge deep two objects' properies.
+ * Merge deeply two objects' with nested properties.
  * 
- * @param {Object} obj1
- * @param {Object} obj2
+ * @param {Object} targetObject Original object.
+ * @param {Object} sourceObject Additional object.
  * @returns {Object}
  */
-function merge (obj1, obj2) {
-    // Create a new object that combines the properties of both input objects
-    const merged = {
-        ...obj1,
-        ...obj2
-    };
+function merge(targetObject = {}, sourceObject = {}) {
+    // Clone the source and target objects to avoid the mutation.
+    const target = JSON.parse(JSON.stringify(targetObject));
+    const source = JSON.parse(JSON.stringify(sourceObject));
 
-    // Loop through the properties of the merged object
-    for (const key of Object.keys(merged)) {
-        // Check if the property is an object
-        if (typeof merged[key] === 'object' && merged[key] !== null) {
-            // If the property is an object, recursively merge the objects
-            merged[key] = merge(obj1[key], obj2[key]);
+    // Iterate through all the keys of source object.
+    Object.keys(source).forEach(key => {
+        if ("object" === typeof source[key] && !Array.isArray(source[key])) {
+            // If property has nested object, call the function recursively.
+            target[key] = this.merge(target[key], source[key]);
+        } else {
+            // Merge the object source to the target.
+            target[key] = source[key];
         }
-    }
+    });
 
-    return merged;
+    return target;
 }
 
 let a = {
@@ -29,7 +29,8 @@ let a = {
     b: 'ab',
     c: 'ac',
     d: {
-        e: 'ae'
+        e: 'ae',
+        g: [1, 2, 3]
     }
 }
 
@@ -45,8 +46,8 @@ let b = {
 
 // Shallow merge
 let c = { ...a, ...b };
-console.error(c);
+console.log('Shallow:', c);
 
 // Deep merge
 c = merge(a, b);
-console.error(c);
+console.log('Deep:', c);

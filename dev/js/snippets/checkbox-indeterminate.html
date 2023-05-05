@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indeterminate Checkboxes</title>
+</head>
+
+<body>
+    <!-- https://css-tricks.com/indeterminate-checkboxes/ -->
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        ul {
+            list-style: none;
+            margin: 5px 20px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        p {
+            font-size: 12px;
+            margin: 24px;
+        }
+    </style>
+    <h1>Indeterminate Checkboxes</h1>
+    <ul>
+        <li>
+            <input type="checkbox" name="tall" id="tall">
+            <label for="tall">Tall Things</label>
+            <ul>
+                <li>
+                    <input type="checkbox" name="tall-1" id="tall-1">
+                    <label for="tall-1">Buildings</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="tall-2" id="tall-2">
+                    <label for="tall-2">Giants</label>
+
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="tall-2-1" id="tall-2-1">
+                            <label for="tall-2-1">Andre</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-2-2" id="tall-2-2">
+                            <label for="tall-2-2">Paul Bunyan</label>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <input type="checkbox" name="tall-3" id="tall-3">
+                    <label for="tall-3">Two sandwiches</label>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <input type="checkbox" name="short" id="short">
+            <label for="short">Short Things</label>
+
+            <ul>
+                <li>
+                    <input type="checkbox" name="short-1" id="short-1">
+                    <label for="short-1">Smurfs</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="short-2" id="short-2">
+                    <label for="short-2">Mushrooms</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="short-3" id="short-3">
+                    <label for="short-3">One Sandwich</label>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <script>
+        //  helper function to create nodeArrays (not collections)
+        const nodeArray = (selector, parent = document) => [].slice.call(parent.querySelectorAll(selector));
+
+        //  checkboxes of interest 
+        const allThings = nodeArray('input');
+
+        //  global listener
+        addEventListener('change', e => {
+            let check = e.target;
+
+            //  exit if change event did not come from 
+            //  our list of allThings 
+            if (allThings.indexOf(check) === -1) return;
+
+            //  check/unchek children (includes check itself)
+            const children = nodeArray('input', check.parentNode);
+            children.forEach(child => child.checked = check.checked);
+
+            //  traverse up from target check
+            while (check) {
+                //  find parent and sibling checkboxes (quick'n'dirty)
+                const parent = (check.closest(['ul']).parentNode).querySelector('input');
+                const siblings = nodeArray('input', parent.closest('li').querySelector(['ul']));
+
+                //  get checked state of siblings
+                //  are every or some siblings checked (using Boolean as test function) 
+                const checkStatus = siblings.map(check => check.checked);
+                const every = checkStatus.every(Boolean);
+                const some = checkStatus.some(Boolean);
+
+                //  check parent if all siblings are checked
+                //  set indeterminate if not all and not none are checked
+                parent.checked = every;
+                parent.indeterminate = !every && every !== some;
+
+                //  prepare for nex loop
+                check = check != parent ? parent : 0;
+            }
+        })
+    </script>
+</body>
+
+</html>

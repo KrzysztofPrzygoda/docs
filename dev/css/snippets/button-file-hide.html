@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        input[type=file]:is(::file-selector-button, ::-ms-browse) {
+            display: none;
+        }
+    
+        /* Safari v16.1 doesn't work as expected */
+        input[type=file]::-webkit-file-upload-button {
+            display: block;
+            width: 0;
+            height: 0;
+            margin-left: -100%;
+        }
+    </style>
+    <form action="#">
+        <input type="file" name="file" id="file">
+    </form>    
+</body>
+</html>

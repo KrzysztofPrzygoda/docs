@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Center Absolute</title>
+</head>
+<body>
+<div class="box old-way centered"></div>
+<div class="box new-way centered"></div>
+<style>
+    .box {
+        border: 1px solid red;
+        padding: 50px;
+        position: relative;
+    }
+
+    .centered::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+
+        background: blue;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+    }
+
+    /* A hack */
+    .old-way.centered::before {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Not supported by Safari on iOS < 15 */
+    .new-way.centered::before {
+        aspect-ratio: 1;
+        margin: auto;
+    }
+</style>
+</body>
+</html>

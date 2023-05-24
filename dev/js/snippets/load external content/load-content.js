@@ -1,4 +1,4 @@
-!(function () {
+!(function (page = '') {
 	/**
 	 * Load content into DOM element using modern JS fetch API.
 	 *
@@ -10,49 +10,50 @@
 	 * @param {Element} element - DOM Element to load content into.
 	 * @return {void}
 	 */
-	async function loadContentIntoElement( url, element ) {
-		if ( ! url || ! element ) return;
-		
-		await fetch( url, {
+	async function loadContentIntoElement(url, element) {
+		if (!url || !element) return;
+
+		await fetch(url, {
 			mode: 'cors', // Response requires header('Access-Control-Allow-Origin: *');
 			cache: 'no-cache',
 		})
-		.then( ( response ) => response.text() )
-		.then( ( content ) => {
-			// Insert HTML with scripts execution using Range
-			// https://grrr.tech/posts/create-dom-node-from-html-string/
-			// https://developer.mozilla.org/en-US/docs/Web/API/Range
-			const contentFragment = document.createRange().createContextualFragment(content);
-			element.replaceChildren(contentFragment);
-		})
-		.catch(( error ) => {
-			console.error( 'Error: ', error );
-		});
+			.then((response) => response.text())
+			.then((content) => {
+				// Insert HTML with scripts execution using Range.
+				const documentFragment = document.createRange().createContextualFragment(content);
+				element.replaceChildren(documentFragment);
+			})
+			.catch((error) => {
+				console.error('Error: ', error);
+			});
 	}
-	
-	switch ( window.location.pathname ) {
+
+	switch (window.location.pathname) {
 		case '/panel/cms-texts.php':
-			// Skip these pages
+			// Skip these pages.
 			return;
-		
+
 		default:
+			// Find this <script> tag.
 			const scriptName = 'load-content.js';
-			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php';
-			
-			// Find this <script> tag
-			const scriptElement = document.querySelector( 'script[src*="' + scriptName + '"]' );
-			if ( ! scriptElement ) {
-				console.error( 'Error:', scriptName, '<script> tag not found.' );
+			const scriptElement = document.querySelector('script[src*="' + scriptName + '"]');
+			if (!scriptElement) {
+				console.error('Error:', scriptName, '<script> tag not found.');
 				return;
 			}
-			
-			// Find this <script> tag parent
+
+			// Find this <script> tag parent.
 			const contentElement = scriptElement.parentElement;
-			if ( ! contentElement ) {
-				console.error( 'Error:', scriptName, '<script> tag parent element not found.' );
+			// const contentElement = document.getElementById('external');
+			if (!contentElement) {
+				console.error('Error:', scriptName, '<script> tag parent element not found.');
 				return;
 			}
-			
-			loadContentIntoElement( contentUrl, contentElement );
+
+			// Load content.
+			page = page ? '?page=' + page : '';
+			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php' + page;
+
+			loadContentIntoElement(contentUrl, contentElement);
 	}
-})();
+})(loadPage);

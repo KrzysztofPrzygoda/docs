@@ -1,6 +1,6 @@
 <?php
-// Clean up any previously added headers.
-header_remove(); 
+// Remove all previously set headers.
+header_remove();
 
 // Anti cache headers.
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -10,14 +10,15 @@ header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
 
 // Anti CORS headers.
+// Requires JS fetch( url, { mode: 'cors', cache: 'no-cache' } )
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
 // Read content file.
-$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$page = filter_input(INPUT_GET, 'pageId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 if (!$page) {
-    $page = 'content';
+    $page = 'content-default';
 }
 
 // Sanitize filename.

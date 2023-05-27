@@ -50,9 +50,10 @@
 				return;
 			}
 
-			// Load content.
-			page = page ? '?page=' + page : '';
-			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php' + page;
+			// Load content (URL query param pageId takes precedence over input var loadPage).
+			const urlParams = new URLSearchParams(window.location.search);
+			page = urlParams.get('pageId') ?? page;
+			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php' + (page ? '?pageId=' + page : '');
 
 			loadContentIntoElement(contentUrl, contentElement);
 	}

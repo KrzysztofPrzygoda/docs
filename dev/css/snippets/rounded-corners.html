@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rounded corners</title>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner"></div>
+    </div>
+    <style>
+        :root {
+            --outer-radius: 3em;
+            --padding: 1.5em;
+            --inner-radius: calc(var(--outer-radius) - var(--padding));
+        }
+        
+        body {
+            display: grid;
+        }
+
+        .outer  {
+            border-radius: var(--outer-radius);
+            padding: var(--padding);
+            background-color: blue;
+            margin: 0 auto;
+            width: auto;
+        }
+
+        .inner {
+            border-radius: var(--inner-radius);
+            background-color: white;
+            height: 200px;
+            width: 200px;
+        }
+
+    </style>
+</body>
+</html>

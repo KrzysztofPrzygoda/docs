@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder</title>
+</head>
+<body>
+    <form action="#">
+        <input type="text" placeholder="Placeholder">
+    </form>
+    <style>
+        /* https://stackoverflow.com/questions/9451902/changing-an-inputs-html5-placeholder-color-with-css-does-not-work-on-chrome */
+
+        /* This won't work (in Chrome at least): */
+        ::-webkit-input-placeholder,
+        ::-moz-placeholder,
+        ::-ms-placeholder,
+        ::placeholder {
+            color:red;
+        }
+
+        /* This will work: */
+        ::-webkit-input-placeholder {
+            color:red;
+        }
+        ::-moz-placeholder {
+            color:red;
+        }
+        ::-ms-placeholder {
+            color:red;
+        }
+        ::placeholder {
+            color:red;
+        }        
+    </style>
+</body>
+</html>

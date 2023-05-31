@@ -12,26 +12,26 @@ Mainly based on:
 
 ## Reference
 
-- [ Linux Documentation Project Guides ](https://tldp.org/guides.html)
+- [Linux Documentation Project Guides](https://tldp.org/guides.html)
 - Apple [Shell Scripting Primer](https://developer.apple.com/library/archive/documentation/OpenSource/Conceptual/ShellScripting/Introduction/Introduction.html)
  
 ## Table of Contents
 
 - [General](#general)
-    - [Command Types](#command-types)
-    - [Keys](#keys)
-    - [Help](#help)
-    - [Debug](#debug)
-    - [Standard Streams](#standard-streams)
-    - [Execute](#execute)
+  - [Command Types](#command-types)
+  - [Keys](#keys)
+  - [Help](#help)
+  - [Debug](#debug)
+  - [Standard Streams](#standard-streams)
+  - [Execute](#execute)
 - [System](#system)
-    - [Version](#version)
-    - [Kernel](#kernel)
-    - [Processes](#processes)
-    - [CPU](#cpu)
-    - [Memory](#memory)
-    - [Drives](#drives)
-    - [Drivers](#drivers)
+  - [Version](#version)
+  - [Kernel](#kernel)
+  - [Processes](#processes)
+  - [CPU](#cpu)
+  - [Memory](#memory)
+  - [Drives](#drives)
+  - [Drivers](#drivers)
 - [Networking](#networking)
 - [Secure Shell (SSH)](#secure-shell)
 - [Software](#software)
@@ -85,6 +85,7 @@ GNU/Linux [Core Utilities](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilit
 ##### Package
 
 Installed via system specific [Package Manager][PM Link]:
+
 - [DEB-based][DEB Link] like [APT (Advanced Package Tool)][APT Link] or
 - [RPM-based][RPM Link] like [YUM][YUM Link].
 
@@ -154,6 +155,7 @@ $ bc
 # Point (reference) file descriptor 2 to file descriptor 1.
 # 2>1 (without reference &) would just redirect STDERR to a plain file named 1.
 ```
+
 ```bash
 $ <command> 1>/dev/null 2>/dev/null
 $ <command> 1>/dev/null 2>&1
@@ -161,7 +163,9 @@ $ <command> >/dev/null 2>&1
 $ <command> >&- 2>&-
 # Redirect STDOUT and STDERR to null.
 ```
+
 The rule is that any redirection sets the handle to the output stream independently:
+
 ```bash
 $ <command> 2>&1 > <file>
 # Redirect STDERR to STDOUT but only STDOUT to file.
@@ -176,7 +180,9 @@ $ <command> > <file> 2>&1
 # then STDERR would additionally be redirected to STDOUT
 # that has already been changed to point at the file.
 ```
+
 Chained pipelines:
+
 ```bash
 $ <cmd1> | <cmd2> | <cmd3>
 # Redirects cmd1 STDOUT to cmd2 STDIN, and cmd2 STDOUT to cmd3 STDIN.
@@ -185,13 +191,16 @@ $ <cmd1> 2>&1 | <cmd2>
 $ <cmd1> |& <cmd2>
 # Pipe cmd1 stdrr and STDOUT to cmd2 STDIN.
 ```
+
 Redirect to multiple outputs:
+
 ```bash
 $ <command> | tee <file>
 # Redirects command output to both STDOUT and the file.
 $ <command> 2>&1 | tee <file>
 # Redirects command STDERR to STDOUT and to the file.
 ```
+
 ```bash
 $ <command> < <infile>
 $ cat <infile> | <command>
@@ -205,7 +214,9 @@ $ echo -e 'user\npass' | ftp localhost
 $ ftp localhost <<< $'user\npass'
 # Pass string to command.
 ```
+
 Switch `STDOUT` and `STDERR`:
+
 ```bash
 $ <cmd> 3>&1 1>&2 2>&3
 # 3>&1 will create a new file descriptor 3 and redirect it to 1 which is STDOUT.
@@ -237,11 +248,13 @@ $ <command> [options] &
 $ <command> [options] >/dev/null 2>&1 &
 # Run command in background and suppress STDOUT and STDERR.
 ```
+
 ```bash
 $ jobs
 $ jobs -l
 # Show commands run in background.
 ```
+
 ```bash
 $ fg
 # Bring last background command back to foreground.
@@ -249,16 +262,19 @@ $ fg %<id>
 $ fg %1
 # Bring background command of id back to foreground.
 ```
+
 ```bash
 CTRL+Z
 bg
 # Move foreground process in the background.
 ```
+
 ```bash
 $ disown
 $ disown %<id>
 # Keep last background process (or of id) running after a shell exits.
 ```
+
 ```bash
 #!/bin/bash
 echo "Job 1" &
@@ -1020,9 +1036,13 @@ $ ssh -i <private-key-file> <user>@<host>
 ```
 
 ## Software
+
 ### Info
+
 ### List
+
 ### Repository
+
 ### Install
 
 ```bash
@@ -1745,29 +1765,29 @@ $ source ~/.bashrc
 ### General
 
 - The Linux Documentation Project on [tldp.org](https://www.tldp.org/)
-    - [Linux Introduction](https://www.tldp.org/LDP/intro-linux/html/intro-linux.html)
-    - [Linux Administration](https://www.tldp.org/LDP/sag/html/sag.html)
-    - [Command-Line Tools (GNU/Linux)](https://www.tldp.org/LDP/GNU-Linux-Tools-Summary/html/GNU-Linux-Tools-Summary.html)
-    - [Bash Beginners Guide](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html)
-    - [Bash Advanced Guide](https://www.tldp.org/LDP/abs/html/abs-guide.html)
+  - [Linux Introduction](https://www.tldp.org/LDP/intro-linux/html/intro-linux.html)
+  - [Linux Administration](https://www.tldp.org/LDP/sag/html/sag.html)
+  - [Command-Line Tools (GNU/Linux)](https://www.tldp.org/LDP/GNU-Linux-Tools-Summary/html/GNU-Linux-Tools-Summary.html)
+  - [Bash Beginners Guide](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html)
+  - [Bash Advanced Guide](https://www.tldp.org/LDP/abs/html/abs-guide.html)
 - GNU Manuals on [gnu.org](https://www.gnu.org/manual/)
-    - [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
-    - [Common GNU/Linux distributions](https://www.gnu.org/distros/common-distros.en.html)
+  - [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
+  - [Common GNU/Linux distributions](https://www.gnu.org/distros/common-distros.en.html)
 - Filesystem Hierarchy Standard
-    - Original specification on [linuxfundation.org](https://refspecs.linuxfoundation.org/fhs.shtml)
-    - Additional comments on [tldp.org](https://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/Linux-Filesystem-Hierarchy.html)
+  - Original specification on [linuxfundation.org](https://refspecs.linuxfoundation.org/fhs.shtml)
+  - Additional comments on [tldp.org](https://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/Linux-Filesystem-Hierarchy.html)
 - OS Manuals
-    - [Debian Reference](https://www.debian.org/doc/manuals/debian-reference/index.en.html)
+  - [Debian Reference](https://www.debian.org/doc/manuals/debian-reference/index.en.html)
 - Other
-    - [The Bash Hackers Wiki](https://wiki.bash-hackers.org/)
+  - [The Bash Hackers Wiki](https://wiki.bash-hackers.org/)
 
 ### Styling
 
 - [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
- - [Icy Bash Coding Style](https://github.com/icy/bash-coding-style)
- - [Anybody can write good bash (with a little effort)](https://blog.yossarian.net/2020/01/23/Anybody-can-write-good-bash-with-a-little-effort)
- - The Bash Hackers Wiki [Scripting with style](https://wiki.bash-hackers.org/scripting/style)
- - [ShellCheck](https://github.com/koalaman/shellcheck) - A shell script static analysis tool
+- [Icy Bash Coding Style](https://github.com/icy/bash-coding-style)
+- [Anybody can write good bash (with a little effort)](https://blog.yossarian.net/2020/01/23/Anybody-can-write-good-bash-with-a-little-effort)
+- The Bash Hackers Wiki [Scripting with style](https://wiki.bash-hackers.org/scripting/style)
+- [ShellCheck](https://github.com/koalaman/shellcheck) - A shell script static analysis tool
 
 ### Tips & Cheetsheets
 

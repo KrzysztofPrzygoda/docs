@@ -842,8 +842,14 @@ $ ipconfig getsummary en0
 ```
 
 ```bash
+$ ping $(ifconfig | grep broadcast | awk '{print $NF}')
+# Ping broadcast address to get response from all LAN machines then...
 $ arp -a
 # View all known IP adresses in the LAN (resolved MAC to IP mappings).
+$ ping $(ifconfig | grep broadcast | awk '{print $NF}') -t 1 > /dev/null && arp -a
+# Oneliner to scan LAN.
+$ nmap -sP 10.10.10.0/24
+# Scan LAN devices over VPN connection (requires nmap package installed).
 ```
 
 #### Connections

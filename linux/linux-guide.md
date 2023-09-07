@@ -841,6 +841,8 @@ $ ipconfig getsummary en0
 # View en0 (primary) interface configuration.
 ```
 
+#### Scan devices
+
 ```bash
 $ ping $(ifconfig | grep broadcast | awk '{print $NF}')
 # Ping broadcast address to get response from all LAN machines then...
@@ -848,8 +850,61 @@ $ arp -a
 # View all known IP adresses in the LAN (resolved MAC to IP mappings).
 $ ping $(ifconfig | grep broadcast | awk '{print $NF}') -t 1 > /dev/null && arp -a
 # Oneliner to scan LAN.
+
 $ nmap -sP 10.10.10.0/24
-# Scan LAN devices over VPN connection (requires nmap package installed).
+# Scan all LAN devices (entire subnet).
+# Useful esp. over VPN connection.
+# Requires nmap package installed.
+```
+
+#### Scan ports
+
+```bash
+$ nmap –p 80 <host>
+$ nmap –p 1-200 <host>
+# Scan port 80 or range 1 to 200 on host.
+
+$ sudo nmap -Pn -p- <host>
+# Scan all host ports (1 – 65535) and bypass host discovery (pinging).
+# Host discovery uses ping, but many server firewalls do not respond to ping requests.
+# This option forces the test without waiting for a reply that may not be coming.
+
+$ sudo nmap -sT <host>
+# Scan using TCP connect (it takes longer, but is more likely to connect).
+
+$ sudo nmap -sS <host>
+# Perform the default SYN scan (it tests by performing only half of the TCP handshake).
+
+$ sudo nmap –sU –p 80,130,255 <host>
+# Scan UDP ports (80, 130, and 255) instead of TCP ports.
+
+$ nmap –A <host>
+# Try to detect the operating system of host.
+
+$ nmap –sV <host>
+# Probe for the services that might be using different ports.
+# The –sV option can be tuned to be more or less aggressive in its scan.
+# Use the ––version-intensity 2 option to specify the level of testing.
+# Replace the number 2 with a number from 0 (light testing) to 9 (run all probes).
+# The more intense the testing, the longer the scan will take.
+``````
+
+A brief list of standard ports:
+
+```bash
+21 – FTP
+22 – SSH
+25 – SMTP (sending email)
+53 – DNS (domain name service)
+80 – HTTP (web server)
+110 – POP3 (email inbox)
+123 – NTP (Network Time Protocol)
+143 – IMAP (email inbox)
+443 – HTTPS (secure web server)
+465 – SMTPS (send secure email)
+631 – CUPS (print server)
+993 – IMAPS (secure email inbox)
+995 – POP3 (secure email inbox)
 ```
 
 #### Connections

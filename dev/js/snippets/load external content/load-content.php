@@ -1,4 +1,10 @@
 <?php
+/**
+ * Return HTML content file.
+ * 
+ * @author "Krzysztof Przygoda <no@email.com>"
+ */
+
 // Remove all previously set headers.
 header_remove();
 
@@ -15,10 +21,10 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: text/html; charset=utf-8');
 
 // Read content file.
-$page = filter_input(INPUT_GET, 'pageId', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$page = filter_input(INPUT_GET, 'content', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 if (!$page) {
-    $page = 'content-default';
+    $page = 'default-page';
 }
 
 // Sanitize filename.

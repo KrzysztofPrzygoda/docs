@@ -35,10 +35,9 @@
 
 		default:
 			// Find this <script> tag.
-			const scriptName = 'load-content.js';
-			const scriptElement = document.querySelector('script[src*="' + scriptName + '"]');
+			const scriptElement = document.currentScript;
 			if (!scriptElement) {
-				console.error('Error:', scriptName, '<script> tag not found.');
+				console.error('Error:', '<script> tag not found.');
 				return;
 			}
 
@@ -52,9 +51,9 @@
 
 			// Load content (URL query param pageId takes precedence over input var loadPage).
 			const urlParams = new URLSearchParams(window.location.search);
-			page = urlParams.get('pageId') ?? page;
-			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php' + (page ? '?pageId=' + page : '');
+			page = urlParams.get('content') ?? scriptElement.dataset.content;
+			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php' + (page ? '?content=' + page : '');
 
 			loadContentIntoElement(contentUrl, contentElement);
 	}
-})(loadPage);
+})();

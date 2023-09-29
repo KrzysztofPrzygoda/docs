@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
 <!--
     @see:
     - https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior
@@ -5,501 +13,497 @@
     - https://codepen.io/kevinpowell/pen/eYjRVmw
 -->
 
-<html>
+<script>
+    const navigation = document.querySelector(".primary-navigation");
+    const navigationHeight = navigation.offsetHeight;
+    document.documentElement.style.setProperty(
+        "--scroll-padding",
+        navigationHeight + "px"
+    );
+</script>
 
-<body>
-    <script>
-        const navigation = document.querySelector(".primary-navigation");
-        const navigationHeight = navigation.offsetHeight;
-        document.documentElement.style.setProperty(
-            "--scroll-padding",
-            navigationHeight + "px"
-        );
-    </script>
+<style>
+    html {
+        scroll-behavior: smooth;
+        scroll-padding: var(--scroll-padding, 5rem);
+    }
 
-    <style>
-        html {
-            scroll-behavior: smooth;
-            scroll-padding: var(--scroll-padding, 5rem);
+    .primary-navigation {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+        font-size: 1.5rem;
+        background: var(--clr-primary-400);
+    }
+
+    .nav-list {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        list-style: none;
+    }
+
+    .nav-list a {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    /* general styling */
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        font: inherit;
+    }
+
+    :root {
+        --fs-900: 3rem;
+        --fs-800: 2.5rem;
+        --fs-700: 2rem;
+        --fs-400: 1rem;
+
+        --fw-400: 400;
+        --fw-700: 700;
+
+        --size-400: 1.5rem;
+        --size-500: 3rem;
+        --size-600: 6rem;
+
+        --clr-neutral-900: hsl(0, 9%, 11%);
+        --clr-neutral-200: hsl(36, 24%, 96%);
+        --clr-neutral-100: hsl(0, 0%, 100%);
+
+        --clr-primary-200: hsl(213, 43%, 79%);
+        --clr-primary-300: hsl(190, 84%, 50%);
+        --clr-primary-400: hsl(217, 100%, 50%);
+        --clr-primary-500: hsl(190, 100%, 28%);
+    }
+
+    /* Box sizing rules */
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* Gerenal spacing and font reset */
+    * {
+        margin: 0;
+        padding: 0;
+        font: inherit;
+    }
+
+    /* Set core body defaults */
+    body {
+        min-height: 100vh;
+        text-rendering: optimizeSpeed;
+        line-height: 1.5;
+    }
+
+    a {
+        color: inherit;
+        text-decoration-color: rgb(107, 107, 107);
+    }
+
+    a:where(:hover, :focus) {
+        text-decoration-color: currentColor;
+    }
+
+    code {
+        font-family: monospace;
+    }
+
+    /* Make images easier to work with */
+    img,
+    picture {
+        max-width: 100%;
+        display: block;
+    }
+
+    /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+    @media (prefers-reduced-motion: reduce) {
+        html:focus-within {
+            scroll-behavior: auto;
         }
-
-        .primary-navigation {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding-top: 4rem;
-            padding-bottom: 4rem;
-            font-size: 1.5rem;
-            background: var(--clr-primary-400);
-        }
-
-        .nav-list {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            list-style: none;
-        }
-
-        .nav-list a {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        /* general styling */
 
         *,
         *::before,
         *::after {
-            box-sizing: border-box;
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
         }
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            font: inherit;
-        }
-
-        :root {
-            --fs-900: 3rem;
-            --fs-800: 2.5rem;
-            --fs-700: 2rem;
-            --fs-400: 1rem;
-
-            --fw-400: 400;
-            --fw-700: 700;
-
-            --size-400: 1.5rem;
-            --size-500: 3rem;
-            --size-600: 6rem;
-
-            --clr-neutral-900: hsl(0, 9%, 11%);
-            --clr-neutral-200: hsl(36, 24%, 96%);
-            --clr-neutral-100: hsl(0, 0%, 100%);
-
-            --clr-primary-200: hsl(213, 43%, 79%);
-            --clr-primary-300: hsl(190, 84%, 50%);
-            --clr-primary-400: hsl(217, 100%, 50%);
-            --clr-primary-500: hsl(190, 100%, 28%);
-        }
-
-        /* Box sizing rules */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        /* Gerenal spacing and font reset */
-        * {
-            margin: 0;
-            padding: 0;
-            font: inherit;
-        }
-
-        /* Set core body defaults */
-        body {
-            min-height: 100vh;
-            text-rendering: optimizeSpeed;
-            line-height: 1.5;
-        }
-
-        a {
-            color: inherit;
-            text-decoration-color: rgb(107, 107, 107);
-        }
-
-        a:where(:hover, :focus) {
-            text-decoration-color: currentColor;
-        }
-
-        code {
-            font-family: monospace;
-        }
-
-        /* Make images easier to work with */
-        img,
-        picture {
-            max-width: 100%;
-            display: block;
-        }
-
-        /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
-        @media (prefers-reduced-motion: reduce) {
-            html:focus-within {
-                scroll-behavior: auto;
-            }
-
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
-
-        /* Utilities */
-
-        .fs-900 {
-            font-size: var(--fs-900);
-        }
-
-        .fs-800 {
-            font-size: var(--fs-800);
-        }
-
-        .fs-700 {
-            font-size: var(--fs-700);
-        }
-
-        .fs-400 {
-            font-size: var(--fs-400);
-        }
-
-        .fw-regular {
-            font-weight: var(--fw-400);
-        }
-
-        .fw-bold {
-            font-weight: var(--fw-700);
-        }
-
-        .surface-neutral-100 {
-            background-color: var(--clr-neutral-100);
-        }
-
-        .surface-neutral-200 {
-            background-color: var(--clr-neutral-200);
-        }
-
-        .surface-neutral-900 {
-            background-color: var(--clr-neutral-900);
-        }
-
-        .surface-primary-200 {
-            background-color: var(--clr-primary-200);
-        }
-
-        .surface-primary-300 {
-            background-color: var(--clr-primary-300);
-        }
-
-        .surface-primary-400 {
-            background-color: var(--clr-primary-400);
-        }
-
-        .surface-primary-500 {
-            background-color: var(--clr-primary-500);
-        }
-
-        .text-neutral-100 {
-            color: var(--clr-neutral-100);
-        }
-
-        .text-neutral-200 {
-            color: var(--clr-neutral-200);
-        }
-
-        .text-neutral-900 {
-            color: var(--clr-neutral-900);
-        }
-
-        .text-primary-300 {
-            color: var(--clr-primary-300);
-        }
-
-        .text-primary-400 {
-            color: var(--clr-primary-400);
-        }
-
-        .text-primary-500 {
-            color: var(--clr-primary-500);
-        }
+    /* Utilities */
 
-        .text-center {
-            text-align: center;
-        }
-
-        .margin-auto {
-            margin: auto;
-        }
-
-        .margin-block-auto {
-            margin-block: auto;
-        }
-
-        .margin-inline-auto {
-            margin-inline: auto;
-        }
-
-        .margin-top-auto {
-            margin-top: auto;
-        }
-
-        .margin-bottom-auto {
-            margin-bottom: auto;
-        }
-
-        .margin-right-auto {
-            margin-right: auto;
-        }
-
-        .margin-left-auto {
-            margin-left: auto;
-        }
-
-        .margin-top-400 {
-            margin-top: var(--size-400);
-        }
-
-        .margin-top-500 {
-            margin-top: var(--size-500);
-        }
-
-        .margin-top-600 {
-            margin-top: var(--size-600);
-        }
-
-        .margin-bottom-400 {
-            margin-bottom: var(--size-400);
-        }
-
-        .margin-bottom-500 {
-            margin-bottom: var(--size-500);
-        }
-
-        .margin-bottom-600 {
-            margin-bottom: var(--size-600);
-        }
-
-        .margin-block-400 {
-            margin-block: var(--size-400);
-        }
+    .fs-900 {
+        font-size: var(--fs-900);
+    }
 
-        .margin-block-500 {
-            margin-block: var(--size-500);
-        }
-
-        .margin-block-600 {
-            margin-block: var(--size-600);
-        }
+    .fs-800 {
+        font-size: var(--fs-800);
+    }
 
-        .padding-block-400 {
-            padding-block: var(--size-400);
-        }
-
-        .padding-block-500 {
-            padding-block: var(--size-500);
-        }
+    .fs-700 {
+        font-size: var(--fs-700);
+    }
 
-        .padding-block-600 {
-            padding-block: var(--size-600);
-        }
+    .fs-400 {
+        font-size: var(--fs-400);
+    }
 
-        .padding-block-auto {
-            padding-block: auto;
-        }
+    .fw-regular {
+        font-weight: var(--fw-400);
+    }
 
-        .padding-inline-auto {
-            padding-inline: auto;
-        }
+    .fw-bold {
+        font-weight: var(--fw-700);
+    }
 
-        .padding-top-auto {
-            padding-top: auto;
-        }
+    .surface-neutral-100 {
+        background-color: var(--clr-neutral-100);
+    }
 
-        .padding-bottom-auto {
-            padding-bottom: auto;
-        }
+    .surface-neutral-200 {
+        background-color: var(--clr-neutral-200);
+    }
 
-        .padding-right-auto {
-            padding-right: auto;
-        }
+    .surface-neutral-900 {
+        background-color: var(--clr-neutral-900);
+    }
 
-        .padding-left-auto {
-            padding-left: auto;
-        }
+    .surface-primary-200 {
+        background-color: var(--clr-primary-200);
+    }
 
-        .padding-400 {
-            padding: var(--size-400);
-        }
+    .surface-primary-300 {
+        background-color: var(--clr-primary-300);
+    }
 
-        .padding-500 {
-            padding: calc(var(--size-400) * 2);
-        }
+    .surface-primary-400 {
+        background-color: var(--clr-primary-400);
+    }
 
-        .border-right-thin {
-            border-right: 1px solid rgb(197, 192, 182);
-        }
+    .surface-primary-500 {
+        background-color: var(--clr-primary-500);
+    }
 
-        :where(.flow > :not(:first-child)) {
-            margin-top: var(--flow-space, var(--size-400));
-        }
+    .text-neutral-100 {
+        color: var(--clr-neutral-100);
+    }
 
-        .flex {
-            display: flex;
-            flex-wrap: wrap;
-            width: fit-content;
-            gap: var(--gap, var(--size-400));
-        }
+    .text-neutral-200 {
+        color: var(--clr-neutral-200);
+    }
 
-        .flex-flow {
-            display: flex;
-            flex-direction: column;
-            gap: var(--flow-space, var(--size-400));
-        }
+    .text-neutral-900 {
+        color: var(--clr-neutral-900);
+    }
 
-        .text-center .flex {
-            margin: 0 auto;
-        }
+    .text-primary-300 {
+        color: var(--clr-primary-300);
+    }
 
-        .container {
-            --max-width: 75rem;
-            width: min(100% - 2rem, var(--max-width));
-            margin-inline: auto;
-        }
+    .text-primary-400 {
+        color: var(--clr-primary-400);
+    }
 
-        /* general styling */
-
-        body {
-            font-family: system-ui, sans-serif;
-            font-size: var(--fs-400);
-            line-height: 1.4;
-            color: var(--clr-neutral-900);
-            background-color: var(--clr-neutral-200);
-        }
+    .text-primary-500 {
+        color: var(--clr-primary-500);
+    }
 
-        [class*="grid-"] {
-            display: grid;
-            gap: 1rem;
-        }
+    .text-center {
+        text-align: center;
+    }
 
-        .grid-even-columns {
-            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-        }
+    .margin-auto {
+        margin: auto;
+    }
 
-        @media (min-width: 50em) {
-            .grid-auto-flow {
-                grid-auto-flow: column;
-                grid-auto-columns: 1fr;
-            }
-        }
+    .margin-block-auto {
+        margin-block: auto;
+    }
 
-        .grid-stack {
-            display: grid;
-            place-items: center;
-        }
+    .margin-inline-auto {
+        margin-inline: auto;
+    }
 
-        .grid-stack>* {
-            grid-column: 1 / 2;
-            grid-row: 1 / 2;
-        }
+    .margin-top-auto {
+        margin-top: auto;
+    }
 
-        .grid-stack>img {
-            aspect-ratio: 16/3;
-            min-height: 30vh;
-            object-fit: cover;
-            z-index: -1;
-        }
+    .margin-bottom-auto {
+        margin-bottom: auto;
+    }
 
-        p {
-            opacity: 0.85;
-        }
+    .margin-right-auto {
+        margin-right: auto;
+    }
 
-        h2 {
-            font-size: 5rem !important;
-            font-weight: 900;
-        }
-    </style>
-
-    <header class="grid-stack">
-        <div class="text-center padding-400 surface-neutral-200">
-            <h1 class="fs-900 fw-bold">Scroll-padding</h1>
-            <p>Stop anchor links from causing areas to be covered by the navigation</p>
+    .margin-left-auto {
+        margin-left: auto;
+    }
+
+    .margin-top-400 {
+        margin-top: var(--size-400);
+    }
+
+    .margin-top-500 {
+        margin-top: var(--size-500);
+    }
+
+    .margin-top-600 {
+        margin-top: var(--size-600);
+    }
+
+    .margin-bottom-400 {
+        margin-bottom: var(--size-400);
+    }
+
+    .margin-bottom-500 {
+        margin-bottom: var(--size-500);
+    }
+
+    .margin-bottom-600 {
+        margin-bottom: var(--size-600);
+    }
+
+    .margin-block-400 {
+        margin-block: var(--size-400);
+    }
+
+    .margin-block-500 {
+        margin-block: var(--size-500);
+    }
+
+    .margin-block-600 {
+        margin-block: var(--size-600);
+    }
+
+    .padding-block-400 {
+        padding-block: var(--size-400);
+    }
+
+    .padding-block-500 {
+        padding-block: var(--size-500);
+    }
+
+    .padding-block-600 {
+        padding-block: var(--size-600);
+    }
+
+    .padding-block-auto {
+        padding-block: auto;
+    }
+
+    .padding-inline-auto {
+        padding-inline: auto;
+    }
+
+    .padding-top-auto {
+        padding-top: auto;
+    }
+
+    .padding-bottom-auto {
+        padding-bottom: auto;
+    }
+
+    .padding-right-auto {
+        padding-right: auto;
+    }
+
+    .padding-left-auto {
+        padding-left: auto;
+    }
+
+    .padding-400 {
+        padding: var(--size-400);
+    }
+
+    .padding-500 {
+        padding: calc(var(--size-400) * 2);
+    }
+
+    .border-right-thin {
+        border-right: 1px solid rgb(197, 192, 182);
+    }
+
+    :where(.flow > :not(:first-child)) {
+        margin-top: var(--flow-space, var(--size-400));
+    }
+
+    .flex {
+        display: flex;
+        flex-wrap: wrap;
+        width: fit-content;
+        gap: var(--gap, var(--size-400));
+    }
+
+    .flex-flow {
+        display: flex;
+        flex-direction: column;
+        gap: var(--flow-space, var(--size-400));
+    }
+
+    .text-center .flex {
+        margin: 0 auto;
+    }
+
+    .container {
+        --max-width: 75rem;
+        width: min(100% - 2rem, var(--max-width));
+        margin-inline: auto;
+    }
+
+    /* general styling */
+
+    body {
+        font-family: system-ui, sans-serif;
+        font-size: var(--fs-400);
+        line-height: 1.4;
+        color: var(--clr-neutral-900);
+        background-color: var(--clr-neutral-200);
+    }
+
+    [class*="grid-"] {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .grid-even-columns {
+        grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    }
+
+    @media (min-width: 50em) {
+        .grid-auto-flow {
+            grid-auto-flow: column;
+            grid-auto-columns: 1fr;
+        }
+    }
+
+    .grid-stack {
+        display: grid;
+        place-items: center;
+    }
+
+    .grid-stack>* {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+    .grid-stack>img {
+        aspect-ratio: 16/3;
+        min-height: 30vh;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    p {
+        opacity: 0.85;
+    }
+
+    h2 {
+        font-size: 5rem !important;
+        font-weight: 900;
+    }
+</style>
+
+<header class="grid-stack">
+    <div class="text-center padding-400 surface-neutral-200">
+        <h1 class="fs-900 fw-bold">Scroll-padding</h1>
+        <p>Stop anchor links from causing areas to be covered by the navigation</p>
+    </div>
+    <img src='https://images.unsplash.com/photo-1551096052-fa4be61340c5?crop=entropy&cs=srgb&fm=jpg&ixid=MnwzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTI4MDgzMzE&ixlib=rb-1.2.1&q=85'
+        alt=''>
+</header>
+
+<nav class="primary-navigation">
+    <ul class="nav-list">
+        <li><a href="#section-1">Home</a></li>
+        <li><a href="#section-2">About</a></li>
+        <li><a href="#section-3">My Work</a></li>
+        <li><a href="#section-4">Contact</a></li>
+    </ul>
+</nav>
+
+<main>
+    <section id="section-1" class="padding-block-600 surface-neutral-900 text-neutral-100">
+        <div class="container flow">
+            <h2 class="fs-800">Home</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis delectus dolor ipsum odit, quam
+                ducimus consectetur fuga omnis fugiat amet dolore veritatis. Praesentium, maiores obcaecati?</p>
+            <p>Explicabo dicta, ratione repellat voluptates illo magnam fugit maxime illum a asperiores optio nulla
+                eius quibusdam ex accusamus assumenda. Eaque ipsa nisi veritatis asperiores reprehenderit.</p>
+            <p>Quis consequuntur natus quidem illum nulla sed sint. Minus a aliquid maxime autem optio, blanditiis
+                delectus repudiandae ducimus dicta ut inventore ipsum. Beatae, laborum blanditiis.</p>
+            <p>Nam eos repellat tenetur laudantium neque amet excepturi ipsa non temporibus ipsam eum sit libero
+                incidunt officiis, tempora optio culpa quia similique maxime labore rerum?</p>
+            <p>Non pariatur eaque modi commodi doloribus laborum at rem eos. Vero, quos. Earum laborum velit a
+                impedit quaerat, facilis veritatis illum odio repellat ea dicta!</p>
         </div>
-        <img src='https://images.unsplash.com/photo-1551096052-fa4be61340c5?crop=entropy&cs=srgb&fm=jpg&ixid=MnwzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTI4MDgzMzE&ixlib=rb-1.2.1&q=85'
-            alt=''>
-    </header>
-
-    <nav class="primary-navigation">
-        <ul class="nav-list">
-            <li><a href="#section-1">Home</a></li>
-            <li><a href="#section-2">About</a></li>
-            <li><a href="#section-3">My Work</a></li>
-            <li><a href="#section-4">Contact</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section id="section-1" class="padding-block-600 surface-neutral-900 text-neutral-100">
-            <div class="container flow">
-                <h2 class="fs-800">Home</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis delectus dolor ipsum odit, quam
-                    ducimus consectetur fuga omnis fugiat amet dolore veritatis. Praesentium, maiores obcaecati?</p>
-                <p>Explicabo dicta, ratione repellat voluptates illo magnam fugit maxime illum a asperiores optio nulla
-                    eius quibusdam ex accusamus assumenda. Eaque ipsa nisi veritatis asperiores reprehenderit.</p>
-                <p>Quis consequuntur natus quidem illum nulla sed sint. Minus a aliquid maxime autem optio, blanditiis
-                    delectus repudiandae ducimus dicta ut inventore ipsum. Beatae, laborum blanditiis.</p>
-                <p>Nam eos repellat tenetur laudantium neque amet excepturi ipsa non temporibus ipsam eum sit libero
-                    incidunt officiis, tempora optio culpa quia similique maxime labore rerum?</p>
-                <p>Non pariatur eaque modi commodi doloribus laborum at rem eos. Vero, quos. Earum laborum velit a
-                    impedit quaerat, facilis veritatis illum odio repellat ea dicta!</p>
-            </div>
-        </section>
-        <section id="section-2" class="padding-block-600">
-            <div class="container flow">
-                <h2 class="fs-800">About</h2>
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero aliquam nostrum rem. Similique, vitae
-                    tempore, iusto doloribus maxime esse dicta est eos voluptates cupiditate soluta.</p>
-                <p>Culpa saepe in, esse necessitatibus quod, architecto veritatis pariatur est temporibus perspiciatis
-                    omnis? Deserunt quibusdam esse obcaecati facilis saepe voluptatibus et, minima voluptas? Rem, esse?
-                </p>
-                <p>Possimus, facilis mollitia. Sint dicta natus modi odio iusto blanditiis similique ea inventore optio!
-                    Doloremque veniam cumque aperiam reiciendis, adipisci ut culpa cum ipsum deserunt?</p>
-                <p>Nam quod sint eius mollitia nostrum corrupti eos repellat cupiditate adipisci repudiandae! Sed
-                    eveniet assumenda, eaque cum officia architecto possimus, recusandae commodi minus, magni nemo.</p>
-                <p>Vero excepturi aspernatur accusamus ratione distinctio. Quibusdam neque doloremque inventore porro
-                    soluta magni mollitia ut, nulla quae adipisci rem laudantium, obcaecati, tempora cupiditate. Rem,
-                    dignissimos.</p>
-            </div>
-        </section>
-        <section id="section-3" class="padding-block-600 surface-neutral-900 text-neutral-100">
-            <div class="container flow">
-                <h2 class="fs-800">My Work</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos, autem debitis? Ratione
-                    expedita suscipit vel aperiam quod exercitationem. Sapiente, iure inventore. Distinctio modi error
-                    quis.</p>
-                <p>Quibusdam architecto, commodi tempora maxime eaque, ducimus recusandae optio impedit cumque aperiam
-                    obcaecati laborum nulla veniam? Praesentium voluptatum autem numquam molestiae vitae natus nostrum
-                    ex.</p>
-                <p>Alias totam dicta in inventore quidem fugiat neque exercitationem placeat dolore voluptatem.
-                    Perferendis, impedit quidem id neque totam consequatur enim ipsum culpa error itaque aperiam!</p>
-                <p>Harum corporis iure consectetur id temporibus libero ducimus adipisci quae, soluta provident corrupti
-                    vitae tempora nulla ipsum enim repellat autem asperiores laboriosam earum quidem mollitia.</p>
-                <p>Fugit ipsam error eligendi asperiores aliquam nostrum nobis, eum mollitia animi facere maxime alias
-                    veritatis. Inventore soluta praesentium, autem doloribus cumque neque odio doloremque ad!</p>
-            </div>
-        </section>
-        <section id="section-4" class="padding-block-600">
-            <div class="container">
-                <h2 class="fs-800">Contact</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur esse consequatur laudantium
-                    dolores illo blanditiis nemo qui architecto. Sint ab quo voluptatibus veniam dolor corrupti?</p>
-                <p>Modi, placeat facilis corrupti magnam quisquam ipsa repudiandae provident est. Veniam, omnis?
-                    Aspernatur dolore, nemo vitae hic laudantium libero ex, odit, minus ducimus tenetur doloremque.</p>
-                <p>Iusto adipisci suscipit ab qui totam reprehenderit eius animi soluta autem quae, sapiente sed ex
-                    blanditiis numquam provident quia quo repellat fugit ad placeat error.</p>
-                <p>Quibusdam nihil totam, corrupti, rerum tempore pariatur iure dolor, impedit repellat voluptatum
-                    voluptas. Placeat, laudantium ipsam quod maiores deserunt corrupti recusandae repellendus velit
-                    eligendi iste.</p>
-                <p>Delectus dolorem optio commodi cupiditate tenetur nulla recusandae reiciendis reprehenderit esse quae
-                    dolorum illum culpa incidunt aut in odio, libero fugit laborum quod animi amet!</p>
-            </div>
-        </section>
-    </main>
+    </section>
+    <section id="section-2" class="padding-block-600">
+        <div class="container flow">
+            <h2 class="fs-800">About</h2>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero aliquam nostrum rem. Similique, vitae
+                tempore, iusto doloribus maxime esse dicta est eos voluptates cupiditate soluta.</p>
+            <p>Culpa saepe in, esse necessitatibus quod, architecto veritatis pariatur est temporibus perspiciatis
+                omnis? Deserunt quibusdam esse obcaecati facilis saepe voluptatibus et, minima voluptas? Rem, esse?
+            </p>
+            <p>Possimus, facilis mollitia. Sint dicta natus modi odio iusto blanditiis similique ea inventore optio!
+                Doloremque veniam cumque aperiam reiciendis, adipisci ut culpa cum ipsum deserunt?</p>
+            <p>Nam quod sint eius mollitia nostrum corrupti eos repellat cupiditate adipisci repudiandae! Sed
+                eveniet assumenda, eaque cum officia architecto possimus, recusandae commodi minus, magni nemo.</p>
+            <p>Vero excepturi aspernatur accusamus ratione distinctio. Quibusdam neque doloremque inventore porro
+                soluta magni mollitia ut, nulla quae adipisci rem laudantium, obcaecati, tempora cupiditate. Rem,
+                dignissimos.</p>
+        </div>
+    </section>
+    <section id="section-3" class="padding-block-600 surface-neutral-900 text-neutral-100">
+        <div class="container flow">
+            <h2 class="fs-800">My Work</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos, autem debitis? Ratione
+                expedita suscipit vel aperiam quod exercitationem. Sapiente, iure inventore. Distinctio modi error
+                quis.</p>
+            <p>Quibusdam architecto, commodi tempora maxime eaque, ducimus recusandae optio impedit cumque aperiam
+                obcaecati laborum nulla veniam? Praesentium voluptatum autem numquam molestiae vitae natus nostrum
+                ex.</p>
+            <p>Alias totam dicta in inventore quidem fugiat neque exercitationem placeat dolore voluptatem.
+                Perferendis, impedit quidem id neque totam consequatur enim ipsum culpa error itaque aperiam!</p>
+            <p>Harum corporis iure consectetur id temporibus libero ducimus adipisci quae, soluta provident corrupti
+                vitae tempora nulla ipsum enim repellat autem asperiores laboriosam earum quidem mollitia.</p>
+            <p>Fugit ipsam error eligendi asperiores aliquam nostrum nobis, eum mollitia animi facere maxime alias
+                veritatis. Inventore soluta praesentium, autem doloribus cumque neque odio doloremque ad!</p>
+        </div>
+    </section>
+    <section id="section-4" class="padding-block-600">
+        <div class="container">
+            <h2 class="fs-800">Contact</h2>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur esse consequatur laudantium
+                dolores illo blanditiis nemo qui architecto. Sint ab quo voluptatibus veniam dolor corrupti?</p>
+            <p>Modi, placeat facilis corrupti magnam quisquam ipsa repudiandae provident est. Veniam, omnis?
+                Aspernatur dolore, nemo vitae hic laudantium libero ex, odit, minus ducimus tenetur doloremque.</p>
+            <p>Iusto adipisci suscipit ab qui totam reprehenderit eius animi soluta autem quae, sapiente sed ex
+                blanditiis numquam provident quia quo repellat fugit ad placeat error.</p>
+            <p>Quibusdam nihil totam, corrupti, rerum tempore pariatur iure dolor, impedit repellat voluptatum
+                voluptas. Placeat, laudantium ipsam quod maiores deserunt corrupti recusandae repellendus velit
+                eligendi iste.</p>
+            <p>Delectus dolorem optio commodi cupiditate tenetur nulla recusandae reiciendis reprehenderit esse quae
+                dolorum illum culpa incidunt aut in odio, libero fugit laborum quod animi amet!</p>
+        </div>
+    </section>
+</main>
 </body>
-
 </html>

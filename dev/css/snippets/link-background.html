@@ -1,0 +1,57 @@
+<style>
+    a {
+        --color-hover: #ff5151;
+        color: inherit;
+        text-decoration: none;
+        display: inline;
+
+        background-image: linear-gradient(to bottom, transparent 0%, var(--color-hover) 1%);
+        background-position: 0 100%;
+        background-size: 100% .3rem;
+        background-repeat: repeat-x;
+
+        transition: background-size .1s ease-in-out .2s;
+    }
+
+    a:hover,
+    a:focus {
+        background-size: 100% 100%;
+        transition-delay: 0s;
+    }
+
+    html {
+        font-size: 10px;
+        display: grid;
+        height: 100%;
+    }
+
+    body {
+        font-size: 1.6rem;
+        line-height: 1.4;
+        max-width: 30em;
+        width: 90%;
+        margin: auto;
+        background: inherit;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: always;
+    }
+</style>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent bibendum, lorem vel tincidunt imperdiet, nibh elit
+    laoreet felis, a bibendum nisl tortor non orci. Donec pretium fermentum felis, <a href="#">quis aliquet est rutrum
+        ut. Integer quis massa ut lacus viverra pharetra in eu lacus. Aliquam tempus odio adipiscing diam pellentesque
+        rhoncus.</a> Curabitur a bibendum est. Mauris vehicula cursus risus id luctus. Curabitur accumsan venenatis
+    nibh, non egestas ipsum vulputate ac. Vivamus consectetur dolor sit amet enim aliquet eu scelerisque ipsum
+    hendrerit. Donec lobortis suscipit vestibulum. Nullam luctus pellentesque risus in ullamcorper. Nam neque nunc,
+    mattis vitae ornare ut, feugiat a erat. Ut tempus iaculis augue vel pellentesque.</p>
+<p>Donec nunc ligula, vulputate quis mollis eu, interdum quis libero. Donec nulla ante, facilisis sit amet vulputate at,
+    tincidunt a velit. Maecenas vestibulum, nulla sed tincidunt viverra, lorem turpis aliquam urna, ut pretium orci
+    purus consequat augue. Etiam a enim orci, vitae pulvinar odio. In elit urna, tincidunt a pellentesque et,
+    scelerisque at nibh. <a href="#">Sed nec</a> est sapien. Aliquam ullamcorper eros eu quam ultrices vel faucibus eros
+        interdum. Etiam mattis eleifend sapien, eu iaculis massa feugiat sed. Aliquam erat volutpat. Vivamus
+    facilisis ultricies eros, a pretium purus mollis id. Sed dapibus elit ut neque rutrum dignissim. Nulla eros nisl,
+    venenatis quis rhoncus sit amet, molestie nec nisl. Pellentesque vel neque sapien, et sagittis nulla.</p>
+<p>Aliquam eu iaculis mauris. Etiam arcu lectus, imperdiet sit amet volutpat vitae, commodo sed nibh. Fusce faucibus
+    tempor cursus. Donec ut ligula tortor. <a href="#">Maecenas malesuada, diam vitae pharetra dictum, erat ante iaculis
+        risus, sed sollicitudin nisl nisl vel metus.</a> Nulla libero augue, convallis nec luctus id, iaculis nec urna.
+    Cras vitae mi ut augue ultricies tempus.</p>

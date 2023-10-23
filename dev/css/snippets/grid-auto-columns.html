@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Auto Flow</title>
+</head>
+<body>
+    <style>
+        .grid {
+            display: grid;
+            gap: 2rem;
+            grid-auto-flow: row;
+        }
+        @media (min-width: 979px) {
+            .grid {
+                grid-template-areas: "a a a";
+                grid-auto-columns: 15% .5fr 200px;
+                /* grid-auto-columns: auto; */
+            }
+        }
+    </style>
+
+    <div class="grid">
+        <div class="grid-cell">
+            <h1>Title</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum quos suscipit deleniti odit! Voluptates ad suscipit assumenda modi corrupti quasi mollitia nihil. Odio nam libero corporis dolores laudantium, quibusdam est.</p>
+        </div>
+        <div class="grid-cell">
+            <h1>Title</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+        </div>
+        <div class="grid-cell">
+            <h1>Title</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum quos suscipit deleniti odit! Voluptates ad suscipit assumenda modi corrupti quasi mollitia nihil. Odio nam libero corporis dolores laudantium, quibusdam est.</p>
+        </div>
+        <div class="grid-cell">
+            <h1>Title</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum quos suscipit deleniti odit! Voluptates ad suscipit assumenda modi corrupti quasi mollitia nihil. Odio nam libero corporis dolores laudantium, quibusdam est.</p>
+        </div>
+    </div>
+
+</body>
+</html>

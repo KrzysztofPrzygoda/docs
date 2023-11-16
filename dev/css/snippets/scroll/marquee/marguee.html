@@ -14,45 +14,29 @@
             background: #000;
         }
 
-        .content-container {
-            width: 100%;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 5rem;
-            padding-right: 5rem;
-            position: relative;
-        }
-
         .marquee {
             width: 100%;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            display: flex;
+            max-width: 100vw;
+            margin-left: auto;
+            margin-right: auto;
+            overflow: hidden;
         }
 
         .marquee_parent {
+            display: flex;
             flex-direction: row;
             align-items: center;
-            display: flex;
-        }
-
-        .marquee_list_wrapper {
-            color: #fff;
-            flex-flow: row;
-            flex: none;
-            justify-content: flex-start;
-            align-items: center;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            display: flex;
         }
 
         .marquee_wrapper {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .marquee_list_wrapper {
+            display: flex;
             flex: none;
             align-items: center;
-            display: flex;
         }
 
         .marquee_logo {
@@ -60,11 +44,11 @@
             margin-right: 5vw;
         }
 
-        .marquee_list_wrapper {
+        .marquee_wrapper {
             animation: scroll 15s linear infinite;
         }
 
-        .marquee_parent:hover>.marquee_list_wrapper {
+        .marquee_parent:hover > .marquee_wrapper {
             animation-play-state: paused;
         }
 
@@ -79,73 +63,54 @@
         }
     </style>
 
-    <div class="content-container">
-        <div class="marquee">
-            <div class="marquee_parent">
-                <div class="marquee_list_wrapper w-dyn-list">
-                    <div role="list" class="marquee_wrapper w-dyn-items">
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo1.svg"
-                                loading="lazy" alt="CarGurus" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo2.png"
-                                loading="lazy" alt="DRIFT" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo3.svg"
-                                loading="lazy" alt="Gainsight" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo4.svg"
-                                loading="lazy" alt="Canva" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo5.svg"
-                                loading="lazy" alt="Webflow" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo6.png"
-                                loading="lazy" alt="HubSpot" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo7.png"
-                                loading="lazy" alt="Lattice" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo8.png"
-                                loading="lazy" alt="Brex" class="marquee_logo"></div>
-                    </div>
-                </div>
-                <div class="marquee_list_wrapper w-dyn-list">
-                    <div role="list" class="marquee_wrapper w-dyn-items">
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo1.svg"
-                                loading="lazy" alt="CarGurus" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo2.png"
-                                loading="lazy" alt="DRIFT" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo3.svg"
-                                loading="lazy" alt="Gainsight" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo4.svg"
-                                loading="lazy" alt="Canva" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo5.svg"
-                                loading="lazy" alt="Webflow" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo6.png"
-                                loading="lazy" alt="HubSpot" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo7.png"
-                                loading="lazy" alt="Lattice" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo8.png"
-                                loading="lazy" alt="Brex" class="marquee_logo"></div>
-                    </div>
-                </div>
-                <div class="marquee_list_wrapper w-dyn-list">
-                    <div role="list" class="marquee_wrapper w-dyn-items">
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo1.svg"
-                                loading="lazy" alt="CarGurus" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo2.png"
-                                loading="lazy" alt="DRIFT" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo3.svg"
-                                loading="lazy" alt="Gainsight" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo4.svg"
-                                loading="lazy" alt="Canva" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo5.svg"
-                                loading="lazy" alt="Webflow" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo6.png"
-                                loading="lazy" alt="HubSpot" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo7.png"
-                                loading="lazy" alt="Lattice" class="marquee_logo"></div>
-                        <div role="listitem" class="marquee_list_item w-dyn-item"><img src="images/logo8.png"
-                                loading="lazy" alt="Brex" class="marquee_logo"></div>
-                    </div>
+    <div class="marquee">
+        <div class="marquee_parent">
+
+            <div class="marquee_wrapper">
+                <div role="list" class="marquee_list_wrapper">
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo1.svg" loading="lazy"
+                            alt="CarGurus" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo2.png" loading="lazy"
+                            alt="DRIFT" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo3.svg" loading="lazy"
+                            alt="Gainsight" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo4.svg" loading="lazy"
+                            alt="Canva" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo5.svg" loading="lazy"
+                            alt="Webflow" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo6.png" loading="lazy"
+                            alt="HubSpot" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo7.png" loading="lazy"
+                            alt="Lattice" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo8.png" loading="lazy" alt="Brex"
+                            class="marquee_logo"></div>
                 </div>
             </div>
+
+            <div class="marquee_wrapper">
+                <div role="list" class="marquee_list_wrapper">
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo1.svg" loading="lazy"
+                            alt="CarGurus" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo2.png" loading="lazy"
+                            alt="DRIFT" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo3.svg" loading="lazy"
+                            alt="Gainsight" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo4.svg" loading="lazy"
+                            alt="Canva" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo5.svg" loading="lazy"
+                            alt="Webflow" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo6.png" loading="lazy"
+                            alt="HubSpot" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo7.png" loading="lazy"
+                            alt="Lattice" class="marquee_logo"></div>
+                    <div role="listitem" class="marquee_list_item"><img src="images/logo8.png" loading="lazy" alt="Brex"
+                            class="marquee_logo"></div>
+                </div>
+            </div>
+
         </div>
     </div>
-    </div>
+
 </body>
 
 </html>

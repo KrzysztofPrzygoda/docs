@@ -973,7 +973,21 @@ $ nslookup <domain.name> <dns.server.name-or-ip>
 # Check resolving in a specific DNS.
 
 $ dig <domain.name> <record>
+$ dig +short <domain.name> <record>
+$ nslookup -type=<record> <domain.name>
 # Check specific DNS record.
+# These are just examples, and in reality, there are many other types of DNS records
+# depending on specific needs and domain configurations:
+# A: Address Record - Maps the domain to an IPv4 address.
+# AAAA: IPv6 Address Record - Maps the domain to an IPv6 address.
+# CNAME: Canonical Name - Allows redirecting one domain (alias) to another.
+# MX: Mail Exchange - Specifies mail servers for the domain.
+# NS: Name Server - Specifies name servers for the domain.
+# PTR: Pointer Record - Used in mapping an IP address to a domain (reverse DNS lookup).
+# SOA: Start of Authority - Contains information about the zone, such as the email of the domain administrator, version number, and more.
+# TXT: Text Record - Stores arbitrary text records.
+# SRV: Service - Specifies the location of a service server in the domain.
+# CAA: Certification Authority Authorization - Specifies which certificate authorities are allowed to issue certificates for the domain.
 
 $ dig -x <ip>
 $ nslookup <ip>

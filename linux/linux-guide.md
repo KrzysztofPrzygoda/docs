@@ -988,10 +988,19 @@ $ nslookup -type=<record> <domain.name>
 # TXT: Text Record - Stores arbitrary text records.
 # SRV: Service - Specifies the location of a service server in the domain.
 # CAA: Certification Authority Authorization - Specifies which certificate authorities are allowed to issue certificates for the domain.
+```
 
+#### IP Lookup
+
+```bash
+$ whois <ip>
+# Check IP registration information.
+```
+
+```bash
 $ dig -x <ip>
 $ nslookup <ip>
-# Reverse DNS lookup.
+# Reverse DNS lookup (IP to domain).
 ```
 
 ## Secure Shell

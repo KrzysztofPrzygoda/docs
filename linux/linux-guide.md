@@ -941,11 +941,14 @@ $ sudo netstat -apx | grep '<command>'
 # List UNIX sockets opened by a command/process.
 ```
 
-#### DNS
+#### DNS Services
 
 ```bash
 $ scutil --dns
 # [macOS] List DNS servers config.
+
+$ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+# [macOS] Flush local DNS cache and restart  multicast DNS service.
 ```
 
 #### DNS Lookup

@@ -29,11 +29,26 @@ EXCLUSIONS=(
 
 echo "Excluding: ${EXCLUSIONS[*]}"
 
-# Using rsync to copy files, overwrite only those in EXCLUSIONS that do not exist in DEST_DIR
+# Using rsync to copy files, overwrite all except those in EXCLUSIONS
 rsync -a --delete "${EXCLUSIONS[@]/#/--exclude=}" "$TEMP_DIR/wordpress/" "$DEST_DIR"
 # rsync -a --delete --exclude="${EXCLUSIONS[*]}" "$TEMP_DIR/wordpress/" "$DEST_DIR/"
 # -a (archive): This option signifies the archive mode, including recursive copying, preservation of file attributes, symbolic links, etc.
 # --delete: This option instructs rsync to remove files from the destination directory that are not present in the source directory.
+
+# Using rsync to copy only files in EXCLUSIONS that do not exist in DEST_DIR
+for item in "${EXCLUSIONS[@]}"; do
+    src_item="$TEMP_DIR/wordpress/$item"
+    dest_item="$DEST_DIR/$item"
+    
+    if [ -e "$src_item" ] && [ ! -e "$dest_item" ]; then
+        rsync -a "$src_item" "$dest_item"
+        echo "Copied: $item"
+    elif [ ! -e "$src_item" ]; then
+        echo "[SKIPPED] Source item does not exist: $item"
+    else
+        echo "[SKIPPED] Destination item already exists: $item"
+    fi
+done
 
 # Cleaning up
 echo "Cleaning up..."

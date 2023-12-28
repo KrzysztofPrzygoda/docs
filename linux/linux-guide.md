@@ -1014,7 +1014,7 @@ mDNS, or Multicast DNS, is a protocol used for the discovery and resolution of d
 
 ```bash
 $ dig @224.0.0.251 -p 5353 <hostname>.local +short
-# Check IP of the sarver named hostname, where:
+# Check IP of the server named hostname, where:
 # @224.0.0.251: multicast IP of mDNS
 # -p 5353: mDNS port
 

@@ -1006,7 +1006,48 @@ $ nslookup <ip>
 # Reverse DNS lookup (IP to domain).
 ```
 
-## Secure Shell
+#### mDNS Lookup
+
+mDNS, or Multicast DNS, is a protocol used for the discovery and resolution of devices on a local network without relying on a central DNS server. It is an extension of the Domain Name System (DNS) and operates through multicast communication within the local network. mDNS is commonly employed in environments where there is a need for simple and dynamic discovery of network resources, such as in small offices, homes, or with Internet of Things (IoT) devices.
+
+> Use case: you want to find IP address of the machine that has `hostname.local` name (e.g. SMB service on NAS).
+
+```bash
+$ dig @224.0.0.251 -p 5353 <hostname>.local +short
+# Check IP of the sarver named hostname, where:
+# @224.0.0.251: multicast IP of mDNS
+# -p 5353: mDNS port
+
+$ dns-sd -G v4v6 <hostname>.local
+# Alternative to dig above, where:
+# -G: get info
+# v4v6: get IP v4 as well as IP v6
+```
+
+Reasons why mDNS might not work over VPN:
+
+1. **Traffic Filtering:**
+   Sometimes, VPN service providers or network infrastructures may filter mDNS traffic, preventing dynamic discovery of devices in the local network. Ensure that mDNS traffic is not blocked at the VPN or firewall level.
+
+2. **Cached DNS Servers:**
+   When connected via VPN, the system may use cached DNS servers provided by the VPN provider. If these DNS servers do not support mDNS, resolving local hostnames can be challenging.
+
+3. **Network Isolation:**
+   Certain VPN configurations may introduce isolation between the local network and the VPN, making mDNS traffic between them difficult. Check the VPN configuration for any restrictions on communication between the local network and the VPN.
+
+4. **Lack of mDNS Support on VPN Server:**
+   The VPN server may not support forwarding mDNS traffic between the client and the local network. Even if traffic is forced through the VPN, mDNS might still be blocked.
+
+5. **Conflicts with DNS Settings:**
+   Conflicts may arise between the DNS server settings provided by the VPN and local DNS settings, affecting the system's ability to resolve local hostnames.
+
+To diagnose the issue, consider the following steps:
+
+- Check the DNS server settings assigned by the VPN.
+- Examine logs and error messages in the Terminal or at the operating system level.
+- Ensure that mDNS traffic is not blocked by the firewall.
+
+## Secure Shell (SSH)
 
 ### Debug
 

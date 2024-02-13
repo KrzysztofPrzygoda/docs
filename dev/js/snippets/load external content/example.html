@@ -13,5 +13,11 @@
 <div id="external">
     <!-- Set data-exclude='["/path/to/", "/path/to/script.ext"]' to skip selected locations -->
     <script src="https://domain.tld/content-provider/load-content-min.js?v=2" data-content="default-page" data-exclude='["/path/to/", "/path/to/script.ext"]'></script>
-    Here should be loaded external <a href="https://domain.tld/path/content/default-page.html">https://domain.tld/path/content/default-page.html</a>
+    Here should be loaded external <a href="https://domain.tld/content-provider/default-page.html">https://domain.tld/content-provider/default-page.html</a>
+</div>
+
+<div id="external">
+    <!-- Set data-include='["/path/to/", "/path/to/script.ext"]' to skip all other locations (include takes precedence over exclude) -->
+    <script src="https://domain.tld/content-provider/load-content-min.js?v=2" data-content="default-page" data-include='["/path/to/", "/path/to/script.ext"]'></script>
+    Here should be loaded external <a href="https://domain.tld/content-provider/default-page.html">https://domain.tld/content-provider/default-page.html</a>
 </div>

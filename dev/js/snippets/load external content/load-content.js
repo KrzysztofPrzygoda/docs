@@ -1,4 +1,4 @@
-!(function (page = '') {
+!(function () {
 	/**
 	 * Load content into DOM element using modern JS fetch API.
 	 *
@@ -35,19 +35,22 @@
         return;
     }
 
-    // Determine excluded URLs.
-    if (scriptElement.dataset.exclude) {
+    // Determine valid URLs.
+    // Include takes precedence over exclude.
+    const urlFilter = scriptElement.dataset.include || scriptElement.dataset.exclude || null;
+    if (urlFilter) {
+        const filterType = scriptElement.dataset.include ? 'include' : 'exclude';
+        const location = window.location.pathname;
         try {
-            const excludedUrls = JSON.parse(scriptElement.dataset.exclude);
-            const location = window.location.pathname;
-            if (excludedUrls.includes(location)) {
+            const urlMatch = JSON.parse(urlFilter).includes(location);
+            if ('include' == filterType ? !urlMatch : urlMatch) {
                 return;
             }
         } catch (error) {
             console.error('Error:',
                 'Invalid format of',
-                `data-exclude='${scriptElement.dataset.exclude}'.`,
-                `Expected format data-exclude='["/path/to/", "/path/to/script.ext"]'.`
+                `data-${filterType}='${urlFilter}'.`,
+                `Expected format data-${filterType}='["/path/to/", "/path/to/script.ext"]'.`
             );
             return;
         }

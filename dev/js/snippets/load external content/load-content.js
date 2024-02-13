@@ -41,6 +41,13 @@
 				return;
 			}
 
+            // Find this <script> URL path.
+            const scriptUrl = scriptElement.getAttribute("src");
+            if (!scriptUrl) {
+				console.error('Error:', '<script> tag src attribute URL not found.');
+				return;
+			}
+
 			// Find this <script> tag parent.
 			const contentElement = scriptElement.parentElement;
 			// const contentElement = document.getElementById('external');
@@ -49,11 +56,21 @@
 				return;
 			}
 
-			// Load content (URL query param pageId takes precedence over input var loadPage).
+            // Prepare content URL.
+            // URL query param content takes precedence over data-content attribute.
 			const urlParams = new URLSearchParams(window.location.search);
-			page = urlParams.get('content') ?? scriptElement.dataset.content;
-			const contentUrl = 'https://dev.bitsmodo.com/shop/idosell/cms/load-content.php' + (page ? '?content=' + page : '');
+			contentId = urlParams.get('content') ?? scriptElement.dataset.content;
 
-			loadContentIntoElement(contentUrl, contentElement);
+            // Attribute data-url takes precedence over default content location (same as this script).
+            let contentUrl = scriptElement.dataset.url ?? scriptUrl.substring(0, scriptUrl.lastIndexOf('/') + 1);
+			contentUrl = contentUrl + 'load-content.php' + (contentId ? '?content=' + contentId : '');
+
+            // Load content.
+            try {
+                new URL(contentUrl);
+                loadContentIntoElement(contentUrl, contentElement);
+            } catch (error) {
+                console.error('Error:', 'Invalid content URL', contentUrl);
+            }
 	}
 })();

@@ -1,11 +1,17 @@
 <div id="external">
     <!-- Set data-content="default-page" or url?content=default-page -->
-    <script src="https://dev.bitsmodo.com/shop/idosell/cms/load-content-min.js?v=1" data-content="default-page"></script>
-    Here should be loaded external <a href="https://dev.bitsmodo.com/shop/idosell/cms/content/default-page.html">https://dev.bitsmodo.com/shop/idosell/cms/content/content.html</a>
+    <script src="https://domain.tld/content-provider/load-content-min.js?v=1" data-content="default-page"></script>
+    Here should be loaded external <a href="https://domain.tld/content-provider/content/default-page.html">https://domain.tld/content-provider/content/default-page.html</a>
 </div>
 
 <div id="external">
     <!-- Set data-url="default-page" to load content from different location -->
-    <script src="https://dev.bitsmodo.com/shop/idosell/cms/load-content-min.js?v=2" data-content="default-page" data-url="https://domain.tld/path/"></script>
+    <script src="https://domain.tld/content-provider/load-content-min.js?v=2" data-content="default-page" data-url="https://another.domain.tld/path/"></script>
+    Here should be loaded external <a href="https://another.domain.tld/path/content/default-page.html">https://anoher.domain.tld/path/content/default-page.html</a>
+</div>
+
+<div id="external">
+    <!-- Set data-exclude='["/path/to/", "/path/to/script.ext"]' to skip selected locations -->
+    <script src="https://domain.tld/content-provider/load-content-min.js?v=2" data-content="default-page" data-exclude='["/path/to/", "/path/to/script.ext"]'></script>
     Here should be loaded external <a href="https://domain.tld/path/content/default-page.html">https://domain.tld/path/content/default-page.html</a>
 </div>

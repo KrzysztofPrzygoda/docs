@@ -28,49 +28,61 @@
 			});
 	}
 
-	switch (window.location.pathname) {
-		case '/panel/cms-texts.php':
-			// Skip these pages.
-			return;
+    // Find this <script> tag.
+    const scriptElement = document.currentScript;
+    if (!scriptElement) {
+        console.error('Error:', '<script> tag not found.');
+        return;
+    }
 
-		default:
-			// Find this <script> tag.
-			const scriptElement = document.currentScript;
-			if (!scriptElement) {
-				console.error('Error:', '<script> tag not found.');
-				return;
-			}
-
-            // Find this <script> URL path.
-            const scriptUrl = scriptElement.getAttribute("src");
-            if (!scriptUrl) {
-				console.error('Error:', '<script> tag src attribute URL not found.');
-				return;
-			}
-
-			// Find this <script> tag parent.
-			const contentElement = scriptElement.parentElement;
-			// const contentElement = document.getElementById('external');
-			if (!contentElement) {
-				console.error('Error:', scriptName, '<script> tag parent element not found.');
-				return;
-			}
-
-            // Prepare content URL.
-            // URL query param content takes precedence over data-content attribute.
-			const urlParams = new URLSearchParams(window.location.search);
-			contentId = urlParams.get('content') ?? scriptElement.dataset.content;
-
-            // Attribute data-url takes precedence over default content location (same as this script).
-            let contentUrl = scriptElement.dataset.url ?? scriptUrl.substring(0, scriptUrl.lastIndexOf('/') + 1);
-			contentUrl = contentUrl + 'load-content.php' + (contentId ? '?content=' + contentId : '');
-
-            // Load content.
-            try {
-                new URL(contentUrl);
-                loadContentIntoElement(contentUrl, contentElement);
-            } catch (error) {
-                console.error('Error:', 'Invalid content URL', contentUrl);
+    // Determine excluded URLs.
+    if (scriptElement.dataset.exclude) {
+        try {
+            const excludedUrls = JSON.parse(scriptElement.dataset.exclude);
+            const location = window.location.pathname;
+            if (excludedUrls.includes(location)) {
+                return;
             }
-	}
+        } catch (error) {
+            console.error('Error:',
+                'Invalid format of',
+                `data-exclude='${scriptElement.dataset.exclude}'.`,
+                `Expected format data-exclude='["/path/to/", "/path/to/script.ext"]'.`
+            );
+            return;
+        }
+    }
+
+    // Find this <script> URL path.
+    const scriptUrl = scriptElement.getAttribute("src");
+    if (!scriptUrl) {
+        console.error('Error:', '<script> tag src attribute URL not found.');
+        return;
+    }
+
+    // Find this <script> tag parent.
+    const contentElement = scriptElement.parentElement;
+    // const contentElement = document.getElementById('external');
+    if (!contentElement) {
+        console.error('Error:', scriptName, '<script> tag parent element not found.');
+        return;
+    }
+
+    // Prepare content URL.
+    // URL query param content takes precedence over data-content attribute.
+    const urlParams = new URLSearchParams(window.location.search);
+    contentId = urlParams.get('content') ?? scriptElement.dataset.content;
+
+    // Attribute data-url takes precedence over default content location (same as this script).
+    let contentUrl = scriptElement.dataset.url ?? scriptUrl.substring(0, scriptUrl.lastIndexOf('/') + 1);
+    contentUrl = contentUrl + 'load-content.php' + (contentId ? '?content=' + contentId : '');
+
+    // Load content.
+    try {
+        new URL(contentUrl);
+        loadContentIntoElement(contentUrl, contentElement);
+    } catch (error) {
+        console.error('Error:', 'Invalid content URL', contentUrl);
+    }
+
 })();

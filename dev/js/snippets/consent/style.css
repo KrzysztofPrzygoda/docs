@@ -1,0 +1,43 @@
+#consent-dialog {
+    position: fixed;
+    z-index: 9999;
+    overflow: hidden;
+    inset: 0;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    height: 100dvh;
+    width: 100%;
+}
+#consent-dialog::after {
+    position: absolute;
+    content: '';
+    z-index: -1;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    background: #081831aa;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+#consent-body {
+    display: grid;
+    justify-items: center;
+    gap: 3rem;
+    max-width: 32rem;
+    margin: 1rem;
+    background: #fff;
+    padding: 3rem;
+}
+#consent-message {
+    text-align: center;
+}
+#consent-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: center;
+}
+#consent-actions > * {
+    margin: 0 !important;
+}

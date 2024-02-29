@@ -14,7 +14,7 @@ Mainly based on:
 
 - [Linux Documentation Project Guides](https://tldp.org/guides.html)
 - Apple [Shell Scripting Primer](https://developer.apple.com/library/archive/documentation/OpenSource/Conceptual/ShellScripting/Introduction/Introduction.html)
- 
+
 ## Table of Contents
 
 - [General](#general)
@@ -977,6 +977,7 @@ $ nslookup <domain.name> <dns.server.name-or-ip>
 
 $ dig <domain.name> <record>
 $ dig +short <domain.name> <record>
+$ dig +noall +answer +multiline <domain.name> <record>
 $ nslookup -type=<record> <domain.name>
 # Check specific DNS record.
 # These are just examples, and in reality, there are many other types of DNS records
@@ -1908,6 +1909,7 @@ $ source ~/.bashrc
   - [Debian Reference](https://www.debian.org/doc/manuals/debian-reference/index.en.html)
 - Other
   - [The Bash Hackers Wiki](https://wiki.bash-hackers.org/)
+  - [Explain Shell](https://explainshell.com/)
 
 ### Styling
 

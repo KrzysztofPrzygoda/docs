@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <footer>
+        <!-- The old way -->
+        Company © <script>document.write(new Date().getFullYear());</script> All rights reserved.
+        <!-- The new way that avoids violation: https://developer.chrome.com/blog/removing-document-write?hl=en -->
+        Company © <script>document.currentScript.outerText = new Date().getFullYear();</script> All rights reserved.
+    </footer>
+</body>
+</html>

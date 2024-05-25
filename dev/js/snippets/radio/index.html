@@ -30,18 +30,20 @@
             touch-action: manipulation;
         }
 
-        [data-audio-control] {
-            opacity: .2;
+        [data-audio-state] {
+            opacity: .4;
             transition: opacity .2s ease-in-out;
         }
 
         [data-audio-state="playing"] {
             opacity: 1;
+            animation: bounce 2s infinite;
         }
 
         [data-audio-state="error"],
         [data-audio-state="waiting"] {
-            animation: blink 1s infinite;
+            opacity: .4;
+            animation: blink 1s infinite, bounce 2s infinite;
         }
 
         @keyframes blink {
@@ -49,6 +51,17 @@
                 opacity: .1;
             }
         }
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }        
     </style>
 </head>
 
@@ -56,13 +69,14 @@
 
     <!-- Audio Player. -->
 
-    <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp" height="140" width="200" alt="Radio TOK FM"
-        data-audio-control>
+    <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp?v=1" height="140" width="200" alt="Radio TOK FM"
+        data-audio-control data-audio-state>
     <div class="audio">
         <!-- <audio id="audioPlayer" class="audio" controls data-audio-control></audio> -->
         <audio id="audioPlayer" class="audio"></audio>
     </div>
     <script>
+        // Alternative: https://howlerjs.com
         const audioSource = 'https://pl-play.adtonos.com/tok-fm';
         const audioPlayer = document.getElementById('audioPlayer');
         const reconnectInterval = 5000; // ms
@@ -86,8 +100,8 @@
             'waiting'
         ].forEach(e => audioPlayer.addEventListener(e, handleEvent));
         
-        function handleEvent(event) {
-            switch (event.type) {
+        function handleEvent(e) {
+            switch (e.type) {
                 case 'abort':
                     log('[abort] Playback aborted.');
                     // handleError();
@@ -145,7 +159,7 @@
                     break;
 
                 default:
-                    log(`[${event.type}] Unhandled event.`);
+                    log(`[${e.type}] Unhandled event.`);
                     break;
             }
 
@@ -185,7 +199,16 @@
         // Init audio controls.
         document.querySelectorAll('[data-audio-control]')?.forEach(element => {
             element.addEventListener('click', () => {
-                audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
+                // Resume way.
+                // audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
+
+                // Restart way.
+                if(audioPlayer.paused) {
+                    audioPlayer.load();
+                    audioPlayer.play();
+                } else {
+                    audioPlayer.pause();
+                };
             });
         });
 
@@ -199,14 +222,14 @@
         // Reset the media element to its initial state and begin the process
         // of selecting a media source and loading the media
         // in preparation for playback to begin at the beginning.
-        audioPlayer.load();
+        // audioPlayer.load();
 
         // Autoplay?
         // Initial play error: DOMException: play() failed because the user didn't interact with the document first.
-        false && audioPlayer.play().catch(error => {
-            log('Initial play error:', error);
-            reconnect();
-        });
+        // audioPlayer.play().catch(error => {
+        //     log('Initial play error:', error);
+        //     reconnect();
+        // });
     </script>
 
     <!-- Console output. -->
@@ -223,7 +246,7 @@
             padding: 1rem;
             margin: 1rem auto;
 
-            height: 50dvh;
+            /* height: 50dvh; */
             max-height: 50dvh;
             width: 80%;
             max-width: 56rem;
@@ -235,7 +258,7 @@
 
             overflow: auto;
             display: flex;
-            flex-direction: column-reverse;            
+            flex-direction: column-reverse;
         }
         .console {
             font-size: 1rem;

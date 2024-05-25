@@ -7,27 +7,57 @@
     <link rel="icon" href="https://bitsmodo.com/default/img/favicon.ico.svg" type="image/svg+xml">
     <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico" type="image/x-icon">
     <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico.png" type="image/png">
-    <link rel="apple-touch-icon" href="https://bitsmodo.com/default/img/favicon.ico.png">    
+    <link rel="apple-touch-icon" href="https://bitsmodo.com/default/img/favicon.ico.png">
     <title>Radio TOK FM</title>
     <style>
         body {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
             background-color: black;
             color: white;
             font-family: system-ui, sans-serif;
-            display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100dvh;
-            margin: 0;
-            max-width: 100%;
-            flex-direction: column;
-            text-align: center;
+            --body-padding: 2rem;
+            padding: var(--body-padding);
+            min-height: calc(100dvh - 2 * var(--body-padding));
+            margin: 0 auto;
+            max-width: 42rem;
         }
 
+        a,
+        a:hover {
+            color: inherit;
+            opacity: 1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            opacity: .4;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Audio Player. -->
+
+    <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp?v=1" height="140" width="200"
+        alt="Radio TOK FM" data-audio-control data-audio-state>
+    <div class="audio">
+        <audio id="audioPlayer" class="audio" controls data-audio-control></audio>
+    </div>
+    <style>
         #logo {
             width: 200px;
-            margin-bottom: 20px;
             touch-action: manipulation;
+        }
+
+        .audio {
+            display: none;
         }
 
         [data-audio-state] {
@@ -51,32 +81,24 @@
                 opacity: .1;
             }
         }
+
         @keyframes bounce {
             0% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-20px);
             }
+
             100% {
                 transform: translateY(0);
             }
-        }        
+        }
     </style>
-</head>
-
-<body>
-
-    <!-- Audio Player. -->
-
-    <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp?v=1" height="140" width="200" alt="Radio TOK FM"
-        data-audio-control data-audio-state>
-    <div class="audio">
-        <!-- <audio id="audioPlayer" class="audio" controls data-audio-control></audio> -->
-        <audio id="audioPlayer" class="audio"></audio>
-    </div>
     <script>
-        // Alternative: https://howlerjs.com
+        // Alternative player: https://howlerjs.com
+        // const audioSource = 'https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_TOKFM.mp3';
         const audioSource = 'https://pl-play.adtonos.com/tok-fm';
         const audioPlayer = document.getElementById('audioPlayer');
         const reconnectInterval = 5000; // ms
@@ -99,7 +121,7 @@
             'suspend',
             'waiting'
         ].forEach(e => audioPlayer.addEventListener(e, handleEvent));
-        
+
         function handleEvent(e) {
             switch (e.type) {
                 case 'abort':
@@ -185,12 +207,12 @@
                 audioPlayer.load();
 
                 audioPlayer.play()
-                .then(() => {
-                    reconnectAttempts = 0;
-                })
-                .catch(error => {
-                    log('Reconnect error:', error);
-                });
+                    .then(() => {
+                        reconnectAttempts = 0;
+                    })
+                    .catch(error => {
+                        log('Reconnect error:', error);
+                    });
 
                 reconnectAttempt = null;
             }, reconnectInterval);
@@ -203,7 +225,7 @@
                 // audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
 
                 // Restart way.
-                if(audioPlayer.paused) {
+                if (audioPlayer.paused) {
                     audioPlayer.load();
                     audioPlayer.play();
                 } else {
@@ -232,6 +254,131 @@
         // });
     </script>
 
+    <!-- Schedule. -->
+
+    <div id="schedule"></div>
+    <style>
+        #schedule {
+            /* height: 30dvh; */
+            max-height: 30dvh;
+            width: 100%;
+            overflow: auto;
+
+            display: flex;
+            /* flex-direction: column-reverse; */
+            flex-direction: column;
+            gap: 1rem;
+
+            text-align: left;
+            font-weight: 100;
+
+            mask-image: linear-gradient(to bottom, #000 calc(100% - 4rem), transparent 100%);
+            padding-bottom: 4rem;
+        }
+
+        #schedule .podcast.now {
+            order: -1;
+            font-size: 2.1rem;
+            text-align: center;
+        }
+        #schedule .podcast.future {
+            opacity: .4;
+        }
+        #schedule .podcast .title {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function updateSchedule() {
+            fetch('schedule.php', {})
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((result) => {
+                    console.log('[schedule]', result);
+
+                    let schedule = document.querySelector('#schedule');
+                    if (!schedule) {
+                        return;
+                    }
+
+                    schedule.innerHTML = '';
+
+                    let current = null;
+                    const template = `
+                        <div class="podcast%s">
+                            <span class="time">%s</span>
+                            <span class="title">%s</span>
+                            <br>
+                            <span class="description">%s</span>
+                        </div>`;
+
+                    if (result.schedule) for (const podcast of result.schedule) {
+                        let status = podcast?.playing === true
+                                ? ' now'
+                                : podcast?.playing === false ? ' future' : ' past',
+                            time = podcast?.emission_time || podcast?.start_time,
+                            category = '', //podcast?.category_name || '',
+                            name = category
+                                ? podcast?.series_name + ` (${category.toLowerCase()})`
+                                : podcast?.series_name,
+                            title = podcast?.podcast_url
+                                ? `<a href="${podcast.podcast_url}" target="_blank" rel="noopener, noreferrer">${name}</a>`
+                                : name,
+                            description = podcast?.podcast_name || '',
+                            content = template;
+
+                        [status, time, title, description].forEach(param => content = content.replace('%s', param));
+                        schedule.innerHTML = content + schedule.innerHTML;
+
+                        if (podcast?.playing) {
+                            current = true;
+                        }
+                    }
+
+                    if (!current) {
+                        let content = template;
+                        [' now', '', 'Przerwa', ''].forEach(param => content = content.replace('%s', param));
+                        schedule.innerHTML = content + schedule.innerHTML;
+                    }
+
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+        function scheduleNextCall(clockMinutes, callback) {
+            const now = new Date();
+            const nextCall = new Date(now);
+
+            // Określamy liczbę minut do najbliższego interwału
+            const minutesUntilNextInterval = clockMinutes - (nextCall.getMinutes() % clockMinutes);
+
+            // Dodajemy odpowiednią liczbę minut do aktualnego czasu
+            nextCall.setMinutes(nextCall.getMinutes() + minutesUntilNextInterval);
+
+            // Ustawiamy sekundy i milisekundy na zero, aby zacząć od początku minuty
+            nextCall.setSeconds(0);
+            nextCall.setMilliseconds(0);
+
+            console.log('[schedule next call]', nextCall);
+
+            const delay = nextCall - now;
+
+            setTimeout(function () {
+                callback();
+                setInterval(callback, clockMinutes * 60 * 1000); // Następne wywołania co określoną liczbę minut
+            }, delay);
+        }
+
+        updateSchedule();
+        scheduleNextCall(20, updateSchedule);
+    </script>
+
     <!-- Console output. -->
 
     <div class="console">
@@ -242,16 +389,11 @@
         #console {
             font-family: 'Courier New', Courier, monospace;
             font-size: .8rem;
+            text-align: left;
 
             padding: 1rem;
             margin: 1rem auto;
-
-            /* height: 50dvh; */
-            max-height: 50dvh;
-            width: 80%;
-            max-width: 56rem;
-
-            text-align: left;
+            max-height: 20dvh;
 
             background: #fff1;
             border-radius: 18px;
@@ -260,10 +402,12 @@
             display: flex;
             flex-direction: column-reverse;
         }
+
         .console {
             font-size: 1rem;
             width: 100%;
         }
+
         .console .info {
             display: inline-flex;
             justify-content: center;
@@ -280,6 +424,7 @@
             background: none;
             color: #fff;
         }
+
         [data-hidden="true"] {
             display: none !important;
         }

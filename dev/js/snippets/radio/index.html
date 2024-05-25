@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://bitsmodo.com/default/img/favicon.ico.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico" type="image/x-icon">
+    <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://bitsmodo.com/default/img/favicon.ico.png">    
+    <title>Radio TOK FM</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100dvh;
+            margin: 0;
+            max-width: 100%;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #logo {
+            width: 200px;
+            margin-bottom: 20px;
+            touch-action: manipulation;
+        }
+
+        [data-audio-control] {
+            opacity: .2;
+            transition: opacity .2s ease-in-out;
+        }
+
+        [data-audio-state="playing"] {
+            opacity: 1;
+        }
+
+        [data-audio-state="error"],
+        [data-audio-state="waiting"] {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: .1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Audio Player. -->
+
+    <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp" height="140" width="200" alt="Radio TOK FM"
+        data-audio-control>
+    <div class="audio">
+        <!-- <audio id="audioPlayer" class="audio" controls data-audio-control></audio> -->
+        <audio id="audioPlayer" class="audio"></audio>
+    </div>
+    <script>
+        const audioSource = 'https://pl-play.adtonos.com/tok-fm';
+        const audioPlayer = document.getElementById('audioPlayer');
+        const reconnectInterval = 5000; // ms
+        let reconnectAttempts = 0;
+        let reconnectAttempt = null;
+
+        audioPlayer.src = audioSource;
+
+        // Event handlers.
+        [
+            'abort',
+            'emptied',
+            'ended',
+            'error',
+            'loadeddata',
+            'pause',
+            'play',
+            'playing',
+            'stalled',
+            'suspend',
+            'waiting'
+        ].forEach(e => audioPlayer.addEventListener(e, handleEvent));
+        
+        function handleEvent(event) {
+            switch (event.type) {
+                case 'abort':
+                    log('[abort] Playback aborted.');
+                    // handleError();
+                    break;
+
+                case 'emptied':
+                    log('[emptied] Media initiated', audioSource);
+                    break;
+
+                case 'ended':
+                    log('[ended] Playback ended.');
+                    updateState('ended');
+                    handleError();
+                    break;
+
+                case 'error':
+                    log('[error] Playback error.');
+                    handleError();
+                    break;
+
+                case 'loadeddata':
+                    log('[loadeddata] Media ready state:', audioPlayer.readyState);
+                    break;
+
+                case 'pause':
+                    log('[pause]');
+                    if (audioPlayer.networkState === audioPlayer.NETWORK_NO_SOURCE) {
+                        log('[pause] No source available.');
+                        handleError();
+                    } else {
+                        updateState('pause');
+                    }
+                    break;
+
+                case 'play':
+                    log('[play]');
+                    break;
+
+                case 'playing':
+                    log('[playing]');
+                    updateState('playing');
+                    break;
+
+                case 'stalled':
+                    log('[stalled] Data is not coming.');
+                    break;
+
+                case 'suspend':
+                    log('[suspend] Data loading suspended.');
+                    break;
+
+                case 'waiting':
+                    log('[waiting] Waiting for data.');
+                    updateState('waiting');
+                    break;
+
+                default:
+                    log(`[${event.type}] Unhandled event.`);
+                    break;
+            }
+
+        }
+
+        function handleError() {
+            log('Audio error. Attempting to reconnect...');
+            updateState('error');
+            reconnect();
+        }
+
+        function reconnect() {
+            // Do not duplicate attempts.
+            if (reconnectAttempt) {
+                return;
+            }
+
+            reconnectAttempt = setTimeout(() => {
+                reconnectAttempts++;
+                log(`Reconnect #${reconnectAttempts}`);
+
+                // audioPlayer.pause();
+                audioPlayer.load();
+
+                audioPlayer.play()
+                .then(() => {
+                    reconnectAttempts = 0;
+                })
+                .catch(error => {
+                    log('Reconnect error:', error);
+                });
+
+                reconnectAttempt = null;
+            }, reconnectInterval);
+        }
+
+        // Init audio controls.
+        document.querySelectorAll('[data-audio-control]')?.forEach(element => {
+            element.addEventListener('click', () => {
+                audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
+            });
+        });
+
+        function updateState(state) {
+            document.querySelectorAll('[data-audio-control]')?.forEach(element => {
+                element.dataset.audioState = state;
+            });
+        }
+
+        // Init player.
+        // Reset the media element to its initial state and begin the process
+        // of selecting a media source and loading the media
+        // in preparation for playback to begin at the beginning.
+        audioPlayer.load();
+
+        // Autoplay?
+        // Initial play error: DOMException: play() failed because the user didn't interact with the document first.
+        false && audioPlayer.play().catch(error => {
+            log('Initial play error:', error);
+            reconnect();
+        });
+    </script>
+
+    <!-- Console output. -->
+
+    <div class="console">
+        <button class="info" onclick="toggle('#console');">?</button>
+        <div id="console" data-hidden="true"></div>
+    </div>
+    <style>
+        #console {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: .8rem;
+
+            padding: 1rem;
+            margin: 1rem auto;
+
+            height: 50dvh;
+            max-height: 50dvh;
+            width: 80%;
+            max-width: 56rem;
+
+            text-align: left;
+
+            background: #fff1;
+            border-radius: 18px;
+
+            overflow: auto;
+            display: flex;
+            flex-direction: column-reverse;            
+        }
+        .console {
+            font-size: 1rem;
+            width: 100%;
+        }
+        .console .info {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: .08em solid #fff;
+            border-radius: 50vw;
+            padding: .68em .4em;
+            width: auto;
+            min-width: 1.5em;
+            height: 1.5em;
+            font-size: 1em;
+            line-height: 0;
+            background: none;
+            color: #fff;
+        }
+        [data-hidden="true"] {
+            display: none !important;
+        }
+    </style>
+    <script>
+        function toggle(selector) {
+            let c = document.querySelector(selector);
+            c.dataset.hidden = 'false' == c.dataset.hidden ? true : false;
+        }
+
+        function log() {
+            let consoleElement = document.getElementById("console"),
+                logMessage = Array.prototype.slice.call(arguments).join(' ');
+            console.log(logMessage);
+            consoleElement.innerHTML += logMessage + '<br>';
+        }
+    </script>
+</body>
+
+</html>

@@ -309,6 +309,19 @@
         #schedule > .date:first-child {
             /* margin: 0; */
         }
+        #schedule .more {
+            margin: 1rem auto;
+        }
+        #schedule .more a {
+            display: block;
+            margin: 1rem auto;
+            text-align: center;
+            background: #fff;
+            padding: .5rem 1rem;
+            color: #000;
+            border-radius: 50vw;
+            font-weight: bold;
+        }
     </style>
     <script>
         function updateSchedule() {
@@ -328,7 +341,8 @@
                     }
 
                     // Clear current schedule.
-                    schedule.innerHTML = '';
+                    // schedule.innerHTML = '';
+                    schedule.innerHTML = `<div class="more past"><a href="https://audycje.tokfm.pl/" target="_blank" rel="noopener, noreferrer">Zobacz więcej</a></div>`;
 
                     let current, date;
                     const podcastHtml = `

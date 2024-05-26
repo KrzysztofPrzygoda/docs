@@ -23,8 +23,8 @@
             --body-padding: 2rem;
             padding: var(--body-padding);
             min-height: calc(100dvh - 2 * var(--body-padding));
-            margin: 0 auto;
             max-width: 42rem;
+            margin: 0 auto;
         }
 
         a,
@@ -259,7 +259,7 @@
     <div id="schedule"></div>
     <style>
         #schedule {
-            /* height: 30dvh; */
+            height: 30dvh;
             max-height: 30dvh;
             width: 100%;
             overflow: auto;
@@ -267,25 +267,47 @@
             display: flex;
             /* flex-direction: column-reverse; */
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
 
             text-align: left;
             font-weight: 100;
 
             mask-image: linear-gradient(to bottom, #000 calc(100% - 4rem), transparent 100%);
             padding-bottom: 4rem;
+
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+            padding-top: 4rem;
+            margin-top: -4rem;
         }
 
         #schedule .podcast.now {
             order: -1;
             font-size: 2.1rem;
+            font-size: 1.6rem;
             text-align: center;
         }
-        #schedule .podcast.future {
+        #schedule .podcast.now .time {
+            display: block;
+        }
+        #schedule .future {
             opacity: .4;
         }
         #schedule .podcast .title {
             font-weight: bold;
+        }
+        #schedule .podcast .description {
+            display: block;
+        }
+        #schedule > .date {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        #schedule > .date:first-child {
+            /* margin: 0; */
         }
     </style>
     <script>
@@ -302,19 +324,32 @@
 
                     let schedule = document.querySelector('#schedule');
                     if (!schedule) {
-                        return;
+                        throw new Error(`#schedule not found.`);
                     }
 
+                    // Clear current schedule.
                     schedule.innerHTML = '';
 
-                    let current = null;
-                    const template = `
+                    let current, date;
+                    const podcastHtml = `
                         <div class="podcast%s">
                             <span class="time">%s</span>
                             <span class="title">%s</span>
-                            <br>
                             <span class="description">%s</span>
-                        </div>`;
+                        </div>`,
+                        formatDate = (date) => {
+                            let newDate = date;
+                            if (!(date instanceof Date)) {
+                                let [day, month, year] = date.split("-").map(Number);
+                                newDate = new Date(year, month - 1, day);
+                            }
+                            const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long"
+                            });
+                            return dateFormatter.format(new Date(newDate));
+                        };
 
                     if (result.schedule) for (const podcast of result.schedule) {
                         let status = podcast?.playing === true
@@ -329,7 +364,15 @@
                                 ? `<a href="${podcast.podcast_url}" target="_blank" rel="noopener, noreferrer">${name}</a>`
                                 : name,
                             description = podcast?.podcast_name || '',
-                            content = template;
+                            content = podcastHtml;
+
+                        // Check date change.
+                        if (podcast?.emission_date && date !== podcast?.emission_date) {
+                            if (date) {
+                                schedule.innerHTML = `<div class="date past">${formatDate(date)}</div>` + schedule.innerHTML;
+                            }
+                            date = podcast?.emission_date;
+                        }
 
                         [status, time, title, description].forEach(param => content = content.replace('%s', param));
                         schedule.innerHTML = content + schedule.innerHTML;
@@ -340,10 +383,12 @@
                     }
 
                     if (!current) {
-                        let content = template;
+                        let content = podcastHtml;
                         [' now', '', 'Przerwa', ''].forEach(param => content = content.replace('%s', param));
                         schedule.innerHTML = content + schedule.innerHTML;
                     }
+
+                    schedule.innerHTML = `<div class="date future">${formatDate(new Date())}</div>` + schedule.innerHTML;
 
                 })
                 .catch(error => {
@@ -392,7 +437,8 @@
             text-align: left;
 
             padding: 1rem;
-            margin: 1rem auto;
+            margin: 0 auto;
+            margin-top: 1rem;
             max-height: 20dvh;
 
             background: #fff1;

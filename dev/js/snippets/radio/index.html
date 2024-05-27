@@ -44,13 +44,17 @@
 <body>
 
     <!-- Audio Player. -->
-
-    <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp?v=1" height="140" width="200"
+    <div class="logo">
+        <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp?v=1" height="140" width="200"
         alt="Radio TOK FM" data-audio-control data-audio-state>
+    </div>
     <div class="audio">
         <audio id="audioPlayer" class="audio" controls data-audio-control></audio>
     </div>
     <style>
+        .logo {
+            margin-top: 10vh;
+        }
         #logo {
             width: 200px;
             touch-action: manipulation;
@@ -259,8 +263,7 @@
     <div id="schedule"></div>
     <style>
         #schedule {
-            height: 30dvh;
-            max-height: 30dvh;
+            height: 30vh;
             width: 100%;
             overflow: auto;
 
@@ -391,20 +394,29 @@
                             date = podcast?.emission_date;
                         }
 
+                        // Add item to the schedule.
                         [status, time, title, description].forEach(param => content = content.replace('%s', param));
                         schedule.innerHTML = content + schedule.innerHTML;
 
+                        // Check for current broadcast.
                         if (podcast?.playing) {
+                            // A flag used outside the loop.
                             current = true;
+                            // Repeat Now to complete schedule browsing.
+                            content = podcastHtml;
+                            [' current', `${time} [Trwa]`, title, description].forEach(param => content = content.replace('%s', param));
+                            schedule.innerHTML = content + schedule.innerHTML;
                         }
                     }
 
+                    // Add program break info if no current broadcast.
                     if (!current) {
                         let content = podcastHtml;
                         [' now', '', 'Przerwa', ''].forEach(param => content = content.replace('%s', param));
                         schedule.innerHTML = content + schedule.innerHTML;
                     }
 
+                    // Add current date info.
                     schedule.innerHTML = `<div class="date future">${formatDate(new Date())}</div>` + schedule.innerHTML;
 
                 })
@@ -456,7 +468,7 @@
             padding: 1rem;
             margin: 0 auto;
             margin-top: 1rem;
-            max-height: 20dvh;
+            max-height: 20vh;
 
             background: #fff1;
             border-radius: 18px;

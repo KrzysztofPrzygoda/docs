@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://bitsmodo.com/default/img/favicon.ico.svg" type="image/svg+xml">
-    <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico" type="image/x-icon">
-    <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico.png" type="image/png">
-    <link rel="apple-touch-icon" href="https://bitsmodo.com/default/img/favicon.ico.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://bitsmodo.com/default/img/favicon.ico.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico" type="image/x-icon" />
+    <link rel="alternate icon" href="https://bitsmodo.com/default/img/favicon.ico.png" type="image/png" />
+    <link rel="apple-touch-icon" href="https://bitsmodo.com/default/img/favicon.ico.png" />
     <title>Radio TOK FM</title>
     <style>
         body {
@@ -35,18 +35,18 @@
         }
 
         a:hover {
-            opacity: .4;
+            opacity: 0.4;
             text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-
     <!-- Audio Player. -->
+
     <div class="logo">
         <img id="logo" src="https://bitsmodo.com/apps/radio/images/tok-fm.webp?v=1" height="140" width="200"
-        alt="Radio TOK FM" data-audio-control data-audio-state>
+            alt="Radio TOK FM" data-audio-control data-audio-state />
     </div>
     <div class="audio">
         <audio id="audioPlayer" class="audio" controls data-audio-control></audio>
@@ -55,6 +55,7 @@
         .logo {
             margin-top: 10vh;
         }
+
         #logo {
             width: 200px;
             touch-action: manipulation;
@@ -65,8 +66,8 @@
         }
 
         [data-audio-state] {
-            opacity: .4;
-            transition: opacity .2s ease-in-out;
+            opacity: 0.4;
+            transition: opacity 0.2s ease-in-out;
         }
 
         [data-audio-state="playing"] {
@@ -76,13 +77,13 @@
 
         [data-audio-state="error"],
         [data-audio-state="waiting"] {
-            opacity: .4;
+            opacity: 0.4;
             animation: blink 1s infinite, bounce 2s infinite;
         }
 
         @keyframes blink {
             50% {
-                opacity: .1;
+                opacity: 0.1;
             }
         }
 
@@ -101,10 +102,12 @@
         }
     </style>
     <script>
+        // We use HTMLMediaElement: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
         // Alternative player: https://howlerjs.com
+
         // const audioSource = 'https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_TOKFM.mp3';
-        const audioSource = 'https://pl-play.adtonos.com/tok-fm';
-        const audioPlayer = document.getElementById('audioPlayer');
+        const audioSource = "https://pl-play.adtonos.com/tok-fm";
+        const audioPlayer = document.getElementById("audioPlayer");
         const reconnectInterval = 5000; // ms
         let reconnectAttempts = 0;
         let reconnectAttempt = null;
@@ -113,87 +116,86 @@
 
         // Event handlers.
         [
-            'abort',
-            'emptied',
-            'ended',
-            'error',
-            'loadeddata',
-            'pause',
-            'play',
-            'playing',
-            'stalled',
-            'suspend',
-            'waiting'
-        ].forEach(e => audioPlayer.addEventListener(e, handleEvent));
+            "abort",
+            "emptied",
+            "ended",
+            "error",
+            "loadeddata",
+            "pause",
+            "play",
+            "playing",
+            "stalled",
+            "suspend",
+            "waiting",
+        ].forEach((e) => audioPlayer.addEventListener(e, handleEvent));
 
         function handleEvent(e) {
             switch (e.type) {
-                case 'abort':
-                    log('[abort] Playback aborted.');
+                case "abort":
+                    log("[abort] Playback aborted.");
                     // handleError();
                     break;
 
-                case 'emptied':
-                    log('[emptied] Media initiated', audioSource);
+                case "emptied":
+                    log("[emptied] Media initiated", audioSource);
                     break;
 
-                case 'ended':
-                    log('[ended] Playback ended.');
-                    updateState('ended');
+                case "ended":
+                    log("[ended] Playback ended.");
+                    updateState("ended");
                     handleError();
                     break;
 
-                case 'error':
-                    log('[error] Playback error.');
+                case "error":
+                    log("[error] Playback error.");
                     handleError();
                     break;
 
-                case 'loadeddata':
-                    log('[loadeddata] Media ready state:', audioPlayer.readyState);
+                case "loadeddata":
+                    log("[loadeddata] Media ready state:", audioPlayer.readyState);
                     break;
 
-                case 'pause':
-                    log('[pause]');
+                case "pause":
+                    log("[pause]");
                     if (audioPlayer.networkState === audioPlayer.NETWORK_NO_SOURCE) {
-                        log('[pause] No source available.');
+                        log("[pause] No source available.");
                         handleError();
                     } else {
-                        updateState('pause');
+                        updateState("pause");
                     }
                     break;
 
-                case 'play':
-                    log('[play]');
+                case "play":
+                    log("[play]");
                     break;
 
-                case 'playing':
-                    log('[playing]');
-                    updateState('playing');
+                case "playing":
+                    log("[playing]");
+                    updateState("playing");
                     break;
 
-                case 'stalled':
-                    log('[stalled] Data is not coming.');
+                case "stalled":
+                    log("[stalled] Data is not coming.");
                     break;
 
-                case 'suspend':
-                    log('[suspend] Data loading suspended.');
+                case "suspend":
+                    log("[suspend] Data loading suspended.");
                     break;
 
-                case 'waiting':
-                    log('[waiting] Waiting for data.');
-                    updateState('waiting');
+                case "waiting":
+                    log("[waiting] Waiting for data.");
+                    updateState("waiting");
                     break;
 
                 default:
                     log(`[${e.type}] Unhandled event.`);
                     break;
             }
-
         }
 
         function handleError() {
-            log('Audio error. Attempting to reconnect...');
-            updateState('error');
+            log("Audio error. Attempting to reconnect...");
+            updateState("error");
             reconnect();
         }
 
@@ -210,12 +212,13 @@
                 // audioPlayer.pause();
                 audioPlayer.load();
 
-                audioPlayer.play()
+                audioPlayer
+                    .play()
                     .then(() => {
                         reconnectAttempts = 0;
                     })
-                    .catch(error => {
-                        log('Reconnect error:', error);
+                    .catch((error) => {
+                        log("Reconnect error:", error);
                     });
 
                 reconnectAttempt = null;
@@ -223,8 +226,8 @@
         }
 
         // Init audio controls.
-        document.querySelectorAll('[data-audio-control]')?.forEach(element => {
-            element.addEventListener('click', () => {
+        document.querySelectorAll("[data-audio-control]")?.forEach((element) => {
+            element.addEventListener("click", () => {
                 // Resume way.
                 // audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
 
@@ -234,14 +237,16 @@
                     audioPlayer.play();
                 } else {
                     audioPlayer.pause();
-                };
+                }
             });
         });
 
         function updateState(state) {
-            document.querySelectorAll('[data-audio-control]')?.forEach(element => {
-                element.dataset.audioState = state;
-            });
+            document
+                .querySelectorAll("[data-audio-control]")
+                ?.forEach((element) => {
+                    element.dataset.audioState = state;
+                });
         }
 
         // Init player.
@@ -275,10 +280,16 @@
             text-align: left;
             font-weight: 100;
 
-            mask-image: linear-gradient(to bottom, #000 calc(100% - 4rem), transparent 100%);
+            mask-image: linear-gradient(to bottom,
+                    #000 calc(100% - 4rem),
+                    transparent 100%);
             padding-bottom: 4rem;
 
-            mask-image: linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+            mask-image: linear-gradient(to bottom,
+                    transparent 0%,
+                    #000 20%,
+                    #000 80%,
+                    transparent 100%);
             padding-top: 4rem;
             margin-top: -4rem;
         }
@@ -289,19 +300,24 @@
             font-size: 1.6rem;
             text-align: center;
         }
+
         #schedule .podcast.now .time {
             display: block;
         }
+
         #schedule .future {
-            opacity: .4;
+            opacity: 0.4;
         }
+
         #schedule .podcast .title {
             font-weight: bold;
         }
+
         #schedule .podcast .description {
             display: block;
         }
-        #schedule > .date {
+
+        #schedule>.date {
             display: block;
             font-size: 1.6rem;
             font-weight: bold;
@@ -309,29 +325,33 @@
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
-        #schedule > .date:first-child {
+
+        #schedule>.date:first-child {
             /* margin: 0; */
         }
+
         #schedule .more {
             margin: 1rem auto;
         }
+
         #schedule .more a {
             display: block;
             margin: 1rem auto;
             text-align: center;
             background: #fff;
-            padding: .5rem 1rem;
+            padding: 0.5rem 1rem;
             color: #000;
             border-radius: 50vw;
             font-weight: bold;
         }
+
         #schedule .more a:hover {
             text-decoration: none;
         }
     </style>
     <script>
         function updateSchedule() {
-            fetch('schedule.php', {})
+            fetch("schedule.php", {})
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -339,9 +359,9 @@
                     return response.json();
                 })
                 .then((result) => {
-                    console.log('[schedule]', result);
+                    console.log("[schedule]", result);
 
-                    let schedule = document.querySelector('#schedule');
+                    let schedule = document.querySelector("#schedule");
                     if (!schedule) {
                         throw new Error(`#schedule not found.`);
                     }
@@ -366,61 +386,74 @@
                             const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
                                 weekday: "long",
                                 day: "numeric",
-                                month: "long"
+                                month: "long",
                             });
                             return dateFormatter.format(new Date(newDate));
                         };
 
-                    if (result.schedule) for (const podcast of result.schedule) {
-                        let status = podcast?.playing === true
-                                ? ' now'
-                                : podcast?.playing === false ? ' future' : ' past',
-                            time = podcast?.emission_time || podcast?.start_time,
-                            category = '', //podcast?.category_name || '',
-                            name = category
-                                ? podcast?.series_name + ` (${category.toLowerCase()})`
-                                : podcast?.series_name,
-                            title = podcast?.podcast_url
-                                ? `<a href="${podcast.podcast_url}" target="_blank" rel="noopener, noreferrer">${name}</a>`
-                                : name,
-                            description = podcast?.podcast_name || '',
-                            content = podcastHtml;
+                    if (result.schedule)
+                        for (const podcast of result.schedule) {
+                            let status =
+                                podcast?.playing === true
+                                    ? " now"
+                                    : podcast?.playing === false
+                                        ? " future"
+                                        : " past",
+                                time = podcast?.emission_time || podcast?.start_time,
+                                category = "", //podcast?.category_name || '',
+                                name = category
+                                    ? podcast?.series_name + ` (${category.toLowerCase()})`
+                                    : podcast?.series_name,
+                                title = podcast?.podcast_url
+                                    ? `<a href="${podcast.podcast_url}" target="_blank" rel="noopener, noreferrer">${name}</a>`
+                                    : name,
+                                description = podcast?.podcast_name || "",
+                                content = podcastHtml;
 
-                        // Check date change.
-                        if (podcast?.emission_date && date !== podcast?.emission_date) {
-                            if (date) {
-                                schedule.innerHTML = `<div class="date past">${formatDate(date)}</div>` + schedule.innerHTML;
+                            // Check date change.
+                            if (podcast?.emission_date && date !== podcast?.emission_date) {
+                                if (date) {
+                                    schedule.innerHTML =
+                                        `<div class="date past">${formatDate(date)}</div>` +
+                                        schedule.innerHTML;
+                                }
+                                date = podcast?.emission_date;
                             }
-                            date = podcast?.emission_date;
-                        }
 
-                        // Add item to the schedule.
-                        [status, time, title, description].forEach(param => content = content.replace('%s', param));
-                        schedule.innerHTML = content + schedule.innerHTML;
-
-                        // Check for current broadcast.
-                        if (podcast?.playing) {
-                            // A flag used outside the loop.
-                            current = true;
-                            // Repeat Now to complete schedule browsing.
-                            content = podcastHtml;
-                            [' current', `${time} [Trwa]`, title, description].forEach(param => content = content.replace('%s', param));
+                            // Add item to the schedule.
+                            [status, time, title, description].forEach(
+                                (param) => (content = content.replace("%s", param))
+                            );
                             schedule.innerHTML = content + schedule.innerHTML;
+
+                            // Check for current broadcast.
+                            if (podcast?.playing) {
+                                // A flag used outside the loop.
+                                current = true;
+                                // Repeat Now to complete schedule browsing.
+                                content = podcastHtml;
+                                [" current", `${time} [Trwa]`, title, description].forEach(
+                                    (param) => (content = content.replace("%s", param))
+                                );
+                                schedule.innerHTML = content + schedule.innerHTML;
+                            }
                         }
-                    }
 
                     // Add program break info if no current broadcast.
                     if (!current) {
                         let content = podcastHtml;
-                        [' now', '', 'Przerwa', ''].forEach(param => content = content.replace('%s', param));
+                        [" now", "", "Przerwa", ""].forEach(
+                            (param) => (content = content.replace("%s", param))
+                        );
                         schedule.innerHTML = content + schedule.innerHTML;
                     }
 
                     // Add current date info.
-                    schedule.innerHTML = `<div class="date future">${formatDate(new Date())}</div>` + schedule.innerHTML;
-
+                    schedule.innerHTML =
+                        `<div class="date future">${formatDate(new Date())}</div>` +
+                        schedule.innerHTML;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error(error);
                 });
         }
@@ -430,7 +463,8 @@
             const nextCall = new Date(now);
 
             // Określamy liczbę minut do najbliższego interwału
-            const minutesUntilNextInterval = clockMinutes - (nextCall.getMinutes() % clockMinutes);
+            const minutesUntilNextInterval =
+                clockMinutes - (nextCall.getMinutes() % clockMinutes);
 
             // Dodajemy odpowiednią liczbę minut do aktualnego czasu
             nextCall.setMinutes(nextCall.getMinutes() + minutesUntilNextInterval);
@@ -439,7 +473,7 @@
             nextCall.setSeconds(0);
             nextCall.setMilliseconds(0);
 
-            console.log('[schedule next call]', nextCall);
+            console.log("[schedule next call]", nextCall);
 
             const delay = nextCall - now;
 
@@ -461,8 +495,8 @@
     </div>
     <style>
         #console {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: .8rem;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.8rem;
             text-align: left;
 
             padding: 1rem;
@@ -488,9 +522,9 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            border: .08em solid #fff;
+            border: 0.08em solid #fff;
             border-radius: 50vw;
-            padding: .68em .4em;
+            padding: 0.68em 0.4em;
             width: auto;
             min-width: 1.5em;
             height: 1.5em;
@@ -507,14 +541,14 @@
     <script>
         function toggle(selector) {
             let c = document.querySelector(selector);
-            c.dataset.hidden = 'false' == c.dataset.hidden ? true : false;
+            c.dataset.hidden = "false" == c.dataset.hidden ? true : false;
         }
 
         function log() {
             let consoleElement = document.getElementById("console"),
-                logMessage = Array.prototype.slice.call(arguments).join(' ');
+                logMessage = Array.prototype.slice.call(arguments).join(" ");
             console.log(logMessage);
-            consoleElement.innerHTML += logMessage + '<br>';
+            consoleElement.innerHTML += logMessage + "<br>";
         }
     </script>
 </body>

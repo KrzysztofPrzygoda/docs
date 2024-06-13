@@ -1,0 +1,68 @@
+# BEGIN Authorization
+AuthName "Restricted Area"
+AuthType Basic
+AuthUserFile /home/klient.dhosting.pl/user/.htpasswd
+Require valid-user
+# END Authorization
+
+# BEGIN Rewrites
+# Redirect http to https
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+# END Rewrites
+
+# BEGIN Break/Redirect
+RewriteEngine on
+
+# Exclude IP from redirection
+# RewriteCond %{REMOTE_ADDR} !^X\.X\.X\.X$
+RewriteCond %{REMOTE_ADDR} !^1\.0\.0\.1$
+
+# Exclude favicon
+# RewriteCond %{REQUEST_URI} !^/favicon\.ico$
+# RewriteCond %{REQUEST_URI} !^/favicon/
+
+# Redirect only the root directory to subfolder
+RewriteCond %{REQUEST_URI} ^/$
+
+# Redirect to subfolder
+# RewriteCond %{REQUEST_URI} !^/subfolder/
+RewriteRule ^(.*)$ /subfolder/ [L,R=302]
+
+# Redirect to another website:
+# RewriteRule ^(.*)$ https://other.com/path/ [L,R=302]
+# END Break/Redirect
+
+# BEGIN HSTS
+# HTTP Strict Transport Security (HSTS) Headers
+<IfModule mod_headers.c>
+    Header always set Server: bitsmodo
+</IfModule>
+# END HSTS
+
+# BEGIN Disable Caching
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</IfModule>
+
+<FilesMatch "\.(css|flv|gif|htm|html|ico|jpe|jpeg|jpg|js|mp3|mp4|png|pdf|swf|txt)$">
+    <IfModule mod_expires.c>
+        ExpiresActive Off
+    </IfModule>
+    <IfModule mod_headers.c>
+        FileETag None
+        Header unset ETag
+        Header unset Pragma
+        Header unset Cache-Control
+        Header unset Last-Modified
+        Header set Pragma "no-cache"
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Expires "Thu, 1 Jan 1970 00:00:00 GMT"
+    </IfModule>
+</FilesMatch>
+# END Disable Caching

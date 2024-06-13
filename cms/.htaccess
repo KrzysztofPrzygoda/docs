@@ -2,6 +2,7 @@
 AuthName "Restricted Area"
 AuthType Basic
 AuthUserFile /home/klient.dhosting.pl/user/.htpasswd
+# https://hostingcanada.org/htpasswd-generator/
 Require valid-user
 # END Authorization
 

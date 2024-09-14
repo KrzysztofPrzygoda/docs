@@ -1,8 +1,9 @@
-# Screen Command Cheatsheet
+# Screen Command Guide
 
 `screen` is a terminal multiplexer that allows you to create, manage, and resume terminal sessions even after disconnection. Below is a complete guide to using `screen`.
 
 ## Table of Contents
+
 1. [Basic Commands](#basic-commands)
 2. [Session Management](#session-management)
 3. [Window Management](#window-management)
@@ -37,6 +38,7 @@
 | Key Combination                    | Description                                      |
 | ---------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl a</kbd> + <kbd>c</kbd>   | Create a new window                              |
+| <kbd>Ctrl a</kbd> + <kbd>A</kbd>   | Rename current window                            |
 | <kbd>Ctrl a</kbd> + <kbd>n</kbd>   | Switch to the next window                        |
 | <kbd>Ctrl a</kbd> + <kbd>p</kbd>   | Switch to the previous window                    |
 | <kbd>Ctrl a</kbd> + <kbd>0-9</kbd> | Switch to a specific window by number            |
@@ -60,6 +62,7 @@
 | <kbd>Ctrl a</kbd> + <kbd>\|</kbd>  | Split the screen vertically                      |
 | <kbd>Ctrl a</kbd> + <kbd>Tab</kbd> | Switch between split regions                     |
 | <kbd>Ctrl a</kbd> + <kbd>X</kbd>   | Close the active split region                    |
+| <kbd>Ctrl a</kbd> + <kbd>Q</kbd>   | Close all regions but the current                |
 
 ## Copy and Paste
 
@@ -68,6 +71,15 @@
 | <kbd>Ctrl a</kbd> + <kbd>[</kbd>   | Enter copy mode (scroll and select text)         |
 | <kbd>Enter</kbd>                   | Set the beginning and end of the selection       |
 | <kbd>Ctrl a</kbd> + <kbd>]</kbd>   | Paste the copied text into the current window    |
+
+## Scrolling
+
+| Key Combination                    | Description                                      |
+| ---------------------------------- | ------------------------------------------------ |
+| <kbd>Ctrl a</kbd> + <kbd>Esc</kbd> | Enter scrolling mode                             |
+| <kbd>Ctrl</kbd> + <kbd>u</kbd>     | Scroll up                                        |
+| <kbd>Ctrl</kbd> + <kbd>d</kbd>     | Scroll down                                      |
+| <kbd>Esc</kbd> + <kbd>Esc</kbd>    | Exit scrolling mode                              |
 
 ## Miscellaneous
 

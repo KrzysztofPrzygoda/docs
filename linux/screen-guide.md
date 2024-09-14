@@ -57,7 +57,7 @@
 | Key Combination                                 | Description                                      |
 | ----------------------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl</kbd> + <kbd>a</kbd> + <kbd>S</kbd>   | Split the screen horizontally                    |
-| <kbd>Ctrl</kbd> + <kbd>a</kbd> + <kbd>|</kbd>   | Split the screen vertically                      |
+| <kbd>Ctrl</kbd> + <kbd>a</kbd> + <kbd>\|</kbd>  | Split the screen vertically                      |
 | <kbd>Ctrl</kbd> + <kbd>a</kbd> + <kbd>Tab</kbd> | Switch between split regions                     |
 | <kbd>Ctrl</kbd> + <kbd>a</kbd> + <kbd>X</kbd>   | Close the active split region                    |
 

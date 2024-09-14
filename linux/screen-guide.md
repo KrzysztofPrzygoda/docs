@@ -24,18 +24,18 @@
 
 ## Session Management
 
-| Key Combination                     | Description                                                    |
-| ----------------------------------- | -------------------------------------------------------------- |
+| Key Combination                  | Description                                                    |
+| -------------------------------- | -------------------------------------------------------------- |
 | <kbd>Ctrl a</kbd> + <kbd>d</kbd> | Detach from the current screen session (session runs in the background) |
-| `screen -r`                         | Reattach to the last detached screen session                   |
-| `screen -r <session_id>`            | Reattach to a specific session                                 |
-| `screen -ls`                        | List all screen sessions                                       |
-| `screen -S <name>`                  | Create a new session with a name                               |
+| `screen -r`                      | Reattach to the last detached screen session                   |
+| `screen -r <session_id>`         | Reattach to a specific session                                 |
+| `screen -ls`                     | List all screen sessions                                       |
+| `screen -S <name>`               | Create a new session with a name                               |
 
 ## Window Management
 
-| Key Combination                                  | Description                                      |
-| ------------------------------------------------ | ------------------------------------------------ |
+| Key Combination                     | Description                                      |
+| ----------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl a</kbd> + <kbd>c</kbd>    | Create a new window                              |
 | <kbd>Ctrl a</kbd> + <kbd>n</kbd>    | Switch to the next window                        |
 | <kbd>Ctrl a</kbd> + <kbd>p</kbd>    | Switch to the previous window                    |
@@ -45,8 +45,8 @@
 
 ## Navigation
 
-| Key Combination                                 | Description                                      |
-| ----------------------------------------------- | ------------------------------------------------ |
+| Key Combination                    | Description                                      |
+| ---------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl a</kbd> + <kbd>n</kbd>   | Move to the next window                          |
 | <kbd>Ctrl a</kbd> + <kbd>p</kbd>   | Move to the previous window                      |
 | <kbd>Ctrl a</kbd> + <kbd>0-9</kbd> | Jump to a window by its number                   |
@@ -54,8 +54,8 @@
 
 ## Screen Splitting
 
-| Key Combination                                 | Description                                      |
-| ----------------------------------------------- | ------------------------------------------------ |
+| Key Combination                    | Description                                      |
+| ---------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl a</kbd> + <kbd>S</kbd>   | Split the screen horizontally                    |
 | <kbd>Ctrl a</kbd> + <kbd>\|</kbd>  | Split the screen vertically                      |
 | <kbd>Ctrl a</kbd> + <kbd>Tab</kbd> | Switch between split regions                     |
@@ -63,16 +63,16 @@
 
 ## Copy and Paste
 
-| Key Combination                               | Description                                      |
-| --------------------------------------------- | ------------------------------------------------ |
+| Key Combination                  | Description                                      |
+| -------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl a</kbd> + <kbd>[</kbd> | Enter copy mode (scroll and select text)         |
-| <kbd>Enter</kbd>                              | Set the beginning and end of the selection       |
+| <kbd>Enter</kbd>                 | Set the beginning and end of the selection       |
 | <kbd>Ctrl a</kbd> + <kbd>]</kbd> | Paste the copied text into the current window    |
 
 ## Miscellaneous
 
-| Key Combination                               | Description                                      |
-| --------------------------------------------- | ------------------------------------------------ |
+| Key Combination                  | Description                                      |
+| -------------------------------- | ------------------------------------------------ |
 | <kbd>Ctrl a</kbd> + <kbd>?</kbd> | Show help with a list of key bindings            |
 | <kbd>Ctrl a</kbd> + <kbd>w</kbd> | Show a list of all windows at the bottom         |
 | <kbd>Ctrl a</kbd> + <kbd>t</kbd> | Show time and system information                 |

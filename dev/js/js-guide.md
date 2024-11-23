@@ -1,6 +1,7 @@
 # JavaScript Guide
 
 See:
+
 - [Mozilla JS Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [CSS-Tricks JS Snippets](https://css-tricks.com/snippets/javascript/)
 
@@ -31,18 +32,22 @@ function letTest() {
 ### Check
 
 #### Variable exists
+
 ```javascript
 if (typeof x !== 'undefined') {
     // x is defined
 }
 ```
+
 #### Object is empty
+
 ```javascript
 const obj = {};
 const isEmpty = Object.keys(obj).length === 0; // true
 ```
 
 #### Object class name
+
 ```javascript
 function getClass(obj) {
    // if the type is not an object return the type
@@ -113,6 +118,7 @@ for (const x of generate(1, 2)) {
 #### Iterate querySelectorAll matches
 
 See:
+
 - [css-tricks.com](https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/)
 
 ```javascript
@@ -123,6 +129,7 @@ for (const n of nodes) {
 ```
 
 Classic loop:
+
 ```javascript
 let divs = document.querySelectorAll('div'), i;
 for (i = 0; i < divs.length; ++i) {
@@ -133,8 +140,10 @@ for (i = 0; i < divs.length; ++i) {
 ## Conditionals
 
 ### if/else/break
+
 If you label the if statement you can use break:
-```java
+
+```javascript
 breakme: if (condition) {
     // Do stuff
 
@@ -147,7 +156,9 @@ breakme: if (condition) {
     // Do more stuff
 }
 ```
+
 You can even label and break plain blocks:
+
 ```javascript
 breakme: {
     // Do stuff
@@ -161,7 +172,9 @@ breakme: {
     // Do more stuff
 }
 ```
+
 It's not a commonly used pattern though, so might confuse people and possibly won't be optimised by compliers. It might be better to use a function and return, or better arrange the conditions.
+
 ```javascript
 ( function() {
    // Do stuff

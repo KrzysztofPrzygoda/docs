@@ -18,6 +18,8 @@ header('Pragma: no-cache');
 // Anti CORS headers.
 // Requires JS fetch( url, { mode: 'cors', cache: 'no-cache' } )
 header('Access-Control-Allow-Origin: *');
+
+// Mime type headers.
 header('Content-Type: text/html; charset=utf-8');
 
 // Read content file.
@@ -29,13 +31,15 @@ if (!$page) {
 
 // Sanitize filename.
 $file = "content/" . basename($page) . ".html";
+$realPath = realpath($file);
+$baseDir = realpath(__DIR__ . "/content");
 
-if (str_starts_with(realpath($file), __DIR__) && file_exists($file)) {
-    readfile($file);
+if ($realPath && str_starts_with($realPath, $baseDir) && file_exists($realPath)) {
+    readfile($realPath);
 } else {
     echo '<div class="menu_messages_error">
 		<h3 class="return_label">
-			File ' . basename($file) . ' not found!
+			File ' . basename($realPath) . ' not found!
 		</h3>
 	</div>';
 }

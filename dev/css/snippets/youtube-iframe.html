@@ -1,7 +1,8 @@
 <!--
-    This is responsive YT iframe with constant display ratio (here: 16:9 or 1:0.5625 or 56,25%).
-    You may want to adjust --ratio and --width.
+This is responsive YT iframe with constant display ratio (here: 16:9 or 1:0.5625 or 56,25%).
 -->
+
+<!-- Legacy way. You may want to adjust --ratio and --width. -->
 <div style="--ratio: calc(16/9); --width: 100%; width: var(--width); padding-bottom: calc(var(--width)/var(--ratio)); position: relative; left: 0; height: 0;">
     <iframe
         src="https://www.youtube.com/embed/vxSZg7sn0Uo?si=1A4Ial0yr6x8hvyf"
@@ -9,6 +10,24 @@
         style="position: absolute; border: 0; top: 0; left: 0; width: 100%; height: 100%;"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen="">
+    </iframe>
+</div>
+
+<!--
+Modern way (ca. since 2021), when aspect-ratio is supported.
+See: https://caniuse.com/?search=aspect-ratio.
+You may want to adjust width and aspec-ratio.
+-->
+<div style="aspect-ratio: 16/9; width: 100%; position: relative;">
+    <iframe
+        src="https://www.youtube.com/embed/vxSZg7sn0Uo?si=1A4Ial0yr6x8hvyf"
+        title="YouTube video player"
+        style="width: 100%; height: 100%;"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen="">
     </iframe>
 </div>

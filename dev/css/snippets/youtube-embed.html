@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pl" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Embed Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container text-center mt-5 mb-5">
+    <h1 class="mb-3">YouTube Embed Tool</h1>
+
+    <div class="row g-3">
+        <div class="col-md">
+            <div class="form-floating">
+                <input type="text" id="ytLink" class="form-control" placeholder="Wklej link do filmu YouTube">
+                <label for="ytLink">YouTube URL</label>
+            </div>
+        </div>
+        <div class="col-md-auto">
+            <div class="input-group">
+                <div class="form-floating">
+                    <select id="thumbnailSize" class="form-select" aria-label="Wybierz rozmiar miniatury" data-remember>
+                        <option value="maxresdefault">Maksymalny</option>
+                        <option value="hqdefault">Wysoki</option>
+                        <option value="mqdefault">Średni</option>
+                        <option value="0">Standardowy</option>
+                    </select>
+                    <label for="thumbnailSize">Rozmiar miniatury</label>
+                </div>
+                <button class="btn btn-primary" onclick="showThumbnail()">Dalej</button>
+        </div>
+       </div>
+    </div>
+
+    <div id="resultContainer" class="mt-3"></div>
+
+    <script>
+        class YouTubeVideo {
+            constructor(url) {
+                this.url = url;
+                this.videoID = null;
+                this.authorName = '';
+                this.title = '';
+                this.thumbnailFileName = '';
+                this.thumbnailUrl = '';
+                this.thumbnailWidth = 0;
+                this.thumbnailHeight = 0;
+                this.videoWidth = 1920;
+                this.videoHeight = 1080;
+            }
+
+            async extractVideoID() {
+                try {
+                    const urlObj = new URL(this.url);
+                    
+                    if (urlObj.hostname.includes("youtube.com")) {
+                        this.videoID = urlObj.searchParams.get("v");
+                    } else if (urlObj.hostname.includes("youtu.be")) {
+                        this.videoID = urlObj.pathname.substring(1);
+                    } else if (urlObj.pathname.includes("/embed/")) {
+                        this.videoID = urlObj.pathname.split("/embed/")[1].split("/")[0];
+                    }
+
+                } catch (error) {
+                    console.error("Nieprawidłowy URL YouTube:", error);
+                    this.videoID = null;
+                }
+            }
+
+            async fetchVideoInfo() {
+                if (!this.videoID) return;
+                try {
+                    const response = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${this.videoID}`);
+                    const data = await response.json();
+                    this.title = data.title ?? "Unknown Video";
+                    this.authorName = data.author_name ?? "Unknown Author";
+                    this.thumbnailFileName = data.title ? data.title.replace(/[^a-zA-Z0-9]/g, "_") : "thumbnail";
+                    console.log(data);
+                } catch (error) {
+                    this.title = "Unknown Video";
+                    this.thumbnailFileName = "thumbnail";
+                }
+            }
+
+            async fetchThumbnailSize(size = "maxresdefault") {
+                if (!this.videoID) return;
+                this.thumbnailUrl = `https://img.youtube.com/vi/${this.videoID}/${size}.jpg`;
+                
+                try {
+                    const img = new Image();
+                    img.src = this.thumbnailUrl;
+                    await img.decode(); // Czeka na załadowanie obrazu
+                    this.thumbnailWidth = img.naturalWidth;
+                    this.thumbnailHeight = img.naturalHeight;
+                } catch (error) {
+                    console.error("Nie udało się pobrać rozmiaru miniatury", error);
+                }
+            }
+
+            async unused__fetchVideoInfoFromYT() {
+                if (!this.videoID) return;
+                try {
+                    const response = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${this.videoID}&format=json`);
+                    const data = await response.json();
+                    if (data.width && data.height) {
+                        this.videoWidth = data.width;
+                        this.videoHeight = data.height;
+                    }
+                } catch (error) {
+                    console.error("Nie udało się pobrać maksymalnego rozmiaru wideo", error);
+                }
+            }
+
+            generateEmbedCode() {
+                if (!this.videoID) {
+                    return '';
+                }
+
+                return `<div style="aspect-ratio: ${this.videoWidth} / ${this.videoHeight}; width: 100%;">
+    <iframe
+        title="${this.title}"
+        src="https://www.youtube.com/embed/${this.videoID}?feature=oembed"
+        style="width: 100%; height: 100%;"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+    </iframe>
+</div>`;
+            }
+
+            async initialize(size = "maxresdefault") {
+                await this.extractVideoID();
+                if (this.videoID) {
+                    await this.fetchVideoInfo();
+                    await this.fetchThumbnailSize(size);
+                    this.videoWidth = this.thumbnailWidth;
+                    this.videoHeight = this.thumbnailHeight;
+                    console.log(this);
+                }
+            }
+        }
+
+        async function showThumbnail() {
+            const url = document.getElementById('ytLink').value;
+            const size = document.getElementById('thumbnailSize').value;
+            
+            const video = new YouTubeVideo(url);
+            await video.initialize(size);
+            
+            if (!video.videoID) {
+                alert("Nieprawidłowy link do YouTube. Spróbuj ponownie.");
+                return
+            }
+
+            document.getElementById('resultContainer').innerHTML = `
+                <div class="input-group mt-3">
+                    <div class="form-floating">
+                        <select id="downloadSize" class="form-select" aria-label="Wybierz rozmiar miniatury" data-remember>
+                            <option value="original">Rozmiar oryginalny (${video.thumbnailWidth}x${video.thumbnailHeight}px)</option>
+                            <option value="848">848px</option>
+                            <option value="720">720px</option>
+                            <option value="480">480px</option>
+                            <option value="360">360px</option>
+                        </select>
+                        <label for="downloadSize">Rozmiar miniatury</label>
+                    </div>
+                    <div class="form-floating">
+                        <select id="downloadFormat" class="form-select" aria-label="Wybierz format miniatury" data-remember>
+                            <option value="jpg">Format oryginalny (JPG)</option>
+                            <option value="webp">WebP</option>
+                            <option value="png">PNG</option>
+                        </select>
+                        <label for="downloadFormat">Format miniatury</label>
+                    </div>
+                    <button class="btn btn-primary" onclick="downloadSelectedThumbnail('${video.thumbnailUrl}', '${video.thumbnailFileName}')">Pobierz miniaturę</button>
+                </div>
+                <div class="form-floating mt-3">
+                    <textarea id="embedCode" class="form-control" name="embedHtml" rows="10" style="font-family: monospace; font-size: 0.8rem; height: 28ch;">${video.generateEmbedCode()}</textarea>
+                    <label for="embedCode" class="form-label">Embed HTML</label>
+                </div>
+                <div class="mt-3">
+                    <img src="${video.thumbnailUrl}" class="img-fluid img-thumbnail" alt="Miniatura wideo">
+                </div>
+            `;
+
+            rememberSelects('select[data-remember]');
+        }
+
+        function downloadSelectedThumbnail(url, fileName) {
+            const selectedSize = document.getElementById('downloadSize').value;
+            const selectedFormat = document.getElementById('downloadFormat').value;
+            
+            if (selectedSize === "original" && selectedFormat === "jpg") {
+                downloadThumbnail(url, fileName, "jpg");
+            } else {
+                if (selectedSize === "original") {
+                    convertAndDownloadThumbnail(url, fileName, selectedFormat);
+                } else {
+                    downloadResizedThumbnail(url, fileName, parseInt(selectedSize), selectedFormat);
+                }
+            }
+        }
+
+        function downloadThumbnail(url, fileName, format) {
+            fetch(url)
+                .then(response => response.blob())  // Pobieramy plik jako blob
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = `${fileName}.${format}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);  // Zwolnienie pamięci
+                })
+                .catch(error => console.error('Błąd pobierania:', error));
+        }
+
+        function convertAndDownloadThumbnail(url, fileName, format) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = url;
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const dataUrl = canvas.toDataURL(`image/${format}`, 0.78);
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = `${fileName}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+        }
+
+        function downloadResizedThumbnail(url, fileName, width, format) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = url;
+            img.onload = function () {
+                const aspectRatio = img.height / img.width;
+                canvas.width = width;
+                canvas.height = width * aspectRatio;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const resizedUrl = canvas.toDataURL(`image/${format}`);
+                const a = document.createElement('a');
+                a.href = resizedUrl;
+                a.download = `${fileName}_${width}px.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+        }
+
+        function rememberSelects(selectsSelector) {
+            const selects = document.querySelectorAll(selectsSelector);
+
+            // Load the saved value from localStorage and set it to the select element.
+            selects.forEach(select => {
+                const savedValue = localStorage.getItem(select.id);
+                if (savedValue) {
+                    select.value = savedValue;
+                }
+            });
+
+            // Save the selected value to localStorage when the select changes.
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    localStorage.setItem(select.id, select.value);
+                });
+            });
+        }
+
+        window.onload = function() {
+            rememberSelects('select[data-remember]');
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

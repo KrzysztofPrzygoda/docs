@@ -1,0 +1,15 @@
+{
+    "Domyślny": [
+        { "postfix": "__small", "width": 375, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__small_2x", "width": 750, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__medium", "width": 768, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__medium_2x", "width": 1536, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__large", "width": 1200, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__large_2x", "width": 2400, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__huge", "width": 1920, "format": "image/webp", "quality": 0.9 },
+        { "postfix": "__huge_2x", "width": 3840, "format": "image/webp", "quality": 0.9 }
+    ],
+    "Na Instagram": [
+      { "postfix": "_ig", "width": 1080, "format": "image/webp", "quality": 0.9 }
+    ]
+}

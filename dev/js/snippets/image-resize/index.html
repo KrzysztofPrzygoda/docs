@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pl" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Resize Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" />
+    <style>
+        /* Restyle */
+
+        .btn {
+            --bs-btn-disabled-opacity: 0.25;
+        }
+
+        body *:not([disabled], [class*="spinner-"], [class*="is-busy"]) {
+            animation: fade-in .25s ease-in-out;
+        }
+
+        @keyframes raise {
+            0% {
+                opacity: 0;
+                transform: translateY(1rem);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Custom */
+
+        .btn-icon-only {
+            border-color: transparent !important;
+            background-color: transparent !important;
+        }
+
+        #drop-area {
+            border: 2px dashed #ccc;
+            transition: all 0.25s ease-in-out;
+        }
+        #drop-area * {
+            pointer-events: none;
+        }
+        #drop-area img {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        /* #drop-area:hover, */
+        .dragover {
+            opacity: 0.5;
+        }
+
+        .preview-img__link:hover {
+            transition: all 0.25s ease-in-out;
+            opacity: 0.75;
+        }
+
+        .form-range {
+            background-color: var(--bs-body-bg);
+        }
+
+        /* Sticky */
+
+        .main-buttons {
+            top: 3.5rem;
+            z-index: 9999;
+        }
+ 
+        [class*="sticky"] {
+            /* inset: auto; */
+            /* padding: 1rem 0; */
+        }
+
+        [class*="sticky-"] > * {
+            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+        }
+
+        /* Busy */
+
+        .is-busy {
+            pointer-events: none;
+        }
+
+        .is-busy i.bi,
+        :not(.is-busy) .spinner-border {
+            display: none;
+        }
+
+        .is-busy .spinner-border {
+            display: inline-block;
+        }
+
+        .is-busy {
+            animation: pulse-fade 1.5s infinite;
+        }
+
+        @keyframes pulse-fade {
+            0% {
+                opacity: 0.75;
+            }
+
+            50% {
+                opacity: 0.25;
+            }
+
+            100% {
+                opacity: 0.75;
+            }
+        }
+    </style>
+</head>
+
+<body class="container mt-5 mb-5">
+    <h1 class="mb-5 text-center">Image Resize Tool</h1>
+
+    <!-- Drag & Drop -->
+    <div id="drop-area"
+        class="container border rounded text-center mb-5 p-5 d-grid align-items-center justify-content-center bg-secondary-subtle"
+        style="cursor: pointer; min-height: 30vh">
+        <p>Przeciągnij obraz tutaj lub kliknij, aby wybrać.</p>
+        <img class="img-fluid d-none" />
+        <input type="file" id="file-input" accept="image/*" hidden />
+    </div>
+
+    <!-- Przyciski generowania -->
+    <div class="main-buttons pt-3 pb-3 mb-5 d-flex gap-2 justify-content-center sticky-top sticky-bottom">
+        <button class="btn btn-primary" id="generate-btn" disabled>
+            <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+            <i class="bi bi-arrows-fullscreen me-2"></i>Generuj
+        </button>
+        <button class="btn btn-light" id="download-zip-btn" disabled>
+            <i class="bi bi-file-earmark-zip me-2"></i>Pobierz ZIP
+        </button>
+    </div>
+
+    <!-- Sety -->
+    <div class="mb-3 d-flex flex-wrap gap-3 align-items-center justify-content-center">
+        <div class="input-group w-auto flex-fill">
+            <div class="form-floating">
+                <select id="set-selector" class="form-select"></select>
+                <label for="set-selector">Zestaw</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" id="set-name" class="form-control" placeholder="Nowy zestaw" />
+                <label for="set-name">Nazwa zestawu</label>
+            </div>
+        </div>
+        <div class="d-flex gap-3 flex-wrap justify-content-center" role="group">
+            <button class="btn btn-outline-primary" id="save-set">
+                <i class="bi bi-floppy"></i>&nbsp;Zapisz
+            </button>
+            <button class="btn btn-outline-danger" id="delete-set">
+                <i class="bi bi-trash3"></i>&nbsp;Usuń
+            </button>
+            <button class="btn btn-outline-secondary" id="export-set">
+                <i class="bi bi-box-arrow-right"></i>&nbsp;Eksportuj
+            </button>
+            <button class="btn btn-outline-secondary" id="import-set">
+                <i class="bi bi-box-arrow-in-right"></i>&nbsp;Importuj
+            </button>
+            <button class="btn btn-outline-success" id="add-spec">
+                <i class="bi bi-plus-circle"></i>&nbsp;Dodaj rozmiar
+            </button>
+        </div>
+        <input type="file" id="import-file" accept=".json" hidden />
+    </div>
+
+    <div id="spec-list" class="vstack gap-3 mb-3"></div>
+    <template id="image-spec-template">
+        <div class="spec-item">
+            <div class="specs d-flex flex-wrap gap-3 align-items-center justify-content-center sticky-top">
+                <div class="input-group w-auto flex-fill">
+                    <div class="form-floating">
+                        <input type="text" class="form-control postfix" />
+                        <label>Postfix</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="number" class="form-control width" required />
+                        <label>Szerokość</label>
+                    </div>
+                    <div class="form-floating">
+                        <select class="form-select format">
+                            <option value="image/png">PNG</option>
+                            <option value="image/jpeg">JPG</option>
+                            <option value="image/webp">WebP</option>
+                        </select>
+                        <label>Format</label>
+                    </div>
+                    <div class="form-floating">
+                        <!-- <input type="number" class="form-control quality" min="0" max="1" step="0.01"> -->
+                        <input type="range" class="form-control form-range quality" min="0" max="1" step="0.01"
+                            oninput="this.nextElementSibling.textContent = `Jakość ${this.value}`" />
+                        <label>Jakość 0..1</label>
+                    </div>
+                    <button class="btn btn-danger remove-btn" title="Usuń rozmiar">
+                        <i class="bi bi-dash-circle"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="preview-wrapper d-grid justify-content-center mt-2 d-none">
+                <div class="d-flex align-items-center gap-3 flex-wrap justify-content-center">
+                    <span class="file-size text-muted">100x100px, ~ 100 KB</span>
+                    <button class="btn btn-primary download-single" disabled>
+                        <i class="bi bi-download"></i>&nbsp;Pobierz
+                    </button>
+                    <button class="btn btn-light toggle-preview d-none" disabled>
+                        <i class="bi bi-eye"></i>&nbsp;Podgląd
+                    </button>
+                </div>
+                <a class="preview-img__link" target="_blank" title="Kliknij aby pobrać">
+                    <img class="preview-img mt-2 img-thumbnail">
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <script src="pica.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        const dropArea = document.getElementById("drop-area");
+        const fileInput = document.getElementById("file-input");
+        const specList = document.getElementById("spec-list");
+        const addSpecBtn = document.getElementById("add-spec");
+        const generateBtn = document.getElementById("generate-btn");
+        const downloadZipBtn = document.getElementById("download-zip-btn");
+        const setSelector = document.getElementById("set-selector");
+        const setNameInput = document.getElementById("set-name");
+        const saveSetBtn = document.getElementById("save-set");
+        const deleteSetBtn = document.getElementById("delete-set");
+        const exportSetBtn = document.getElementById("export-set");
+        const importSetBtn = document.getElementById("import-set");
+        const importFile = document.getElementById("import-file");
+
+        let originalImage = null;
+        let originalFileName = "";
+        let generatedFiles = [];
+        const SET_STORAGE_KEY = "image-resizer-sets";
+        const LAST_SET_KEY = "last-used-set";
+
+        // Obsluga drag & drop
+        dropArea.addEventListener("click", () => fileInput.click());
+        ["dragover", "drop"].forEach((event) => {
+            dropArea.addEventListener(event, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+        dropArea.addEventListener("drop", (e) => {
+            handleFile(e.dataTransfer.files[0]);
+            dropArea.classList.remove("dragover");
+        });
+        fileInput.addEventListener("change", () =>
+            handleFile(fileInput.files[0])
+        );
+        dropArea.addEventListener("dragenter", () => {
+            dropArea.classList.add("dragover");
+        });
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("dragover");
+        });
+
+        function formatImageInfo(width, height, sizeInBytes) {
+            // Tablica jednostek i ich podstaw (potęg 1024)
+            const units = [
+                { symbol: "B", base: 0 },
+                { symbol: "KB", base: 1 },
+                { symbol: "MB", base: 2 },
+                { symbol: "GB", base: 3 },
+            ];
+
+            // Znajdź odpowiednią jednostkę
+            let unitIndex = 0;
+            let size = sizeInBytes;
+
+            while (size >= 1000 && unitIndex < units.length - 1) {
+                size /= 1000;
+                unitIndex++;
+            }
+
+            // Zaokrąglij do jednego miejsca po przecinku, chyba że mamy bajty
+            const formattedSize =
+                unitIndex === 0 ? Math.round(size) : size.toFixed(1);
+
+            // Zwróć sformatowaną informację
+            return `${width}×${height}px, ~ ${formattedSize} ${units[unitIndex].symbol}`;
+        }
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith("image/")) return;
+            originalFileName = file.name.split(".").slice(0, -1).join(".");
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const image = new Image();
+                image.onload = () => {
+                    originalImage = image;
+                    generateBtn.disabled = false;
+                    const img = dropArea.querySelector("img"),
+                        info = dropArea.querySelector("p");
+
+                    info.innerHTML =
+                        file.name +
+                        "<br>" +
+                        formatImageInfo(
+                            image.naturalWidth,
+                            image.naturalHeight,
+                            file.size
+                        );
+                    img.src = URL.createObjectURL(file);
+                    img.classList.remove("d-none");
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function createSpecElement(spec = {}) {
+            // Pobierz istniejący template z dokumentu HTML
+            const template = document.getElementById("image-spec-template");
+
+            // Klonuj zawartość template
+            const fragment = template.content.cloneNode(true);
+            const specElement = fragment.querySelector(".spec-item");
+
+            // Ustawiamy wartości
+            const postfix = spec.postfix || "";
+            const width = spec.width || "";
+            const format = spec.format || "image/png";
+            const quality = spec.quality ?? 0.9;
+
+            // Wypełniamy pola formularza
+            specElement.querySelector(".postfix").value = postfix;
+            specElement.querySelector(".width").value = width;
+
+            // Ustawiamy wybrany format
+            const formatSelect = specElement.querySelector(".format");
+            for (const option of formatSelect.options) {
+                if (option.value === format) {
+                    option.selected = true;
+                    break;
+                }
+            }
+
+            specElement.querySelector(".quality").value = quality;
+
+            // Dodajemy event listenery
+            specElement
+                .querySelector(".remove-btn")
+                .addEventListener("click", () => {
+                    specElement.remove();
+                });
+
+            specElement
+                .querySelector(".download-single")
+                .addEventListener("click", () => {
+                    const idx = [...specList.children].indexOf(specElement);
+                    const file = generatedFiles[idx];
+                    if (file) {
+                        const a = document.createElement("a");
+                        a.href = URL.createObjectURL(file.blob);
+                        a.download = file.name;
+                        a.click();
+                    }
+                });
+
+            return specElement;
+        }
+
+        function getSpecsFromUI() {
+            return [...specList.children]
+                .map((row) => ({
+                    postfix: row.querySelector(".postfix").value,
+                    width: parseInt(row.querySelector(".width").value),
+                    format: row.querySelector(".format").value,
+                    quality: parseFloat(row.querySelector(".quality").value),
+                }))
+                .filter((s) => s.width);
+        }
+
+        function loadSet(name) {
+            console.log("Loading set:", name);
+            const sets = getSetsFromStorage();
+            const spec = sets[name] || [];
+            specList.innerHTML = "";
+            spec.forEach((s) => specList.appendChild(createSpecElement(s)));
+            setNameInput.value = name;
+            localStorage.setItem(LAST_SET_KEY, name);
+            refreshInputs();
+        }
+
+        function saveCurrentSet() {
+            const name = setNameInput.value.trim();
+            if (!name) return alert("Podaj nazwę zestawu!");
+            const specs = getSpecsFromUI();
+            const sets = getSetsFromStorage();
+            sets[name] = specs;
+            localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(sets));
+            localStorage.setItem(LAST_SET_KEY, name);
+            refreshSetSelector(name);
+        }
+
+        function deleteCurrentSet() {
+            const name = setNameInput.value.trim();
+            if (!name) return;
+            const sets = getSetsFromStorage();
+            delete sets[name];
+            localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(sets));
+            refreshSetSelector();
+            specList.innerHTML = "";
+            // Refresh set
+            setSelector.dispatchEvent(new Event("change"));
+        }
+
+        function exportSet() {
+            const specs = getSpecsFromUI();
+            const name = setNameInput.value.trim() || "zestaw";
+            const blob = new Blob([JSON.stringify(specs, null, 2)], {
+                type: "application/json",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${name}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importSetFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const specs = JSON.parse(e.target.result);
+                    specList.innerHTML = "";
+                    specs.forEach((s) => specList.appendChild(createSpecElement(s)));
+                } catch {
+                    alert("Błędny plik JSON!");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        importSetBtn.addEventListener("click", () => importFile.click());
+        importFile.addEventListener("change", (e) =>
+            importSetFromFile(e.target.files[0])
+        );
+
+        function refreshInputs(selector = "input") {
+            specList.querySelectorAll(selector).forEach((input) => {
+                input.dispatchEvent(new Event("input"));
+            });
+        }
+
+        function refreshSetSelector(selected = null) {
+            const sets = getSetsFromStorage();
+            setSelector.innerHTML = "";
+            Object.keys(sets).forEach((name) => {
+                const opt = document.createElement("option");
+                opt.value = name;
+                opt.textContent = name;
+                if (name === selected) opt.selected = true;
+                setSelector.appendChild(opt);
+            });
+            console.log("Selected:", setSelector.value);
+        }
+
+        function getSetsFromStorage() {
+            return JSON.parse(localStorage.getItem(SET_STORAGE_KEY) || "{}");
+        }
+
+        addSpecBtn.addEventListener("click", () => {
+            specList.appendChild(createSpecElement());
+            refreshInputs();
+        });
+
+        saveSetBtn.addEventListener("click", saveCurrentSet);
+        deleteSetBtn.addEventListener("click", deleteCurrentSet);
+        exportSetBtn.addEventListener("click", exportSet);
+        setSelector.addEventListener("change", () => loadSet(setSelector.value));
+
+        function applySharpen(ctx, width, height, amount = 0.5) {
+            const a = -1 * amount;
+            const c = 4 * amount + 1; // central value
+            const weights = [0, a, 0, a, c, a, 0, a, 0];
+            const side = 3;
+            const half = Math.floor(side / 2);
+
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const src = imageData.data;
+            const output = new Uint8ClampedArray(src.length);
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    for (let c = 0; c < 3; c++) {
+                        // R, G, B
+                        let i = (y * width + x) * 4 + c;
+                        let sum = 0;
+                        for (let ky = 0; ky < side; ky++) {
+                            for (let kx = 0; kx < side; kx++) {
+                                const dx = x + kx - half;
+                                const dy = y + ky - half;
+                                if (dx >= 0 && dx < width && dy >= 0 && dy < height) {
+                                    const si = (dy * width + dx) * 4 + c;
+                                    sum += src[si] * weights[ky * side + kx];
+                                }
+                            }
+                        }
+                        output[i] = Math.min(255, Math.max(0, sum));
+                    }
+                    // kopiujemy kanał alpha
+                    output[(y * width + x) * 4 + 3] = src[(y * width + x) * 4 + 3];
+                }
+            }
+
+            imageData.data.set(output);
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // Step-wise scaling to reduce moiré
+        function resizeImageStepwise(img, targetWidth) {
+            let currentCanvas = document.createElement("canvas");
+            currentCanvas.width = img.width;
+            currentCanvas.height = img.height;
+
+            let ctx = currentCanvas.getContext("2d");
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
+            // Tymczasowe narysowanie z lekkim rozmyciem
+            const downscaleFactor = img.width / targetWidth;
+            if (downscaleFactor > 2) {
+                ctx.filter = "blur(1.5px)";
+                ctx.drawImage(img, 0, 0);
+                ctx.filter = "none";
+            } else {
+                ctx.drawImage(img, 0, 0);
+            }
+
+            const scaleStep = 0.5;
+            while (currentCanvas.width * scaleStep > targetWidth) {
+                const nextCanvas = document.createElement("canvas");
+                nextCanvas.width = currentCanvas.width * scaleStep;
+                nextCanvas.height = currentCanvas.height * scaleStep;
+                const nextCtx = nextCanvas.getContext("2d");
+                nextCtx.imageSmoothingEnabled = true;
+                nextCtx.imageSmoothingQuality = "high";
+                nextCtx.drawImage(
+                    currentCanvas,
+                    0,
+                    0,
+                    nextCanvas.width,
+                    nextCanvas.height
+                );
+                currentCanvas = nextCanvas;
+            }
+
+            // Final scale to exact target width
+            const finalCanvas = document.createElement("canvas");
+            const finalScale = targetWidth / currentCanvas.width;
+            finalCanvas.width = targetWidth;
+            finalCanvas.height = Math.round(currentCanvas.height * finalScale);
+            const finalCtx = finalCanvas.getContext("2d");
+            finalCtx.imageSmoothingEnabled = true;
+            finalCtx.imageSmoothingQuality = "high";
+            finalCtx.drawImage(
+                currentCanvas,
+                0,
+                0,
+                finalCanvas.width,
+                finalCanvas.height
+            );
+            applySharpen(finalCtx, finalCanvas.width, finalCanvas.height);
+
+            return finalCanvas;
+        }
+
+        // Pica.js https://github.com/nodeca/pica
+        // Consider https://github.com/nodeca/image-blob-reduce
+        function resizeImageWithPica(img, targetWidth) {
+            const srcCanvas = document.createElement("canvas");
+            srcCanvas.width = img.width;
+            srcCanvas.height = img.height;
+            const srcCtx = srcCanvas.getContext("2d");
+            srcCtx.drawImage(img, 0, 0);
+
+            const destCanvas = document.createElement("canvas");
+            const scale = targetWidth / img.width;
+            destCanvas.width = targetWidth;
+            destCanvas.height = Math.round(img.height * scale);
+
+            return pica()
+                .resize(srcCanvas, destCanvas, {
+                    quality: 3,
+                    alpha: true,
+                })
+                .then(() => {
+                    // Po zakończeniu resamplingu - wyostrz obraz
+                    // applySharpen(destCanvas.getContext('2d'), destCanvas.width, destCanvas.height, 0.3);
+                    return destCanvas;
+                });
+        }
+
+        generateBtn.addEventListener("click", async () => {
+            if (!originalImage) return;
+            const specs = getSpecsFromUI();
+            if (!specs.length) return;
+
+            generateBtn.classList.add("is-busy");
+            downloadZipBtn.disabled = true;
+
+            generatedFiles = [];
+            for (let i = 0; i < specs.length; i++) {
+                const s = specs[i];
+
+                // const canvas = resizeImageStepwise(originalImage, s.width);
+                const canvas = await resizeImageWithPica(originalImage, s.width);
+                const blob = await new Promise((r) =>
+                    canvas.toBlob(r, s.format, s.quality)
+                );
+                const ext = s.format.split("/")[1].replace("jpeg", "jpg");
+                const name = `${originalFileName}${s.postfix}.${ext}`;
+                generatedFiles.push({ name, blob });
+
+                const specItem = specList.children[i];
+                const downloadBtn = specItem.querySelector(".download-single");
+                downloadBtn.disabled = false;
+                let previewBtn = specItem.querySelector(".toggle-preview");
+
+                // PODGLĄD + ROZMIAR
+                let previewWrap = specItem.querySelector(".preview-wrapper");
+                if (!previewWrap) {
+                    previewWrap = document.createElement("div");
+                    previewWrap.className = "preview-wrapper mt-2";
+
+                    // Rozmiar
+                    const sizeInfo = document.createElement("span");
+                    sizeInfo.className = "file-size text-muted";
+                    previewWrap.appendChild(sizeInfo);
+
+                    // Przycisk Podgląd
+                    previewBtn = document.createElement("button");
+                    previewBtn.innerHTML = '<i class="bi bi-eye"></i> Podgląd';
+                    previewBtn.className =
+                        "btn btn-light toggle-preview me-2";
+                    previewWrap.appendChild(previewBtn);
+
+                    // Obraz
+                    const preview = document.createElement("img");
+                    preview.className = "preview-img mt-2 img-thumbnail d-none";
+                    previewWrap.appendChild(preview);
+
+                    specItem.appendChild(previewWrap);
+                }
+
+                const previewImg = previewWrap.querySelector(".preview-img"),
+                    previewLink = previewWrap.querySelector(".preview-img__link"),
+                    sizeInfo = previewWrap.querySelector(".file-size");
+                
+                previewWrap.classList.remove("d-none");
+                previewBtn.disabled = false;
+                previewBtn.addEventListener("click", () => {
+                    previewImg.classList.toggle("d-none");
+                });
+
+                // Odczytaj rozmiar obrazu.
+                createImageBitmap(blob).then((imageBitmap) => {
+                    sizeInfo.textContent = formatImageInfo(
+                        imageBitmap.width,
+                        imageBitmap.height,
+                        blob.size
+                    );
+                    imageBitmap.close(); // Zwalniamy zasoby
+                });
+
+                previewImg.src = URL.createObjectURL(blob);
+                previewLink.href = previewImg.src;
+                previewLink.download = name;
+                previewLink.draggable = true;
+            }
+
+            downloadZipBtn.disabled = false;
+            generateBtn.classList.remove("is-busy");
+        });
+
+        downloadZipBtn.addEventListener("click", async () => {
+            const zip = new JSZip();
+            generatedFiles.forEach((f) => zip.file(f.name, f.blob));
+            const blob = await zip.generateAsync({ type: "blob" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "obrazy.zip";
+            a.click();
+        });
+
+        // Init
+        (async () => {
+            const localSets = getSetsFromStorage();
+
+            // jeśli brak lokalnych zestawów, próbujemy pobrać z pliku sets.json
+            if (Object.keys(localSets).length === 0) {
+                try {
+                    const res = await fetch("sets.json");
+                    if (!res.ok) throw new Error("Nie znaleziono sets.json");
+                    const jsonSets = await res.json();
+                    localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(jsonSets));
+                    console.log("Zestawy załadowane z sets.json");
+                } catch (e) {
+                    console.warn("Nie udało się załadować sets.json:", e.message);
+                }
+            }
+
+            refreshSetSelector();
+
+            // ładujemy ostatnio używany lub pierwszy dostępny
+            const last = localStorage.getItem(LAST_SET_KEY);
+            if (last && setSelector.querySelector(`option[value="${last}"]`)) {
+                setSelector.value = last;
+                loadSet(last);
+            } else if (setSelector.options.length > 0) {
+                setSelector.value = setSelector.options[0].value;
+                loadSet(setSelector.value);
+            }
+        })();
+    </script>
+</body>
+
+</html>

@@ -703,7 +703,7 @@
             const blob = await zip.generateAsync({ type: "blob" });
             const a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = "obrazy.zip";
+            a.download = `${originalFileName}.zip`;
             a.click();
         });
 

@@ -35,8 +35,9 @@
             --bs-btn-disabled-bg: #6c757d;
         }
 
-        body *:not([disabled], [class*="spinner-"], [class*="is-busy"]) {
+        body *:not([disabled], [class*="spinner-"], [class*="is-busy"], i.bi) {
             animation: fade-in .25s ease-in-out;
+            /* transition: all .25s ease-in-out; */
         }
 
         @keyframes raise {
@@ -89,26 +90,16 @@
             }
         }
 
-        @keyframes pulse-fade {
-            0% {
-                opacity: 0.75;
-            }
-
-            50% {
-                opacity: 0.25;
-            }
-
-            100% {
-                opacity: 0.75;
-            }
-        }
-
         /* Custom */
 
         .btn:active
         {
             transform: scale(0.95);
             transition: transform 0.1s ease-out;
+        }
+
+        .btn[data-confirm="true"] .bi.confirm::before {
+            content: "\f504" !important;
         }
 
         .btn-icon-only {
@@ -232,7 +223,7 @@
                 <i class="bi bi-floppy"></i>&nbsp;Zapisz
             </button>
             <button class="btn btn-outline-danger" id="delete-set">
-                <i class="bi bi-trash3"></i>&nbsp;Usuń
+                <i class="bi bi-trash3 confirm"></i>&nbsp;Usuń
             </button>
             <button class="btn btn-outline-secondary" id="export-set">
                 <i class="bi bi-box-arrow-right"></i>&nbsp;Eksportuj
@@ -275,7 +266,7 @@
                         <label>Jakość 0..1</label>
                     </div>
                     <button class="btn btn-danger remove-btn" title="Usuń rozmiar">
-                        <i class="bi bi-dash-circle"></i>
+                        <i class="bi bi-dash-circle confirm"></i>
                     </button>
                 </div>
             </div>
@@ -427,8 +418,16 @@
             // Dodajemy event listenery
             specElement
                 .querySelector(".remove-btn")
-                .addEventListener("click", () => {
-                    specElement.remove();
+                ?.addEventListener("click", (e) => {
+                    const removeBtn = e.currentTarget;
+                    if (removeBtn.dataset.confirm === "true") {
+                        specElement.remove();
+                    } else {
+                        removeBtn.dataset.confirm = "true";
+                        setTimeout(() => {
+                            delete removeBtn.dataset.confirm;
+                        }, 2000);
+                    }
                 });
 
             specElement
@@ -483,13 +482,23 @@
         function deleteCurrentSet() {
             const name = setNameInput.value.trim();
             if (!name) return;
-            const sets = getSetsFromStorage();
-            delete sets[name];
-            localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(sets));
-            refreshSetSelector();
-            specList.innerHTML = "";
-            // Refresh set
-            setSelector.dispatchEvent(new Event("change"));
+            if (deleteSetBtn.dataset.confirm === "true") {
+                // Drugie kliknięcie - usuń zestaw
+                const sets = getSetsFromStorage();
+                delete sets[name];
+                localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(sets));
+                refreshSetSelector();
+                specList.innerHTML = "";
+                setSelector.dispatchEvent(new Event("change"));
+
+                delete deleteSetBtn.dataset.confirm;
+            } else {
+                // Pierwsze kliknięcie - potwierdź
+                deleteSetBtn.dataset.confirm = "true";
+                setTimeout(() => {
+                    delete deleteSetBtn.dataset.confirm;
+                }, 2000);
+            }
         }
 
         function exportSet() {

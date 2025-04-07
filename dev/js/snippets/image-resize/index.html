@@ -18,6 +18,23 @@
             --bs-btn-disabled-opacity: 0.25;
         }
 
+        .btn-outline-primary,
+        .btn-outline-danger,
+        .btn-outline-success {
+            --bs-btn-color: #6c757d;
+            --bs-btn-border-color: #6c757d;
+            --bs-btn-bg: transparent;
+            --bs-btn-disabled-color: #6c757d;
+            --bs-btn-disabled-border-color: #6c757d;
+            --bs-btn-disabled-bg: transparent;
+        }
+        .btn-danger {
+            --bs-btn-border-color: #6c757d;
+            --bs-btn-bg: #6c757d;
+            --bs-btn-disabled-border-color: #6c757d;
+            --bs-btn-disabled-bg: #6c757d;
+        }
+
         body *:not([disabled], [class*="spinner-"], [class*="is-busy"]) {
             animation: fade-in .25s ease-in-out;
         }
@@ -44,7 +61,55 @@
             }
         }
 
+        @keyframes bump {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-0.25rem);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse-fade {
+            0% {
+                opacity: 0.75;
+            }
+
+            50% {
+                opacity: 0.25;
+            }
+
+            100% {
+                opacity: 0.75;
+            }
+        }
+
         /* Custom */
+
+        .btn:active
+        {
+            transform: scale(0.95);
+            transition: transform 0.1s ease-out;
+        }
 
         .btn-icon-only {
             border-color: transparent !important;
@@ -62,15 +127,15 @@
             max-width: 100%;
             margin: 0 auto;
         }
-        /* #drop-area:hover, */
-        .dragover {
+
+        #drop-area.dragover {
             opacity: 0.5;
         }
 
-        .preview-img__link:hover {
-            transition: all 0.25s ease-in-out;
+        /* .preview-img__link:hover {
+            transition: opacity 0.25s ease-in-out;
             opacity: 0.75;
-        }
+        } */
 
         .form-range {
             background-color: var(--bs-body-bg);
@@ -146,7 +211,7 @@
             <i class="bi bi-arrows-fullscreen me-2"></i>Generuj
         </button>
         <button class="btn btn-light" id="download-zip-btn" disabled>
-            <i class="bi bi-file-earmark-zip me-2"></i>Pobierz ZIP
+            <i class="bi bi-file-earmark-zip me-2"></i>Pobierz
         </button>
     </div>
 
@@ -468,6 +533,7 @@
 
         function refreshSetSelector(selected = null) {
             const sets = getSetsFromStorage();
+            // sets["[Dodaj zestaw]"] = [];
             setSelector.innerHTML = "";
             Object.keys(sets).forEach((name) => {
                 const opt = document.createElement("option");
@@ -591,6 +657,7 @@
 
         // Pica.js https://github.com/nodeca/pica
         // Consider https://github.com/nodeca/image-blob-reduce
+        // Info: https://stackoverflow.com/questions/18922880/html5-canvas-resize-downscale-image-high-quality
         function resizeImageWithPica(img, targetWidth) {
             const srcCanvas = document.createElement("canvas");
             srcCanvas.width = img.width;

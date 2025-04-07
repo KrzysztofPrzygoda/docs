@@ -82,13 +82,42 @@
             }
 
             50% {
-                transform: scale(1.05);
+                transform: scale(1.2);
             }
 
             100% {
                 transform: scale(1);
             }
         }
+
+        @keyframes pulse-fade {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse-busy {
+            0% {
+                opacity: 0.75;
+            }
+
+            50% {
+                opacity: 0.25;
+            }
+
+            100% {
+                opacity: 0.75;
+            }
+        }
+
 
         /* Custom */
 
@@ -100,6 +129,8 @@
 
         .btn[data-confirm="true"] .bi.confirm::before {
             content: "\f504" !important;
+            /* animation: pulse-fade .5s infinite; */
+            animation: pulse .5s infinite;
         }
 
         .btn-icon-only {
@@ -132,9 +163,37 @@
             background-color: var(--bs-body-bg);
         }
 
+        /* Zoomable image */
+
+        .zoomable-container {
+            max-width: 100%;
+            overflow: hidden;
+            padding: 0;
+            position: relative;
+            scrollbar-width: none;     /* Firefox */
+            -ms-overflow-style: none;  /* IE/Edge */
+        }
+        .zoomable-container::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .zoomable-image {
+            display: block;
+            max-width: 100%;
+        }
+        .zoomable-image:hover {
+            cursor: zoom-in;
+        }
+        .zoomable-image[data-zoomed="true"] {
+            cursor: zoom-out;
+            max-width: none;
+        }
+
         /* Sticky */
 
         .main-buttons {
+            margin: 0 auto;
+            max-width: fit-content;
             top: 3.5rem;
             z-index: 9999;
         }
@@ -164,21 +223,7 @@
         }
 
         .is-busy {
-            animation: pulse-fade 1.5s infinite;
-        }
-
-        @keyframes pulse-fade {
-            0% {
-                opacity: 0.75;
-            }
-
-            50% {
-                opacity: 0.25;
-            }
-
-            100% {
-                opacity: 0.75;
-            }
+            animation: pulse-busy 1.5s infinite;
         }
     </style>
 </head>
@@ -266,13 +311,13 @@
                         <label>Jakość 0..1</label>
                     </div>
                     <button class="btn btn-danger remove-btn" title="Usuń rozmiar">
-                        <i class="bi bi-dash-circle confirm"></i>
+                        <i class="bi bi-x-circle confirm"></i>
                     </button>
                 </div>
             </div>
             <div class="preview-wrapper d-grid justify-content-center mt-2 d-none">
                 <div class="d-flex align-items-center gap-3 flex-wrap justify-content-center">
-                    <span class="file-size text-muted">100x100px, ~ 100 KB</span>
+                    <span class="file-size text-muted">0x0px, ~ 0 B</span>
                     <button class="btn btn-primary download-single" disabled>
                         <i class="bi bi-download"></i>&nbsp;Pobierz
                     </button>
@@ -280,9 +325,9 @@
                         <i class="bi bi-eye"></i>&nbsp;Podgląd
                     </button>
                 </div>
-                <a class="preview-img__link mt-2" target="_blank" title="Kliknij aby pobrać">
-                    <img class="preview-img img-thumbnail">
-                </a>
+                <div class="zoomable-container img-thumbnail mt-2">
+                    <img class="preview-img zoomable-image">
+                </div>
             </div>
         </div>
     </template>
@@ -701,77 +746,85 @@
 
             generatedFiles = [];
             for (let i = 0; i < specs.length; i++) {
-                const s = specs[i];
+                const spec = specs[i];
 
-                // const canvas = resizeImageStepwise(originalImage, s.width);
-                const canvas = await resizeImageWithPica(originalImage, s.width);
+                // Utwórz obraz.
+                // const canvas = resizeImageStepwise(originalImage, spec.width);
+                const canvas = await resizeImageWithPica(originalImage, spec.width);
                 const blob = await new Promise((r) =>
-                    canvas.toBlob(r, s.format, s.quality)
+                    canvas.toBlob(r, spec.format, spec.quality)
                 );
-                const ext = s.format.split("/")[1].replace("jpeg", "jpg");
-                const name = `${originalFileName}${s.postfix}.${ext}`;
+                const ext = spec.format.split("/")[1].replace("jpeg", "jpg"),
+                    name = `${originalFileName}${spec.postfix}.${ext}`;
                 generatedFiles.push({ name, blob });
 
-                const specItem = specList.children[i];
-                const downloadBtn = specItem.querySelector(".download-single");
-                downloadBtn.disabled = false;
-                let previewBtn = specItem.querySelector(".toggle-preview");
-
-                // PODGLĄD + ROZMIAR
-                let previewWrap = specItem.querySelector(".preview-wrapper");
-                if (!previewWrap) {
-                    previewWrap = document.createElement("div");
-                    previewWrap.className = "preview-wrapper mt-2";
-
-                    // Rozmiar
-                    const sizeInfo = document.createElement("span");
-                    sizeInfo.className = "file-size text-muted";
-                    previewWrap.appendChild(sizeInfo);
-
-                    // Przycisk Podgląd
-                    previewBtn = document.createElement("button");
-                    previewBtn.innerHTML = '<i class="bi bi-eye"></i> Podgląd';
-                    previewBtn.className =
-                        "btn btn-light toggle-preview me-2";
-                    previewWrap.appendChild(previewBtn);
-
-                    // Obraz
-                    const preview = document.createElement("img");
-                    preview.className = "preview-img mt-2 img-thumbnail d-none";
-                    previewWrap.appendChild(preview);
-
-                    specItem.appendChild(previewWrap);
-                }
-
-                const previewImg = previewWrap.querySelector(".preview-img"),
-                    previewLink = previewWrap.querySelector(".preview-img__link"),
-                    sizeInfo = previewWrap.querySelector(".file-size");
-                
-                previewWrap.classList.remove("d-none");
-                previewBtn.disabled = false;
-                previewBtn.addEventListener("click", () => {
-                    previewImg.classList.toggle("d-none");
-                });
-
                 // Odczytaj rozmiar obrazu.
-                createImageBitmap(blob).then((imageBitmap) => {
-                    sizeInfo.textContent = formatImageInfo(
-                        imageBitmap.width,
-                        imageBitmap.height,
-                        blob.size
-                    );
+                let imgWidth = 0, imgHeight = 0;
+                await createImageBitmap(blob).then((imageBitmap) => {
+                    imgWidth = imageBitmap.width;
+                    imgHeight = imageBitmap.height;
                     imageBitmap.close(); // Zwalniamy zasoby
                 });
 
+                // Utwórz specyfikację.
+                const specItem = specList.children[i],
+                    previewWrap = specItem.querySelector(".preview-wrapper"),
+                    downloadBtn = previewWrap.querySelector(".download-single"),
+                    sizeInfo = previewWrap.querySelector(".file-size"),
+                    previewImg = previewWrap.querySelector(".preview-img");
+                
+                // Wstaw obraz.
                 previewImg.src = URL.createObjectURL(blob);
-                previewLink.href = previewImg.src;
-                previewLink.download = name;
-                previewLink.draggable = true;
+                previewImg.dragggable = false;
+                downloadBtn.disabled = false;
+                sizeInfo.textContent = formatImageInfo(
+                    imgWidth,
+                    imgHeight,
+                    blob.size
+                );
+
+                // Ustaw zoom.
+                const zoomContainer = previewWrap.querySelector(".zoomable-container");
+                zoomContainer.style.aspectRatio = `${imgWidth} / ${imgHeight}`;
+                zoomContainer.addEventListener('mousemove', (e) => {
+                    if (previewImg.dataset.zoomed === "true") {
+                        imageZoomHandler(e, imgWidth, imgHeight);
+                    }
+                });
+                zoomContainer.addEventListener("click", (e) => {
+                    // (De)aktywacja zoomu.
+                    previewImg.dataset.zoomed = previewImg.dataset.zoomed !== "true";
+                    if (previewImg.dataset.zoomed === "true") {
+                        imageZoomHandler(e, imgWidth, imgHeight);
+                    }
+                });
+
+                // Pokaż specyfikację.
+                previewWrap.classList.remove("d-none");
             }
 
             downloadZipBtn.disabled = false;
             generateBtn.classList.remove("is-busy");
         });
+
+        function imageZoomHandler(event, imageWidth, imageHeight) {
+            const zoomContainer = event.currentTarget;
+
+            // Obliczamy pozycję kursora w kontenerze
+            const rect = zoomContainer.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const percentX = x / rect.width;
+            const percentY = y / rect.height;
+
+            // Teraz przewijamy kontener tak, by widoczny obszar odpowiadał % obrazu
+            const maxScrollX = imageWidth - zoomContainer.clientWidth;
+            const maxScrollY = imageHeight - zoomContainer.clientHeight;
+
+            zoomContainer.scrollLeft = percentX * maxScrollX;
+            zoomContainer.scrollTop = percentY * maxScrollY;
+        };
 
         downloadZipBtn.addEventListener("click", async () => {
             const zip = new JSZip();

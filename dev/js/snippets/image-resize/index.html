@@ -251,6 +251,7 @@
         .is-busy {
             animation: pulse-busy 1.5s infinite;
         }
+
     </style>
 </head>
 
@@ -503,11 +504,9 @@
             const format = spec.format || "image/png";
             const quality = spec.quality ?? 0.9;
 
-            // Wypełniamy pola formularza
             specElement.querySelector(".postfix").value = postfix;
             specElement.querySelector(".width").value = width;
 
-            // Ustawiamy wybrany format
             const formatSelect = specElement.querySelector(".format");
             for (const option of formatSelect.options) {
                 if (option.value === format) {
@@ -516,9 +515,14 @@
                 }
             }
 
-            specElement.querySelector(".quality").value = quality;
+            formatSelect.addEventListener("change", (e) => {
+                qualitySelect.disabled = (formatSelect.value == "image/png") ? true : false;
+            });
 
-            // Dodajemy event listenery
+            const qualitySelect = specElement.querySelector(".quality");
+            qualitySelect.value = quality;
+            qualitySelect.disabled = (formatSelect.value == "image/png") ? true : false;
+
             specElement
                 .querySelector(".remove-btn")
                 ?.addEventListener("click", (e) => {

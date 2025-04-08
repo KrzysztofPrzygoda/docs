@@ -9,13 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" />
     <style>
         /* Restyle */
-        
+
         :root {
             font-size: clamp(12px, 2vw, 16px);
-        }
-
-        .btn {
-            /* --bs-btn-disabled-opacity: 0.25; */
         }
 
         /* Animations */
@@ -98,20 +94,29 @@
             }
         }
 
-
-        /* Custom */
-
         body *:not([disabled], [class*="spinner-"], [class*="is-busy"], i.bi) {
-            animation: fade-in .25s ease-in-out;
+            /* animation: fade-in .25s ease-in-out; */
             /* transition: all .25s ease-in-out; */
         }
 
-        .btn-muted, .btn[disabled] {
+        .spec-item > * {
+            animation: fade-in .25s ease-in-out;
+        }
+
+        /* Custom */
+
+        .btn {
+            /* --bs-btn-disabled-opacity: 0.25; */
+        }
+
+        .btn-muted,
+        .btn[disabled] {
             --bs-btn-border-color: #6c757d;
             --bs-btn-bg: #6c757d;
             --bs-btn-disabled-border-color: #6c757d;
             --bs-btn-disabled-bg: #6c757d;
         }
+
         .btn-muted[class*="btn-outline-"] {
             --bs-btn-color: #6c757d;
             --bs-btn-border-color: #6c757d;
@@ -120,13 +125,12 @@
             --bs-btn-disabled-border-color: #6c757d;
             --bs-btn-disabled-bg: transparent;
         }
-        
-        .btn:active
-        {
+
+        .btn:active {
             transform: scale(0.95);
             transition: transform 0.1s ease-out;
         }
-        
+
         .btn[disabled],
         .specs .form-floating:has(.form-control:is([disabled], [aria-disabled="true"])) {
             display: none;
@@ -142,23 +146,41 @@
             background-color: transparent !important;
         }
 
-        #drop-area {
+        .form-range {
+            background-color: var(--bs-body-bg);
+        }
+
+        /* Drop area */
+
+        #drop-area > * {
             transition: all 0.25s ease-in-out;
         }
+
         #drop-area * {
-            pointer-events: none;
+            /* pointer-events: none; */
         }
+
         #drop-area img {
             max-width: 100%;
             margin: 0 auto;
         }
 
-        #drop-area.dragover {
+        .dragover #drop-area,
+        .drop-area__info:hover {
             opacity: 0.5;
         }
 
-        .form-range {
-            background-color: var(--bs-body-bg);
+        body:not(.dragover) .drop-overlay {
+            display: none !important;
+        }
+
+        .drop-overlay {
+            position: fixed;
+            inset: 0;
+            height: 100dvh;
+            width: 100dvw;
+            z-index: 999999;
+            /* opacity: .8; */
         }
 
         /* Zoomable image */
@@ -168,20 +190,26 @@
             overflow: hidden;
             padding: 0;
             position: relative;
-            scrollbar-width: none;     /* Firefox */
-            -ms-overflow-style: none;  /* IE/Edge */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE/Edge */
         }
+
         .zoomable-container::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
+            /* Chrome/Safari */
         }
 
         .zoomable-image {
             display: block;
             max-width: 100%;
         }
+
         .zoomable-image:hover {
             cursor: zoom-in;
         }
+
         .zoomable-image[data-zoomed="true"] {
             cursor: zoom-out;
             max-width: none;
@@ -195,13 +223,13 @@
             top: 3.5rem;
             z-index: 9999;
         }
- 
+
         [class*="sticky"] {
             /* inset: auto; */
             /* padding: 1rem 0; */
         }
 
-        [class*="sticky-"] > * {
+        [class*="sticky-"]>* {
             /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
         }
 
@@ -230,11 +258,21 @@
     <h1 class="mb-5 text-center">Image Resize Tool</h1>
 
     <!-- Drag & Drop -->
+    <div class="drop-overlay d-grid justify-content-center align-items-center bg-secondary">
+        <p class="text-center">
+            <span class="fs-1">Upuść obraz</span><br>
+            <i class="bi bi-card-image" style="font-size: 10rem;"></i>
+        </p>
+    </div>
     <div id="drop-area"
         class="container border rounded text-center mb-5 p-5 d-grid align-items-center justify-content-center bg-secondary-subtle"
         style="cursor: pointer; min-height: 30vh">
-        <p>Przeciągnij obraz tutaj lub kliknij, aby wybrać.</p>
-        <img class="img-fluid d-none" />
+        <p class="pb-3 drop-area__info">
+            Upuść obraz na okno przeglądarki<br>
+            lub kliknij i wybierz z dysku.<br>
+            <i class="bi bi-card-image" style="font-size: 10rem;"></i>
+        </p>
+        <img class="img-fluid img-thumbnail d-none" />
         <input type="file" id="file-input" accept="image/*" hidden />
     </div>
 
@@ -355,26 +393,46 @@
         const SET_STORAGE_KEY = "image-resizer-sets";
         const LAST_SET_KEY = "last-used-set";
 
-        // Obsluga drag & drop
+        function resetApp() {
+            downloadZipBtn.disabled = true;
+            loadSet(setSelector.value);
+        }
+
+        // Obsługa file upload.
         dropArea.addEventListener("click", () => fileInput.click());
-        ["dragover", "drop"].forEach((event) => {
-            dropArea.addEventListener(event, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            });
+        fileInput.addEventListener("change", () => {
+            handleFile(fileInput.files[0]);
+            resetApp();
         });
-        dropArea.addEventListener("drop", (e) => {
+
+        // Obsługa drag & drop.
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        let dragCounter = 0;
+        window.addEventListener('drop', (e) => {
             handleFile(e.dataTransfer.files[0]);
-            dropArea.classList.remove("dragover");
+            document.body.classList.remove('dragover');
+            dragCounter = 0;
+            resetApp();
         });
-        fileInput.addEventListener("change", () =>
-            handleFile(fileInput.files[0])
-        );
-        dropArea.addEventListener("dragenter", () => {
-            dropArea.classList.add("dragover");
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            window.addEventListener(eventName, preventDefaults, false);
         });
-        dropArea.addEventListener("dragleave", () => {
-            dropArea.classList.remove("dragover");
+
+        window.addEventListener('dragenter', () => {
+            dragCounter++;
+            document.body.classList.add('dragover');
+        });
+
+        window.addEventListener('dragleave', () => {
+            dragCounter--;
+            if (dragCounter === 0) {
+                document.body.classList.remove('dragover');
+            }
         });
 
         function formatImageInfo(width, height, sizeInBytes) {
@@ -413,7 +471,7 @@
                     originalImage = image;
                     generateBtn.disabled = false;
                     const img = dropArea.querySelector("img"),
-                        info = dropArea.querySelector("p");
+                        info = dropArea.querySelector(".drop-area__info");
 
                     info.innerHTML =
                         file.name +
@@ -587,7 +645,6 @@
 
         function refreshSetSelector(selected = null) {
             const sets = getSetsFromStorage();
-            // sets["Nowy zestaw"] = [];
             setSelector.innerHTML = "";
             Object.keys(sets).forEach((name) => {
                 const opt = document.createElement("option");
@@ -722,7 +779,7 @@
                 finalCanvas.width,
                 finalCanvas.height
             );
-            applySharpen(finalCtx, finalCanvas.width, finalCanvas.height);
+            applySharpen(finalCtx, finalCanvas.width, finalCanvas.height, 0.3);
 
             return finalCanvas;
         }
@@ -742,14 +799,25 @@
             destCanvas.width = targetWidth;
             destCanvas.height = Math.round(img.height * scale);
 
+            // Pica
+            let unsharpRadius = 0.6, // 0.5..2.0. By default it's not set. Radius of Gaussian blur. If it is less than 0.5, Unsharp Mask is off. Big values are clamped to 2.0.
+                unsharpAmount = 180, // >=0. Default = 0 (off). Usually value between 100 to 200 is good. Note, mks2013 filter already does optimal sharpening.
+                unsharpThreshold = 1; // 0..255. Default = 0. Threshold for applying unsharp mask.
+
+            // Affinity Photo 2
+            // let unsharpRadius = (0.6 / 100) * 2,
+            //     unsharpAmount = (0.7 / 4) * 200,
+            //     unsharpThreshold = (0 / 100) * 255;
+
+
             return pica()
                 .resize(srcCanvas, destCanvas, {
-                    quality: 3, // Jakość resamplingu (1-3, domyślnie 3)
+                    // quality: 3, // Jakość resamplingu (1-3, domyślnie 3)
                     filter: "mks2013", // Algorytm resamplingu ("box", "hamming", "mks2013", "lanczos2", "lanczos3")
                     alpha: true, // Zachowaj kanał alfa
-                    unsharpAmount: 180, // Siła wyostrzania (0-100)
-                    unsharpRadius: 0.6, // Promień wyostrzania
-                    unsharpThreshold: 1, // Próg wyostrzania
+                    unsharpAmount: unsharpAmount, // Siła wyostrzania (100..200)
+                    unsharpRadius: unsharpRadius, // Promień wyostrzania (0.5..2.0)
+                    unsharpThreshold: unsharpThreshold, // Próg wyostrzania (0..255)
                 })
                 .then(() => {
                     return destCanvas;
@@ -792,7 +860,7 @@
                     downloadBtn = specItem.querySelector(".download-single"),
                     sizeInfo = specItem.querySelector(".file-size"),
                     previewImg = previewWrap.querySelector(".preview-img");
-                
+
                 // Wstaw obraz.
                 previewImg.src = URL.createObjectURL(blob);
                 previewImg.dragggable = false;

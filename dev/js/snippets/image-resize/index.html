@@ -683,6 +683,11 @@
                 // setSelector.dispatchEvent(new Event("change"));
             }
         });
+        setNameInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                saveCurrentSet();
+            }
+        });
         saveSetBtn.addEventListener("click", saveCurrentSet);
         deleteSetBtn.addEventListener("click", deleteCurrentSet);
         exportSetBtn.addEventListener("click", exportSet);

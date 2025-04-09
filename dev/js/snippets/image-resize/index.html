@@ -99,7 +99,7 @@
             /* transition: all .25s ease-in-out; */
         }
 
-        .spec-item > * {
+        .spec-item>* {
             animation: fade-in .25s ease-in-out;
         }
 
@@ -152,7 +152,7 @@
 
         /* Drop area */
 
-        #drop-area > * {
+        #drop-area>* {
             transition: all 0.25s ease-in-out;
         }
 
@@ -185,7 +185,7 @@
 
         /* Zoomable image */
 
-        .zoomable-container {
+        .zoom-container {
             max-width: 100%;
             overflow: hidden;
             padding: 0;
@@ -196,7 +196,7 @@
             /* IE/Edge */
         }
 
-        .zoomable-container::-webkit-scrollbar {
+        .zoom-container::-webkit-scrollbar {
             display: none;
             /* Chrome/Safari */
         }
@@ -252,6 +252,11 @@
             animation: pulse-busy 1.5s infinite;
         }
 
+        /* Logic */
+
+        .form-floating:has(.form-control.d-none) {
+            display: none;
+        }
     </style>
 </head>
 
@@ -295,31 +300,36 @@
                 <select id="set-selector" class="form-select"></select>
                 <label for="set-selector">Zestaw</label>
             </div>
-            <div class="form-floating d-none">
+            <div class="form-floating">
                 <input type="text" id="set-name" class="form-control" placeholder="Nowy zestaw" />
                 <label for="set-name">Nazwa zestawu</label>
             </div>
-            <button class="btn btn-outline-success btn-muted" id="new-set">
+            <button class="btn btn-outline-success btn-muted d-none" id="new-set">
                 <i class="bi bi-file-earmark-plus"></i>&nbsp;Nowy
             </button>
-        </div>
-        <div class="d-flex gap-3 flex-wrap justify-content-center" role="group">
             <button class="btn btn-outline-primary btn-muted" id="save-set">
                 <i class="bi bi-floppy"></i>&nbsp;Zapisz
             </button>
-            <button class="btn btn-outline-danger btn-muted" id="delete-set">
+            <button class="btn btn-outline-danger btn-muted d-none" id="delete-set">
                 <i class="bi bi-trash3 confirm"></i>&nbsp;Usuń
             </button>
-            <button class="btn btn-outline-secondary btn-muted" id="export-set">
-                <i class="bi bi-box-arrow-right"></i>&nbsp;Eksportuj
+            <button class="btn btn-outline-secondary btn-muted d-none" id="export-set">
+                <i class="bi bi-box-arrow-right"></i>&nbsp;Eksport
             </button>
-            <button class="btn btn-outline-secondary btn-muted" id="import-set">
-                <i class="bi bi-box-arrow-in-right"></i>&nbsp;Importuj
+            <button class="btn btn-outline-secondary btn-muted d-none" id="import-set">
+                <i class="bi bi-box-arrow-in-right"></i>&nbsp;Import
             </button>
             <button class="btn btn-outline-success btn-muted" id="add-spec">
                 <i class="bi bi-plus-circle"></i>&nbsp;Rozmiar
             </button>
+            <button class="btn btn-secondary btn-muted" id="more-set" aria-label="Więcej">
+                <i class="bi bi-three-dots"></i>
+            </button>
         </div>
+
+        <!-- <div class="d-flex gap-3 flex-wrap justify-content-center" role="group">
+        </div> -->
+
         <input type="file" id="import-file" accept=".json" hidden />
     </div>
 
@@ -337,9 +347,9 @@
                 </div>
                 <div class="form-floating">
                     <select class="form-select format">
-                        <option value="image/png">PNG</option>
-                        <option value="image/jpeg">JPG</option>
                         <option value="image/webp">WebP</option>
+                        <option value="image/jpeg">JPG</option>
+                        <option value="image/png">PNG</option>
                     </select>
                     <label>Format</label>
                 </div>
@@ -363,8 +373,8 @@
             <div class="preview-wrapper d-grid justify-content-center mt-2 d-none">
                 <div class="d-flex align-items-center gap-3 flex-wrap justify-content-center">
                 </div>
-                <div class="zoomable-container img-thumbnail mt-2">
-                    <img class="preview-img zoomable-image">
+                <div class="zoom-container img-thumbnail mt-2">
+                    <img class="preview-img">
                 </div>
             </div>
         </div>
@@ -373,26 +383,28 @@
     <script src="pica.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        const dropArea = document.getElementById("drop-area");
-        const fileInput = document.getElementById("file-input");
-        const specList = document.getElementById("spec-list");
-        const addSpecBtn = document.getElementById("add-spec");
-        const generateBtn = document.getElementById("generate-btn");
-        const downloadZipBtn = document.getElementById("download-zip-btn");
-        const setSelector = document.getElementById("set-selector");
-        const setNameInput = document.getElementById("set-name");
-        const newSetBtn = document.getElementById("new-set");
-        const saveSetBtn = document.getElementById("save-set");
-        const deleteSetBtn = document.getElementById("delete-set");
-        const exportSetBtn = document.getElementById("export-set");
-        const importSetBtn = document.getElementById("import-set");
-        const importFile = document.getElementById("import-file");
+        const dropArea = document.getElementById("drop-area"),
+            fileInput = document.getElementById("file-input"),
+            specList = document.getElementById("spec-list"),
+            addSpecBtn = document.getElementById("add-spec"),
+            generateBtn = document.getElementById("generate-btn"),
+            downloadZipBtn = document.getElementById("download-zip-btn"),
+            setSelector = document.getElementById("set-selector"),
+            setNameInput = document.getElementById("set-name"),
+            newSetBtn = document.getElementById("new-set"),
+            saveSetBtn = document.getElementById("save-set"),
+            deleteSetBtn = document.getElementById("delete-set"),
+            exportSetBtn = document.getElementById("export-set"),
+            importSetBtn = document.getElementById("import-set"),
+            moreSetBtn = document.getElementById("more-set"),
+            importFile = document.getElementById("import-file");
 
-        let originalImage = null;
-        let originalFileName = "";
-        let generatedFiles = [];
-        const SET_STORAGE_KEY = "image-resizer-sets";
-        const LAST_SET_KEY = "last-used-set";
+        let originalImage = null,
+            originalFileName = "",
+            generatedFiles = [];
+        
+        const SET_STORAGE_KEY = "image-resizer-sets",
+            LAST_SET_KEY = "last-used-set";
 
         function resetApp() {
             downloadZipBtn.disabled = true;
@@ -412,8 +424,11 @@
             e.stopPropagation();
         }
 
-        let dragCounter = 0;
+        let dragCounter = 0,
+            dragStartedInWindow = false;
         window.addEventListener('drop', (e) => {
+            if (dragStartedInWindow) return;
+
             handleFile(e.dataTransfer.files[0]);
             document.body.classList.remove('dragover');
             dragCounter = 0;
@@ -424,12 +439,20 @@
             window.addEventListener(eventName, preventDefaults, false);
         });
 
-        window.addEventListener('dragenter', () => {
+        window.addEventListener('dragstart', (e) => {
+            // Sprawdź, czy przeciąganie rozpoczęło się w oknie.
+            dragStartedInWindow = document.body.contains(e.target);
+            console.log('dragStartedInWindow', dragStartedInWindow);
+        });
+
+        window.addEventListener('dragenter', (e) => {
+            if (dragStartedInWindow) return;
             dragCounter++;
             document.body.classList.add('dragover');
         });
 
-        window.addEventListener('dragleave', () => {
+        window.addEventListener('dragleave', (e) => {
+            if (dragStartedInWindow) return;
             dragCounter--;
             if (dragCounter === 0) {
                 document.body.classList.remove('dragover');
@@ -501,7 +524,7 @@
             // Ustawiamy wartości
             const postfix = spec.postfix || "";
             const width = spec.width || "";
-            const format = spec.format || "image/png";
+            const format = spec.format || "image/webp";
             const quality = spec.quality ?? 0.9;
 
             specElement.querySelector(".postfix").value = postfix;
@@ -657,7 +680,7 @@
                 if (name === selected) opt.selected = true;
                 setSelector.appendChild(opt);
             });
-            setNameInput.parentElement.classList.add("d-none");
+            setNameInput.classList.add("d-none");
             console.log("Selected:", setSelector.value);
         }
 
@@ -673,18 +696,13 @@
         });
 
         newSetBtn.addEventListener("click", () => {
-            const nameElement = setNameInput.parentElement;
-            if (nameElement.classList.contains("d-none")) {
-                nameElement.classList.remove("d-none");
+            if (setNameInput.classList.contains("d-none")) {
+                setNameInput.classList.remove("d-none");
                 setNameInput.value = "";
                 setNameInput.focus();
-                // specList.innerHTML = "";
-                // setSelector.value = "";
-                // localStorage.removeItem(LAST_SET_KEY);
             } else {
-                nameElement.classList.add("d-none");
+                setNameInput.classList.add("d-none");
                 setNameInput.value = setSelector.value;
-                // setSelector.dispatchEvent(new Event("change"));
             }
         });
         setNameInput.addEventListener("keydown", (event) => {
@@ -696,6 +714,10 @@
         deleteSetBtn.addEventListener("click", deleteCurrentSet);
         exportSetBtn.addEventListener("click", exportSet);
         setSelector.addEventListener("change", () => loadSet(setSelector.value));
+        moreSetBtn.addEventListener("click", (e) => {
+            [newSetBtn, deleteSetBtn, exportSetBtn, importSetBtn]
+                .forEach(b => b.classList.toggle('d-none'));
+        });
 
         function applySharpen(ctx, width, height, amount = 0.5) {
             const a = -1 * amount;
@@ -867,12 +889,12 @@
                 const specItem = specList.children[i],
                     previewWrap = specItem.querySelector(".preview-wrapper"),
                     downloadBtn = specItem.querySelector(".download-single"),
-                    sizeInfo = specItem.querySelector(".file-size"),
-                    previewImg = previewWrap.querySelector(".preview-img");
+                    sizeInfo = specItem.querySelector(".file-size");
 
                 // Wstaw obraz.
+                let previewImg = previewWrap.querySelector(".preview-img");
                 previewImg.src = URL.createObjectURL(blob);
-                previewImg.dragggable = false;
+                // previewImg.setAttribute('draggable', false);
                 downloadBtn.disabled = false;
                 sizeInfo.textContent = formatImageInfo(
                     imgWidth,
@@ -881,24 +903,41 @@
                 );
                 sizeInfo.removeAttribute('aria-disabled');
 
-                // Ustaw zoom.
-                const zoomContainer = previewWrap.querySelector(".zoomable-container");
-                zoomContainer.style.aspectRatio = `${imgWidth} / ${imgHeight}`;
-                zoomContainer.addEventListener('mousemove', (e) => {
-                    if (previewImg.dataset.zoomed === "true") {
-                        imageZoomHandler(e, imgWidth, imgHeight);
-                    }
-                });
-                zoomContainer.addEventListener("click", (e) => {
-                    // (De)aktywacja zoomu.
-                    previewImg.dataset.zoomed = previewImg.dataset.zoomed !== "true";
-                    if (previewImg.dataset.zoomed === "true") {
-                        imageZoomHandler(e, imgWidth, imgHeight);
-                    }
-                });
-
                 // Pokaż specyfikację.
                 previewWrap.classList.remove("d-none");
+
+                // Ustaw zoom.
+                setTimeout(() => {
+                    const zoomContainer = previewWrap.querySelector(".zoom-container");
+
+                    if (zoomContainer.offsetWidth < imgWidth || zoomContainer.offsetHeight < imgHeight) {
+                        previewImg.classList.add('zoomable-image');
+                        zoomContainer.style.aspectRatio = `${imgWidth} / ${imgHeight}`;
+
+                        // Sprawdź, czy listenery już istnieją.
+                        if (!zoomContainer.hasEventListeners) {
+                            const zoomMouseMoveListener = (e) => {
+                                if (previewImg.dataset.zoomed === "true") {
+                                    imageZoomHandler(e, imgWidth, imgHeight);
+                                }
+                            };
+                            const zoomClickListener = (e) => {
+                                // (De)aktywacja zoomu.
+                                previewImg.dataset.zoomed = previewImg.dataset.zoomed !== "true";
+                                if (previewImg.dataset.zoomed === "true") {
+                                    imageZoomHandler(e, imgWidth, imgHeight);
+                                }
+                            };
+
+                            // Dodaj listenery.
+                            zoomContainer.addEventListener('mousemove', zoomMouseMoveListener);
+                            zoomContainer.addEventListener("click", zoomClickListener);
+
+                            // Oznacz, że listenery zostały dodane.
+                            zoomContainer.hasEventListeners = true;
+                        }
+                    }
+                }, 100);
             }
 
             downloadZipBtn.disabled = false;

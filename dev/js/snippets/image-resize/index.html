@@ -150,6 +150,10 @@
             background-color: var(--bs-body-bg);
         }
 
+        .dropdown-more::after {
+            display: none;
+        }
+
         /* Drop area */
 
         #drop-area>* {
@@ -179,7 +183,7 @@
             inset: 0;
             height: 100dvh;
             width: 100dvw;
-            z-index: 999999;
+            z-index: 99999;
             /* opacity: .8; */
         }
 
@@ -221,6 +225,9 @@
             margin: 0 auto;
             max-width: fit-content;
             top: 3.5rem;
+        }
+        
+        .z-index-top {
             z-index: 9999;
         }
 
@@ -283,7 +290,7 @@
     </div>
 
     <!-- Przyciski generowania -->
-    <div class="main-buttons pt-3 pb-3 mb-5 d-flex gap-2 justify-content-center sticky-top sticky-bottom">
+    <div class="main-buttons pt-3 pb-3 mb-5 d-flex gap-2 justify-content-center sticky-top sticky-bottom z-index-top">
         <button class="btn btn-primary" id="generate-btn" disabled>
             <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
             <i class="bi bi-arrows-fullscreen me-2"></i>Generuj
@@ -294,8 +301,8 @@
     </div>
 
     <!-- Sety -->
-    <div class="mb-3 d-flex flex-wrap gap-3 align-items-center justify-content-center">
-        <div class="input-group w-auto flex-fill">
+    <div class="mb-3 d-flex flex-wrap gap-3 align-items-center">
+        <div class="input-group w-auto flex-fill flex-shrink-0-">
             <div class="form-floating">
                 <select id="set-selector" class="form-select"></select>
                 <label for="set-selector">Zestaw</label>
@@ -304,27 +311,25 @@
                 <input type="text" id="set-name" class="form-control" placeholder="Nowy zestaw" />
                 <label for="set-name">Nazwa zestawu</label>
             </div>
-            <button class="btn btn-outline-success btn-muted d-none" id="new-set">
-                <i class="bi bi-file-earmark-plus"></i>&nbsp;Nowy
-            </button>
             <button class="btn btn-outline-primary btn-muted" id="save-set">
                 <i class="bi bi-floppy"></i>&nbsp;Zapisz
             </button>
-            <button class="btn btn-outline-danger btn-muted d-none" id="delete-set">
-                <i class="bi bi-trash3 confirm"></i>&nbsp;Usuń
-            </button>
-            <button class="btn btn-outline-secondary btn-muted d-none" id="export-set">
-                <i class="bi bi-box-arrow-right"></i>&nbsp;Eksport
-            </button>
-            <button class="btn btn-outline-secondary btn-muted d-none" id="import-set">
-                <i class="bi bi-box-arrow-in-right"></i>&nbsp;Import
-            </button>
-            <button class="btn btn-outline-success btn-muted" id="add-spec">
+            <!-- <button class="btn btn-outline-success btn-muted" id="add-spec">
                 <i class="bi bi-plus-circle"></i>&nbsp;Rozmiar
-            </button>
-            <button class="btn btn-secondary btn-muted" id="more-set" aria-label="Więcej">
+            </button> -->
+            <button class="btn btn-secondary dropdown-toggle dropdown-more" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-three-dots"></i>
+                <span class="visually-hidden">Przełącz menu</span>
             </button>
+            <ul class="dropdown-menu z-index-top">
+                <li><button class="dropdown-item" type="button" id="new-set"><i class="bi bi-file-earmark-plus"></i>&nbsp;Nowy</button></li>
+                <li><button class="dropdown-item" type="button" id="add-spec"><i class="bi bi-plus-circle"></i>&nbsp;Rozmiar</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" type="button" id="import-set"><i class="bi bi-box-arrow-in-left"></i>&nbsp;Import</button></li>
+                <li><button class="dropdown-item" type="button" id="export-set"><i class="bi bi-box-arrow-right"></i>&nbsp;Eksport</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item" type="button" id="delete-set"><i class="bi bi-trash3"></i>&nbsp;Usuń</button></li>
+            </ul>
         </div>
 
         <!-- <div class="d-flex gap-3 flex-wrap justify-content-center" role="group">
@@ -360,10 +365,17 @@
                     <label>Jakość 0..1</label>
                 </div>
                 <div class="form-floating">
+                    <!-- <input type="range" class="form-control form-range unsharp" min="0" max="3" step="1"
+                        oninput="this.nextElementSibling.textContent = `Ostrość ${['Wyłączona', 'Mała', 'Średia', 'Duża'][this.value] ?? 'Nieznana'}`" /> -->
+                    <input type="range" class="form-control form-range unsharp" min="0" max="3" step="1"
+                        oninput="this.nextElementSibling.textContent = `Ostrość ${this.value}`" />
+                    <label class="">Ostrość 0..3</label>
+                </div>
+                <div class="form-floating">
                     <div class="form-control file-size text-muted" aria-disabled="true">—</div>
                     <label>Rozmiar</label>
                 </div>
-                <button class="btn btn-primary download-single" disabled>
+                <button class="btn btn-primary download-single" disabled title="Pobierz">
                     <i class="bi bi-download"></i>
                 </button>
                 <button class="btn btn-danger btn-muted remove-btn" title="Usuń rozmiar">
@@ -396,7 +408,6 @@
             deleteSetBtn = document.getElementById("delete-set"),
             exportSetBtn = document.getElementById("export-set"),
             importSetBtn = document.getElementById("import-set"),
-            moreSetBtn = document.getElementById("more-set"),
             importFile = document.getElementById("import-file");
 
         let originalImage = null,
@@ -522,13 +533,15 @@
             const specElement = fragment.querySelector(".spec-item");
 
             // Ustawiamy wartości
-            const postfix = spec.postfix || "";
-            const width = spec.width || "";
-            const format = spec.format || "image/webp";
-            const quality = spec.quality ?? 0.9;
+            const postfix = spec.postfix || "",
+                width = spec.width || "",
+                format = spec.format || "image/webp",
+                quality = spec.quality ?? 0.9,
+                unsharp = spec.unsharp ?? 0;
 
             specElement.querySelector(".postfix").value = postfix;
             specElement.querySelector(".width").value = width;
+            specElement.querySelector(".unsharp").value = unsharp;
 
             const formatSelect = specElement.querySelector(".format");
             for (const option of formatSelect.options) {
@@ -552,12 +565,9 @@
                     const removeBtn = e.currentTarget;
                     if (removeBtn.dataset.confirm === "true") {
                         specElement.remove();
-                    } else {
-                        removeBtn.dataset.confirm = "true";
-                        setTimeout(() => {
-                            delete removeBtn.dataset.confirm;
-                        }, 2000);
                     }
+
+                    toggleConfirm(removeBtn);
                 });
 
             specElement
@@ -583,6 +593,7 @@
                     width: parseInt(row.querySelector(".width").value),
                     format: row.querySelector(".format").value,
                     quality: parseFloat(row.querySelector(".quality").value),
+                    unsharp: parseFloat(row.querySelector(".unsharp").value),
                 }))
                 .filter((s) => s.width);
         }
@@ -610,25 +621,14 @@
         }
 
         function deleteCurrentSet() {
-            const name = setNameInput.value.trim();
+            const name = setSelector.value.trim();
             if (!name) return;
-            if (deleteSetBtn.dataset.confirm === "true") {
-                // Drugie kliknięcie - usuń zestaw
-                const sets = getSetsFromStorage();
-                delete sets[name];
-                localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(sets));
-                refreshSetSelector();
-                specList.innerHTML = "";
-                setSelector.dispatchEvent(new Event("change"));
-
-                delete deleteSetBtn.dataset.confirm;
-            } else {
-                // Pierwsze kliknięcie - potwierdź
-                deleteSetBtn.dataset.confirm = "true";
-                setTimeout(() => {
-                    delete deleteSetBtn.dataset.confirm;
-                }, 2000);
-            }
+            const sets = getSetsFromStorage();
+            delete sets[name];
+            localStorage.setItem(SET_STORAGE_KEY, JSON.stringify(sets));
+            refreshSetSelector();
+            specList.innerHTML = "";
+            setSelector.dispatchEvent(new Event("change"));
         }
 
         function exportSet() {
@@ -688,6 +688,16 @@
             return JSON.parse(localStorage.getItem(SET_STORAGE_KEY) || "{}");
         }
 
+        function toggleConfirm(element) {
+            console.log(element.dataset.confirm)
+            if (element.dataset.confirm !== "true") {
+                element.dataset.confirm = "true";
+                setTimeout(() => {
+                    delete element.dataset.confirm;
+                }, 2000);
+            }
+        }
+
         addSpecBtn.addEventListener("click", () => {
             const specItem = createSpecElement();
             specList.appendChild(specItem);
@@ -705,21 +715,25 @@
                 setNameInput.value = setSelector.value;
             }
         });
+
         setNameInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 saveCurrentSet();
             }
         });
+        setNameInput.addEventListener("blur", (event) => {
+            const t = event.currentTarget;
+            if (t.value == '') {
+                t.classList.toggle('d-none');
+            }
+        });
+
         saveSetBtn.addEventListener("click", saveCurrentSet);
         deleteSetBtn.addEventListener("click", deleteCurrentSet);
         exportSetBtn.addEventListener("click", exportSet);
         setSelector.addEventListener("change", () => loadSet(setSelector.value));
-        moreSetBtn.addEventListener("click", (e) => {
-            [newSetBtn, deleteSetBtn, exportSetBtn, importSetBtn]
-                .forEach(b => b.classList.toggle('d-none'));
-        });
 
-        function applySharpen(ctx, width, height, amount = 0.5) {
+        function unused__applySharpen(ctx, width, height, amount = 0.5) {
             const a = -1 * amount;
             const c = 4 * amount + 1; // central value
             const weights = [0, a, 0, a, c, a, 0, a, 0];
@@ -758,7 +772,7 @@
         }
 
         // Step-wise scaling to reduce moiré
-        function resizeImageStepwise(img, targetWidth) {
+        function unused__resizeImageStepwise(img, targetWidth) {
             let currentCanvas = document.createElement("canvas");
             currentCanvas.width = img.width;
             currentCanvas.height = img.height;
@@ -818,7 +832,7 @@
         // Pica.js https://github.com/nodeca/pica
         // Consider https://github.com/nodeca/image-blob-reduce
         // Info: https://stackoverflow.com/questions/18922880/html5-canvas-resize-downscale-image-high-quality
-        function resizeImageWithPica(img, targetWidth) {
+        function resizeImageWithPica(img, targetWidth, unsharp = {radius: 0.6, amount: 180, treshold: 1}) {
             const srcCanvas = document.createElement("canvas");
             srcCanvas.width = img.width;
             srcCanvas.height = img.height;
@@ -831,24 +845,23 @@
             destCanvas.height = Math.round(img.height * scale);
 
             // Pica
-            let unsharpRadius = 0.6, // 0.5..2.0. By default it's not set. Radius of Gaussian blur. If it is less than 0.5, Unsharp Mask is off. Big values are clamped to 2.0.
-                unsharpAmount = 180, // >=0. Default = 0 (off). Usually value between 100 to 200 is good. Note, mks2013 filter already does optimal sharpening.
-                unsharpThreshold = 1; // 0..255. Default = 0. Threshold for applying unsharp mask.
+            // unsharp.radius = 0.6, // 0.5..2.0. By default it's not set. Radius of Gaussian blur. If it is less than 0.5, Unsharp Mask is off. Big values are clamped to 2.0.
+            // unsharp.amount = 180, // >=0. Default = 0 (off). Usually value between 100 to 200 is good. Note, mks2013 filter already does optimal sharpening.
+            // unsharp.threshold = 1; // 0..255. Default = 0. Threshold for applying unsharp mask.
 
             // Affinity Photo 2
-            // let unsharpRadius = (0.6 / 100) * 2,
-            //     unsharpAmount = (0.7 / 4) * 200,
-            //     unsharpThreshold = (0 / 100) * 255;
-
+            // unsharp.radius = (0.6 / 100) * 2,
+            // unsharp.amount = (0.7 / 4) * 200,
+            // unsharp.threshold = (0 / 100) * 255;
 
             return pica()
                 .resize(srcCanvas, destCanvas, {
                     // quality: 3, // Jakość resamplingu (1-3, domyślnie 3)
                     filter: "mks2013", // Algorytm resamplingu ("box", "hamming", "mks2013", "lanczos2", "lanczos3")
                     alpha: true, // Zachowaj kanał alfa
-                    unsharpAmount: unsharpAmount, // Siła wyostrzania (100..200)
-                    unsharpRadius: unsharpRadius, // Promień wyostrzania (0.5..2.0)
-                    unsharpThreshold: unsharpThreshold, // Próg wyostrzania (0..255)
+                    unsharpAmount: unsharp.amount, // Siła wyostrzania (100..200)
+                    unsharpRadius: unsharp.radius, // Promień wyostrzania (0.5..2.0)
+                    unsharpThreshold: unsharp.threshold, // Próg wyostrzania (0..255)
                 })
                 .then(() => {
                     return destCanvas;
@@ -869,7 +882,15 @@
 
                 // Utwórz obraz.
                 // const canvas = resizeImageStepwise(originalImage, spec.width);
-                const canvas = await resizeImageWithPica(originalImage, spec.width);
+                const unsharpMap = [
+                    {radius: 0, amount: 0, treshold: 0},
+                    {radius: 0.6, amount: 60, treshold: 0},
+                    {radius: 0.6, amount: 120, treshold: 0},
+                    {radius: 0.6, amount: 180, treshold: 0}
+                    // {radius: 0.6, amount: 180, treshold: 0}
+                ];
+                const unsharp = unsharpMap[spec.unsharp] ?? {radius: 0.6, amount: 180, treshold: 0};
+                const canvas = await resizeImageWithPica(originalImage, spec.width, unsharp);
                 const blob = await new Promise((r) =>
                     canvas.toBlob(r, spec.format, spec.quality)
                 );
@@ -963,6 +984,7 @@
             zoomContainer.scrollTop = percentY * maxScrollY;
         };
 
+        // Download ZIP
         downloadZipBtn.addEventListener("click", async () => {
             const zip = new JSZip();
             generatedFiles.forEach((f) => zip.file(f.name, f.blob));
@@ -1003,6 +1025,6 @@
             }
         })();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

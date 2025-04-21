@@ -367,7 +367,7 @@
                 <div class="form-floating">
                     <!-- <input type="range" class="form-control form-range unsharp" min="0" max="3" step="1"
                         oninput="this.nextElementSibling.textContent = `Ostrość ${['Wyłączona', 'Mała', 'Średia', 'Duża'][this.value] ?? 'Nieznana'}`" /> -->
-                    <input type="range" class="form-control form-range unsharp" min="0" max="3" step="1"
+                    <input type="range" class="form-control form-range unsharp" min="0" max="4" step="1"
                         oninput="this.nextElementSibling.textContent = `Ostrość ${this.value}`" />
                     <label class="">Ostrość 0..3</label>
                 </div>
@@ -884,9 +884,10 @@
                 // const canvas = resizeImageStepwise(originalImage, spec.width);
                 const unsharpMap = [
                     {radius: 0, amount: 0, treshold: 0},
-                    {radius: 0.6, amount: 60, treshold: 0},
-                    {radius: 0.6, amount: 120, treshold: 0},
-                    {radius: 0.6, amount: 180, treshold: 0}
+                    {radius: 0.6, amount: 60, treshold: 1},
+                    {radius: 0.6, amount: 100, treshold: 1},
+                    {radius: 0.6, amount: 140, treshold: 1},
+                    {radius: 0.6, amount: 180, treshold: 1}
                     // {radius: 0.6, amount: 180, treshold: 0}
                 ];
                 const unsharp = unsharpMap[spec.unsharp] ?? {radius: 0.6, amount: 180, treshold: 0};

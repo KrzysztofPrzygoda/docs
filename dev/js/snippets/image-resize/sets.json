@@ -1,15 +1,42 @@
 {
     "Domyślny": [
-        { "postfix": "__small", "width": 375, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__small_2x", "width": 750, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__medium", "width": 768, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__medium_2x", "width": 1536, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__large", "width": 1200, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__large_2x", "width": 2400, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__huge", "width": 1920, "format": "image/webp", "quality": 0.9 },
-        { "postfix": "__huge_2x", "width": 3840, "format": "image/webp", "quality": 0.9 }
+        { "postfix": "__small", "width": 375, "format": "image/webp", "quality": 0.9, "unsharp": 1},
+        { "postfix": "__small_2x", "width": 750, "format": "image/webp", "quality": 0.9, "unsharp": 0},
+        { "postfix": "__medium", "width": 768, "format": "image/webp", "quality": 0.9, "unsharp": 0 },
+        { "postfix": "__medium_2x", "width": 1536, "format": "image/webp", "quality": 0.9, "unsharp": 0 },
+        { "postfix": "__large", "width": 1200, "format": "image/webp", "quality": 0.9, "unsharp": 0 },
+        { "postfix": "__large_2x", "width": 2400, "format": "image/webp", "quality": 0.9, "unsharp": 0 },
+        { "postfix": "__huge", "width": 1920, "format": "image/webp", "quality": 0.9, "unsharp": 0 },
+        { "postfix": "__huge_2x", "width": 3840, "format": "image/webp", "quality": 0.9, "unsharp": 0 }
     ],
-    "Na Instagram": [
-      { "postfix": "_ig", "width": 1080, "format": "image/webp", "quality": 0.9 }
+    "Favicon": [
+        { "postfix": "__16", "width": 16, "format": "image/png", "unsharp": 1, "info": "Najczęściej używany rozmiar – pojawia się na kartach przeglądarki, w zakładkach oraz w pasku adresu." },
+        { "postfix": "__32", "width": 32, "format": "image/png", "unsharp": 1, "info": "Używany na stronie „nowa karta” w niektórych przeglądarkach oraz jako ikona pulpitu w systemie Windows." },
+        { "postfix": "__48", "width": 48, "format": "image/png", "unsharp": 0, "info": "Często używany jako ikona na pasku zadań w Windows i jako punkt wyjściowy dla większych ikon." },
+        { "postfix": "__64", "width": 64, "format": "image/png", "unsharp": 0, "info": "Przydatny dla większych ekranów – może być skalowany w dół do mniejszych rozmiarów." },
+        { "postfix": "__96", "width": 96, "format": "image/png", "unsharp": 0, "info": "Zalecany przez Google dla ekranów o wysokiej rozdzielczości. Zapewnia ostrość favicona na ekranach Retina i 4K." }
+    ],
+    "Ikony PWA": [
+        { "postfix": "__48", "width": 48, "format": "image/png", "unsharp": 1, "info": "Ikony 48x48 są często używane jako favicony i małe ikony w interfejsie użytkownika PWA." },
+        { "postfix": "__72", "width": 72, "format": "image/png", "unsharp": 1, "info": "Ikony 72x72 są używane w niektórych systemach Android do wyświetlania na ekranie głównym." },
+        { "postfix": "__96", "width": 96, "format": "image/png", "unsharp": 0, "info": "Ikony 96x96 są używane w niektórych systemach Android do wyświetlania na ekranie głównym." },
+        { "postfix": "__128", "width": 128, "format": "image/png", "unsharp": 0, "info": "Ikony 128x128 są używane w niektórych systemach Android i Chrome OS do wyświetlania na ekranie głównym." },
+        { "postfix": "__144", "width": 144, "format": "image/png", "unsharp": 0, "info": "Ikony 144x144 są używane w niektórych systemach Android i Chrome OS do wyświetlania na ekranie głównym." },
+        { "postfix": "__192", "width": 192, "format": "image/png", "unsharp": 0, "info": "Ikony 192x192 są używane jako ikony na ekranie głównym w systemie Android i Chrome OS." },
+        { "postfix": "__384", "width": 384, "format": "image/png", "unsharp": 0, "info": "Ikony 384x384 są używane na urządzeniach z systemem Android o wysokiej rozdzielczości." },
+        { "postfix": "__512", "width": 512, "format": "image/png", "unsharp": 0, "info": "Ikony 512x512 są używane jako ikony na ekranie głównym w systemie Android i Chrome OS, a także w App Store." }
+    ],
+    "Ikony Apple Touch (bez zaokrągleń)": [
+        { "postfix": "__120", "width": 120, "format": "image/png", "unsharp": 0, "info": "Ikony 120x120 są używane na ekranach iPhone 2x do wyświetlania na ekranie głównym. Nie powinny mieć zaokrąglonych rogów (system sam nakłada maskę)." },
+        { "postfix": "__152", "width": 152, "format": "image/png", "unsharp": 0, "info": "Ikony 152x152 są używane na ekranach non-Retina do wyświetlania na ekranie głównym. Nie powinny mieć zaokrąglonych rogów (system sam nakłada maskę)." },
+        { "postfix": "__167", "width": 167, "format": "image/png", "unsharp": 0, "info": "Ikony 167x167 są używane na iPad Pro do wyświetlania na ekranie głównym. Nie powinny mieć zaokrąglonych rogów (system sam nakłada maskę)." },
+        { "postfix": "__180", "width": 180, "format": "image/png", "unsharp": 0, "info": "Ikony 180x180 są używane na iPhone x3 do wyświetlania na ekranie głównym. Nie powinny mieć zaokrąglonych rogów (system sam nakłada maskę)." }
+    ],
+    "Ikony macOS (zaokrąglone)": [
+        { "postfix": "__16", "width": 16, "format": "image/png", "unsharp": 1, "info": "Ikony 16x16 są często używane w małych elementach interfejsu, takich jak menu kontekstowe, paski narzędzi i listy." },
+        { "postfix": "__32", "width": 32, "format": "image/png", "unsharp": 1, "info": "Ikony 32x32 są używane w Docku, menu i oknach dialogowych." },
+        { "postfix": "__64", "width": 64, "format": "image/png", "unsharp": 0, "info": "Ikony 64x64 są używane w Finderze, Launchpadzie i w oknach dialogowych." },
+        { "postfix": "__256", "width": 256, "format": "image/png", "unsharp": 0, "info": "Ikony 256x256 są używane w Finderze (szczególnie w widoku ikon) i w Launchpadzie, zwłaszcza na ekranach o wysokiej rozdzielczości (Retina)." },
+        { "postfix": "__1024", "width": 1024, "format": "image/png", "unsharp": 0, "info": "Ikony 1024x1024 są używane w Quick Look, App Store i w sytuacjach, gdy ikona jest wyświetlana na pełnym ekranie lub w bardzo dużym rozmiarze." }
     ]
 }

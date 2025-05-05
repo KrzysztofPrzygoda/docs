@@ -1,4 +1,21 @@
-// Task Timer App - JavaScript Code
+window.addEventListener('load', () => {
+    applyAppSettings();
+
+    // Sprawdź, czy było aktywne zadanie przed odświeżeniem
+    if (lastActiveTaskId !== null && tasks[lastActiveTaskId]) {
+        startTask(lastActiveTaskId); // Uruchomi zegar dla przywróconego zadania
+    } else {
+        renderTasks();
+    }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('service-worker.js?v=2');
+        });
+    }
+});
+
+// Task Timer App
 const taskNameDisplay = taskDisplay.querySelector('#taskDisplay task');
 const taskTimeDisplay = taskDisplay.querySelector('#taskDisplay time');
 const pageTitle = document.querySelector('title');
@@ -335,23 +352,6 @@ function importData(event) {
     }
 }
 
-window.addEventListener('load', () => {
-    applyAppSettings();
-
-    // Sprawdź, czy było aktywne zadanie przed odświeżeniem
-    if (lastActiveTaskId !== null && tasks[lastActiveTaskId]) {
-        startTask(lastActiveTaskId); // Uruchomi zegar dla przywróconego zadania
-    } else {
-        renderTasks();
-    }
-});
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js?v=3');
-    });
-}
-
 // Zmiana czasu zadania
 
 const changeTimeModal = new bootstrap.Modal(document.getElementById('changeTimeModal'));
@@ -543,14 +543,26 @@ async function requestNotificationPermission() {
     }
 }
 
-async function showNotification(body) {
+async function showNotification(body, requireInteraction = false) {
     if (!appSettings.notificationsEnabled) {
         return;
     }
 
     const permission = await checkNotificationPermission();
     if ('granted' === permission) {
-        new Notification('Task Timer', { body });
+        // new Notification('Task Timer', { body });
+        new Notification('Task Timer', {
+                body: body,
+                icon: './images/icons/icon__192.png',  // ikona wyróżniająca
+                badge: './images/icons/icon__96.png',  // opcjonalna ikona do "badge" (np. Android)
+                // image: "task-preview.png",             // opcjonalny obrazek do powiadomienia
+                lang: 'pl-PL',                         // język powiadomienia
+                dir: 'auto',                           // kierunek tekstu (auto, ltr, rtl)
+                tag: 'task-timer',                     // zapobiega dublowaniu
+                // timestamp: Date.now(),                 // znacznik czasu powiadomienia
+                renotify: true,                        // powiadamia ponownie przy tym samym tagu
+                requireInteraction: requireInteraction // powiadomienie nie znika samo
+        });
     } else {
         console.error('Notification permission not granted but still set in appSettings.');
     }
@@ -585,7 +597,7 @@ async function updateIdleDetectionView() {
     if (activityIndicator.dataset.enabled != appSettings.idleDetectionEnabled) {
         activityIndicator.dataset.enabled = appSettings.idleDetectionEnabled;
         activityIndicator.title = 'granted' === idlePermission
-            ? permissionInfo + ` na ${idleThresholdInput.value ?? 0}s`
+            ? permissionInfo + ` (${idleThresholdInput.value ?? 0}s)`
             : permissionInfo;
     }
 }
@@ -699,11 +711,11 @@ async function startIdleDetection() {
                 console.log(`Stopping task ${activeTaskId}`);
                 idleTaskId = activeTaskId;
                 stopTask(activeTaskId, true);
-                showNotification(`Zatrzymano: ${tasks[idleTaskId].name} ${formatTime(tasks[idleTaskId].seconds)} z powodu bezczynności przez ${idleThresholdInput.value} sekund.`);
+                showNotification(`■ Zatrzymano: ${tasks[idleTaskId].name} ${formatTime(tasks[idleTaskId].seconds)} z powodu bezczynności przez ${idleThresholdInput.value} sekund.`, true);
             } else if (!userIdle && null !== idleTaskId) {
                 console.log(`Resuming task ${idleTaskId}`);
                 startTask(idleTaskId, true);
-                showNotification(`Wznowiono: ${tasks[idleTaskId].name} ${formatTime(tasks[idleTaskId].seconds)} ze stanu bezczynności.`);
+                showNotification(`▶ Wznowiono: ${tasks[idleTaskId].name} ${formatTime(tasks[idleTaskId].seconds)} ze stanu bezczynności.`, true);
                 idleTaskId = null;
             }
         });

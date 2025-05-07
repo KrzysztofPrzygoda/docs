@@ -98,13 +98,15 @@ function renderTaskDisplay() {
     }
 
     const taskName = task.name;
-    const taskTime = formatTime((task.seconds ?? 0) + (task.timeLapse ?? 0));
+    const seconds = (task.seconds ?? 0) + (task.timeLapse ?? 0);
+    const taskTime = formatTime(seconds, 'hh:mm:ss');
     const isActive = document.body.dataset.active === "true";
 
     if (document.body.dataset.taskId != lastActiveTaskId) {
         document.body.dataset.taskId = lastActiveTaskId;
     }
 
+    // Update task name and time display
     if (taskNameDisplay.textContent != taskName) {
         taskNameDisplay.textContent = taskName;
     }
@@ -113,23 +115,52 @@ function renderTaskDisplay() {
         taskTimeDisplay.textContent = taskTime;
     }
 
+    // Upadate page title
     const title = `${isActive ? '▶' : '■'} ${taskTime} ${taskName}`;
     if (pageTitle.textContent != title) {
         pageTitle.textContent = title;
     }
 
+    // Update task list item time
     const taskListItemTime = document.querySelector('#taskList [data-active="true"] time');
     if (taskListItemTime && taskListItemTime.textContent != taskTime) {
         taskListItemTime.textContent = taskTime;
     }
+
+    // Update badge
+    if ('setAppBadge' in navigator) {
+        if (isActive) {
+            const minutes = formatTime(seconds, 'minutes');
+    
+            if (minutes !== renderTaskDisplay.lastBadgeMinutes) {
+                // Set the app badge with the number of minutes
+                minutes > 0 ? navigator.setAppBadge(minutes) : navigator.setAppBadge();
+                renderTaskDisplay.lastBadgeMinutes = minutes;
+            }
+        } else {
+            navigator.clearAppBadge();
+            renderTaskDisplay.lastBadgeMinutes = null;
+        }
+    }
 }
 
-function formatTime(secs) {
+function formatTime(secs = 0, format = 'hh:mm:ss') {
     secs = parseInt(secs, 10);
-    const h = Math.floor(secs / 3600);
-    const m = Math.floor((secs % 3600) / 60);
-    const s = secs % 60;
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+    switch (format) {
+        case 'hh:mm:ss': {
+            const h = Math.floor(secs / 3600);
+            const m = Math.floor((secs % 3600) / 60);
+            const s = secs % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        case 'minutes':
+            return Math.max(0, Math.floor(secs / 60));
+
+        default:
+            return secs;
+    }
 }
 
 function sortTasks() {

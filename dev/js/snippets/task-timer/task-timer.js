@@ -736,14 +736,15 @@ async function startIdleDetection() {
         idleDetector.addEventListener('change', () => {
             const userIdle = idleDetector.userState === 'idle';
             const screenLocked = idleDetector.screenState === 'locked';
+            const idleState = userIdle || screenLocked;
             console.log(`Idle change: user ${idleDetector.userState}, screen ${idleDetector.screenState}.`);
 
-            if (userIdle && null !== activeTaskId) {
+            if (idleState && null !== activeTaskId) {
                 console.log(`Stopping task ${activeTaskId}`);
                 idleTaskId = activeTaskId;
                 stopTask(activeTaskId, true);
                 showNotification(`■ Zatrzymano: ${tasks[idleTaskId].name} ${formatTime(tasks[idleTaskId].seconds)} z powodu bezczynności przez ${idleThresholdInput.value} sekund.`, true);
-            } else if (!userIdle && null !== idleTaskId) {
+            } else if (!idleState && null !== idleTaskId) {
                 console.log(`Resuming task ${idleTaskId}`);
                 startTask(idleTaskId, true);
                 showNotification(`▶ Wznowiono: ${tasks[idleTaskId].name} ${formatTime(tasks[idleTaskId].seconds)} ze stanu bezczynności.`, true);

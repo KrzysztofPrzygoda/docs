@@ -1,0 +1,107 @@
+<script>
+    /**
+ * Exports data from a JavaScript object to a JSON file.
+ * @param {string} fileName - The name of the file to be downloaded.
+ * @param {object} data - The JavaScript object to be exported.
+ */
+function exportToJson(fileName, data) {
+    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
+    
+    // Create a virtual anchor element to trigger the download
+    const downloadAnchorNode = document.createElement('a');
+    
+    // Set the data as the href attribute and the file name for download
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", fileName);
+    
+    // Append the anchor to the body, click it, and then remove it
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
+
+/**
+ * Imports data from a JSON file and returns it as a JavaScript object.
+ * @returns {Promise<object>} - A Promise that resolves with the imported data object.
+ */
+function importFromJson() {
+    return new Promise((resolve, reject) => {
+        // Create a virtual file input element
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json'; // Accept only JSON files
+
+        // Handle the file selection event
+        input.onchange = event => {
+            const file = event.target.files[0];
+            if (!file) {
+                reject('No file was selected.');
+                return;
+            }
+
+            const reader = new FileReader();
+            
+            // Handle the file loading event
+            reader.onload = e => {
+                try {
+                    // Parse the JSON file content
+                    const jsonData = JSON.parse(e.target.result);
+                    resolve(jsonData);
+                } catch (error) {
+                    // Error if the file is not valid JSON
+                    reject('Error parsing JSON file: ' + error.message);
+                }
+            };
+            
+            // Handle file reading errors
+            reader.onerror = () => {
+                reject('Error reading the file.');
+            };
+
+            // Read the file content as text
+            reader.readAsText(file);
+        };
+
+        // Simulate a click on the input to open the file selection dialog
+        input.click();
+    });
+}
+</script>
+
+<!-- Example usage: -->
+
+<button id="export-button">Export Settings</button>
+<button id="import-button">Import Settings</button>
+
+<script>
+    // A sample variable to be exported and imported
+    let appSettings = {
+        theme: 'dark',
+        language: 'en',
+        fontSize: 16
+    };
+
+    // Handle the export button click
+    document.getElementById('export-button').addEventListener('click', () => {
+        // Export data from the appSettings object to a file named 'settings.json'
+        exportToJson('settings.json', appSettings);
+    });
+
+    // Handle the import button click
+    document.getElementById('import-button').addEventListener('click', () => {
+        importFromJson()
+            .then(importedData => {
+                // On successful import, update our appSettings variable
+                appSettings = importedData;
+                console.log('Settings imported successfully:', appSettings);
+
+                // You can call a function here to update the UI
+                // e.g., updateUI(appSettings);
+            })
+            .catch(error => {
+                // Handle import errors
+                console.error(error);
+                alert(error);
+            });
+    });
+</script>

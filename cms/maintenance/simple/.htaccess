@@ -1,0 +1,25 @@
+# BEGIN Maintenance Mode
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Exclude IP from redirection
+    RewriteCond %{REMOTE_ADDR} !^1\.1\.1\.1$
+    RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1
+
+    # Check if maintenance is on
+    RewriteCond %{DOCUMENT_ROOT}/maintenance.html -f
+    RewriteCond %{DOCUMENT_ROOT}/.maintenance-on -f
+
+    # Check if request is not for maintenance.html to avoid loops
+    RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+
+    # Redirect to maintenance.html
+    RewriteRule ^.*$ /maintenance.html [R=503,L]
+
+    # Set 503 response code page
+    ErrorDocument 503 /maintenance.html
+
+    # Set Cache-Control to no-store for maintenance mode
+    Header Set Cache-Control "max-age=0, no-store"
+</IfModule>
+# END Maintenance Mode

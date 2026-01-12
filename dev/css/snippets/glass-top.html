@@ -1,0 +1,34 @@
+<!-- Simulates a glass-like frosted effect at the top of the viewport using multiple layers with varying blur levels and gradient masks. -->
+<style>
+    .w-full { width: 100%; }
+    .fixed { position: fixed; }
+    .h-40 { height: 10rem; }
+    .top-0 { top: 0; }
+    .pointer-events-none { pointer-events: none; }
+
+    .absolute { position: absolute; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+
+    .z-\[21\] { z-index: 21; }
+    .rounded-\[inherit\] { border-radius: inherit; }
+</style>
+
+<div class="w-full fixed h-40 top-0 z-[21] pointer-events-none">
+    <div class="absolute inset-0 pointer-events-none"
+        style="backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px)"></div>
+    <div class="absolute inset-0 pointer-events-none rounded-[inherit]"
+        style="mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 16.666666666666664%, rgba(255, 255, 255, 1) 33.33333333333333%, rgba(255, 255, 255, 0) 50%);-webkit-mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 16.666666666666664%, rgba(255, 255, 255, 1) 33.33333333333333%, rgba(255, 255, 255, 0) 50%);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px)">
+    </div>
+    <div class="absolute inset-0 pointer-events-none rounded-[inherit]"
+        style="mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 16.666666666666664%, rgba(255, 255, 255, 1) 33.33333333333333%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 66.66666666666666%);-webkit-mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 16.666666666666664%, rgba(255, 255, 255, 1) 33.33333333333333%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 66.66666666666666%);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)">
+    </div>
+    <div class="absolute inset-0 pointer-events-none rounded-[inherit]"
+        style="mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 33.33333333333333%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 1) 66.66666666666666%, rgba(255, 255, 255, 0) 83.33333333333333%);-webkit-mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 33.33333333333333%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 1) 66.66666666666666%, rgba(255, 255, 255, 0) 83.33333333333333%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)">
+    </div>
+    <div class="absolute inset-0 pointer-events-none rounded-[inherit]"
+        style="mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 66.66666666666666%, rgba(255, 255, 255, 1) 83.33333333333333%, rgba(255, 255, 255, 0) 100%);-webkit-mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 66.66666666666666%, rgba(255, 255, 255, 1) 83.33333333333333%, rgba(255, 255, 255, 0) 100%);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
+    </div>
+    <div class="absolute inset-0 pointer-events-none rounded-[inherit]"
+        style="mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 66.66666666666666%, rgba(255, 255, 255, 1) 83.33333333333333%, rgba(255, 255, 255, 1) 100%, rgba(255, 255, 255, 0) 116.66666666666666%);-webkit-mask-image:linear-gradient(0deg, rgba(255, 255, 255, 0) 66.66666666666666%, rgba(255, 255, 255, 1) 83.33333333333333%, rgba(255, 255, 255, 1) 100%, rgba(255, 255, 255, 0) 116.66666666666666%);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)">
+    </div>
+</div>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Antigravity-like Particles</title>
+<style>
+    body { margin: 0; overflow: hidden; background: #05060a; }
+    canvas { display: block; }
+</style>
+</head>
+<body>
+
+<script type="module">
+import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
+
+// ===============================
+// CONFIG
+// ===============================
+const IMG_SOURCES = ["shape.png", "shape2.png"]; // podmień na swoje
+const PARTICLE_SIZE = 0.03;
+const SPREAD = 6;
+const MORPH_SPEED = 0.08;
+const SHAPE_CHANGE_INTERVAL = 5000; // ms
+
+// ===============================
+let scene, camera, renderer;
+let particles, particlePositions;
+let targetSets = [];      // tablica Float32Array dla różnych kształtów
+let currentTargetIndex = 0;
+let hover = false;
+let mouse = new THREE.Vector2(0, 0);
+let clock = new THREE.Clock();
+
+// ===============================
+init();
+loadAllShapes(IMG_SOURCES).then(targets => {
+    targetSets = targets;
+    createParticles(targetSets[0]);
+    animate();
+});
+
+// ===============================
+// LOAD MULTIPLE BITMAPS
+// ===============================
+async function loadAllShapes(srcArray) {
+    const all = [];
+    for (const src of srcArray) {
+        const pts = await loadShape(src);
+        all.push(pointsToFloat32(pts));
+    }
+    // wyrównanie liczby punktów między kształtami
+    const maxLen = Math.max(...all.map(a => a.length));
+    return all.map(arr => normalizeLength(arr, maxLen));
+}
+
+function loadShape(src) {
+    return new Promise(resolve => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            const data = ctx.getImageData(0, 0, img.width, img.height).data;
+            const points = [];
+
+            for (let y = 0; y < img.height; y++) {
+                for (let x = 0; x < img.width; x++) {
+                    const i = (y * img.width + x) * 4;
+                    const r = data[i], g = data[i+1], b = data[i+2];
+
+                    if (r < 50 && g < 50 && b < 50) {
+                        points.push({
+                            x: (x - img.width/2) / img.width * 4,
+                            y: -(y - img.height/2) / img.height * 4,
+                            z: 0
+                        });
+                    }
+                }
+            }
+            resolve(points);
+        };
+    });
+}
+
+function pointsToFloat32(points) {
+    const arr = new Float32Array(points.length * 3);
+    for (let i = 0; i < points.length; i++) {
+        arr[i*3]   = points[i].x;
+        arr[i*3+1] = points[i].y;
+        arr[i*3+2] = points[i].z;
+    }
+    return arr;
+}
+
+function normalizeLength(arr, targetLength) {
+    if (arr.length === targetLength) return arr;
+    const out = new Float32Array(targetLength);
+    for (let i = 0; i < targetLength; i += 3) {
+        const srcIndex = (i % arr.length);
+        out[i]   = arr[srcIndex];
+        out[i+1] = arr[srcIndex+1];
+        out[i+2] = arr[srcIndex+2];
+    }
+    return out;
+}
+
+// ===============================
+// CREATE PARTICLES
+// ===============================
+function createParticles(initialTarget) {
+    const geometry = new THREE.BufferGeometry();
+    const count = initialTarget.length / 3;
+
+    particlePositions = new Float32Array(count * 3);
+
+    for (let i = 0; i < count; i++) {
+        particlePositions[i*3]   = (Math.random() - 0.5) * SPREAD;
+        particlePositions[i*3+1] = (Math.random() - 0.5) * SPREAD;
+        particlePositions[i*3+2] = (Math.random() - 0.5) * SPREAD;
+    }
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+
+    const material = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: PARTICLE_SIZE,
+        transparent: true,
+        opacity: 0.9
+    });
+
+    particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    // cykliczna zmiana kształtu
+    setInterval(() => {
+        currentTargetIndex = (currentTargetIndex + 1) % targetSets.length;
+    }, SHAPE_CHANGE_INTERVAL);
+}
+
+// ===============================
+// INIT THREE.JS
+// ===============================
+function init() {
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+    camera.position.z = 7;
+
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    document.body.appendChild(renderer.domElement);
+
+    window.addEventListener("resize", () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        hover = true;
+        mouse.x = (e.clientX / innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+    });
+
+    window.addEventListener("mouseleave", () => {
+        hover = false;
+    });
+}
+
+// ===============================
+// ANIMATION LOOP
+// ===============================
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (!particles || targetSets.length === 0) return;
+
+    const dt = clock.getDelta();
+    const pos = particles.geometry.attributes.position.array;
+    const target = targetSets[currentTargetIndex];
+
+    // delikatna rotacja sceny
+    scene.rotation.y += dt * 0.1;
+    scene.rotation.x += dt * 0.05;
+
+    for (let i = 0; i < pos.length; i += 3) {
+        const tx = target[i];
+        const ty = target[i+1];
+        const tz = target[i+2];
+
+        // bazowy morph do kształtu
+        pos[i]   += (tx - pos[i]) * MORPH_SPEED;
+        pos[i+1] += (ty - pos[i+1]) * MORPH_SPEED;
+        pos[i+2] += (tz - pos[i+2]) * MORPH_SPEED;
+
+        // efekt „życia” – lekki noise
+        pos[i]   += (Math.random() - 0.5) * 0.002;
+        pos[i+1] += (Math.random() - 0.5) * 0.002;
+        pos[i+2] += (Math.random() - 0.5) * 0.002;
+
+        // interakcja z myszą – lokalne zaburzenie
+        if (hover) {
+            const worldX = pos[i];
+            const worldY = pos[i+1];
+
+            const mx = mouse.x * 4;
+            const my = mouse.y * 4;
+
+            const dx = worldX - mx;
+            const dy = worldY - my;
+            const dist = Math.sqrt(dx*dx + dy*dy) + 0.0001;
+
+            const influenceRadius = 1.5;
+            if (dist < influenceRadius) {
+                const force = (influenceRadius - dist) * 0.03;
+                pos[i]   += (dx / dist) * force;
+                pos[i+1] += (dy / dist) * force;
+            }
+        }
+    }
+
+    particles.geometry.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+}
+</script>
+
+</body>
+</html>

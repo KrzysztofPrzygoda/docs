@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Particles Morphing</title>
+<style>
+    body { margin: 0; overflow: hidden; background: #111; }
+    canvas { display: block; }
+</style>
+</head>
+<body>
+
+<script type="module">
+</script>
+<canvas id="particles-canvas"></canvas>
+<script>
+// ===============================
+// CONFIG
+// ===============================
+const PARTICLE_COUNT = 3000;
+const PARTICLE_SIZE = 1;
+// const MORPH_IMAGE = 'https://upload.wikimedia.org/wikipedia/commons/8/89/HD_transparent_picture.png'; // <- podmień na swój kształt (czarno-biały, najlepiej SVG lub PNG z przezroczystością)
+const MORPH_IMAGE = 'shape-transparent.png'; // <- podmień na swój kształt (czarno-biały, najlepiej SVG lub PNG z przezroczystością)
+const CANVAS_BG = '#0000';
+
+// ===============================
+// UTILS
+// ===============================
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+
+function dist(a, b) {
+    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+}
+
+// ===============================
+// PARTICLE SYSTEM
+// ===============================
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let W = window.innerWidth, H = window.innerHeight;
+canvas.width = W;
+canvas.height = H;
+
+window.addEventListener('resize', () => {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    if (shapePoints.length) fitShapePoints();
+});
+
+// Particle structure
+class Particle {
+    constructor(x, y) {
+        this.base = { x, y };
+        this.x = x;
+        this.y = y;
+        this.tx = x;
+        this.ty = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.noiseSeed = Math.random() * 1000;
+        this.morphTarget = null;
+    }
+    update(morphing) {
+        // Gentle floating
+        const t = Date.now() * 0.0005 + this.noiseSeed;
+        const floatX = Math.sin(t * 2) * 8;
+        const floatY = Math.cos(t * 1.5) * 8;
+        let target = morphing && this.morphTarget ? this.morphTarget : { x: this.base.x + floatX, y: this.base.y + floatY };
+        this.x = lerp(this.x, target.x, morphing ? 0.18 : 0.08);
+        this.y = lerp(this.y, target.y, morphing ? 0.18 : 0.08);
+    }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, PARTICLE_SIZE, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.globalAlpha = 0.85;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+}
+
+let particles = [];
+let shapePoints = [];
+let morphing = false;
+
+// Generate random base positions
+function initParticles() {
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        let angle = Math.random() * Math.PI * 2;
+        let radius = Math.random() * (Math.min(W, H) * 0.35);
+        let x = W / 2 + Math.cos(angle) * radius;
+        let y = H / 2 + Math.sin(angle) * radius;
+        particles.push(new Particle(x, y));
+    }
+}
+
+// ===============================
+// SHAPE SAMPLING
+// ===============================
+function fitShapePoints() {
+    // Dopasuj shapePoints do rozmiaru canvasu
+    let minX = Math.min(...shapePoints.map(p => p.x));
+    let maxX = Math.max(...shapePoints.map(p => p.x));
+    let minY = Math.min(...shapePoints.map(p => p.y));
+    let maxY = Math.max(...shapePoints.map(p => p.y));
+    let scale = Math.min(W * 0.6 / (maxX - minX), H * 0.6 / (maxY - minY));
+    let offsetX = W / 2 - ((minX + maxX) / 2) * scale;
+    let offsetY = H / 2 - ((minY + maxY) / 2) * scale;
+    shapePoints = shapePoints.map(p => ({
+        x: p.x * scale + offsetX,
+        y: p.y * scale + offsetY
+    }));
+}
+
+function sampleImageShape(img, count = PARTICLE_COUNT) {
+    // Sample non-transparent pixels from image
+    let temp = document.createElement('canvas');
+    temp.width = img.width;
+    temp.height = img.height;
+    let tctx = temp.getContext('2d');
+    tctx.drawImage(img, 0, 0);
+    let data = tctx.getImageData(0, 0, img.width, img.height).data;
+    let points = [];
+    for (let y = 0; y < img.height; y += 2) {
+        for (let x = 0; x < img.width; x += 2) {
+            let idx = (y * img.width + x) * 4;
+            if (data[idx + 3] > 128) points.push({ x, y });
+        }
+    }
+    // losowo wybierz count punktów
+    let selected = [];
+    for (let i = 0; i < count; i++) {
+        selected.push(points[Math.floor(Math.random() * points.length)]);
+    }
+    shapePoints = selected;
+    fitShapePoints();
+}
+
+// ===============================
+// ANIMATION
+// ===============================
+function animate() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = CANVAS_BG;
+    ctx.fillRect(0, 0, W, H);
+    for (let p of particles) {
+        p.update(morphing);
+        p.draw(ctx);
+    }
+    requestAnimationFrame(animate);
+}
+
+// ===============================
+// INTERACTION
+// ===============================
+canvas.addEventListener('mouseenter', () => {
+    morphing = true;
+    if (shapePoints.length) {
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].morphTarget = shapePoints[i % shapePoints.length];
+        }
+    }
+});
+canvas.addEventListener('mouseleave', () => {
+    morphing = false;
+    for (let p of particles) p.morphTarget = null;
+});
+
+// ===============================
+// INIT
+// ===============================
+initParticles();
+
+// Wczytaj obrazek i pobierz shape
+const img = new window.Image();
+img.crossOrigin = 'anonymous';
+img.onload = () => {
+    sampleImageShape(img);
+};
+img.src = MORPH_IMAGE;
+
+animate();
+</script>
+</script>
+</body>
+</html>

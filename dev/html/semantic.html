@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="#main-content">Skip to main content</a>
+
+    <!-- navigation and header content -->
+    
+    <header>
+        <!-- page header -->
+        <img src="logo.png" alt="Logo" />
+        <nav class="menu">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>        
+    </header>
+
+    <aside>
+        <p>The aside HTML element represents a portion of a document whose content is only indirectly related to the document's main content. Asides are frequently presented as sidebars or call-out boxes.</p>
+    </aside>
+
+    <main id="main-content">
+        <!-- main page content -->
+        <hgroup id="document-title">
+            <h1>Main</h1>
+            <p>The main HTML element represents the dominant content of the body of a document. The main content area consists of content that is directly related to or expands upon the central topic of a document, or the central functionality of an application.</p>
+            <p>The hgroup HTML element represents a heading and related content. It groups a single h1–h6 element with one or more p.</p>
+            <p>The hgroup presently has no strong accessibility semantics. The content of the element (a heading and optional paragraphs) is what is exposed by browser accessibility APIs.</p>
+        </hgroup>
+
+        <section>
+            <h2>Heading</h2>
+            <p>Section is a generic sectioning element, and should only be used if there isn't a more specific element to represent it. As an example, a navigation menu should be wrapped in a nav element, but a list of search results or a map display and its controls don't have specific elements, and could be put inside a section.</p>
+        </section>
+
+        <article>
+            <header>
+                <!-- article header -->
+                <h2>Article</h2>
+                <p>
+                    Posted on Wednesday, <time datetime="2017-10-04">4 October 2017</time> by
+                    Jane Smith
+                </p>
+            </header>
+            <p>The article HTML element represents a self-contained composition in a document, page, application, or site, which is intended to be independently distributable or reusable (e.g., in syndication). Examples include: a forum post, a magazine or newspaper article, or a blog entry, a product card, a user-submitted comment, an interactive widget or gadget, or any other independent item of content.</p>
+            <picture>
+                <source width="170" height="150" srcset="photo.avif, photo_2x.avif 2x" type="image/avif">
+                <source width="170" height="150" srcset="photo.webp, photo_2x.webp 2x" type="image/webp">
+                <img src="fallback.jpg" width="170" height="150" alt="photo">
+            </picture>
+            <video controls width="250" height="200" muted>
+                <source src="video.webm" type="video/webm" />
+                <source src="video.mp4" type="video/mp4" />
+                Download the
+                <a href="video.webm">WEBM</a>
+                or
+                <a href="video.mp4">MP4</a>
+                video.
+            </video>
+            <aside>
+                <p>This example uses aside to mark up a paragraph in an article. The paragraph is only indirectly related to the main article content</p>
+            </aside>
+            <footer>
+                <p>Article footer...</p>
+                <p>
+                    Posted on
+                    <time datetime="2015-05-16 19:00">May 16</time>
+                    by Lisa.
+                </p>
+            </footer>
+            <article>
+                <p>When an article element is nested, the inner element represents an article related to the outer element. For example, the comments of a blog post can be article elements nested in the article representing the blog post.</p>
+            </article>
+        </article>
+        
+    </main>
+
+    <footer>
+        <p>
+            The footer HTML element represents a footer for its nearest ancestor sectioning content or sectioning root element. A footer typically contains information about the author of the section, copyright data or links to related documents.
+        </p>
+        <small>
+            Copyright © 2023 Football History Archives. All Rights Reserved.
+        </small>
+    </footer>    
+</body>
+</html>

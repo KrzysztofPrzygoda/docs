@@ -14,7 +14,8 @@
     for large web applications with many components or features.
     -->
 
-    <script>
+    <button id="lazyLoadButton">Load Module</button>
+    <script type="module">
         // Lazy load a JavaScript module when needed
         function loadModule() {
             import('./module.js')
@@ -30,6 +31,40 @@
         // Add an event listener to trigger the lazy loading
         const button = document.getElementById('lazyLoadButton');
         button.addEventListener('click', loadModule);
+    </script>
+
+    <!--
+    IntersectionObserver-based lazy loading for multiple components
+    -->
+
+    <div data-module="./component1.js" style="height:400px; margin-top:800px; background:#eef;">Component 1 (lazy load on scroll)</div>
+    <div data-module="./component2.js" style="height:400px; margin-top:800px; background:#efe;">Component 2 (lazy load on scroll)</div>
+    <script type="module">
+        const observer = new IntersectionObserver(async (entries, obs) => {
+            for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+
+                const el = entry.target;
+                const modulePath = el.dataset.module;
+
+                try {
+                    const module = await import(modulePath);
+                    module.init(el); // Assuming each module exports an init function
+                } catch (e) {
+                    console.error("Lazy module error:", e);
+                }
+
+                obs.unobserve(el); // Stop observing after load
+            }
+        }, {
+            root: null,              // viewport
+            rootMargin: "200px",     // preload before it actually enters the viewport
+            threshold: 0.01          // only 1% visibility is enough
+        });
+
+        document
+            .querySelectorAll('[data-module]')
+            .forEach(el => observer.observe(el));
     </script>
 </body>
 

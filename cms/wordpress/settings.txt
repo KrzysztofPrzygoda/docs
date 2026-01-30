@@ -1,0 +1,12 @@
+file_transfer_method=ftp
+ftp_host=example.com
+ftp_user=username
+ftp_password=your_password
+remote_path=/path/to/wordpress
+local_path=/local/path/to/wordpress
+db_user=db_username
+db_password=db_password
+db_name=wordpress_db
+sql_file=wordpress.sql
+old_url=http://oldurl.com
+new_url=http://newurl.com

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lazy Loading Example</title>
+</head>
+
+<body>
+    <!-- Your regular HTML content here -->
+    <!--
+    Technique to improve initial page load times
+    by deferring the loading of non-essential JavaScript until it’s required.
+    This technique is especially useful
+    for large web applications with many components or features.
+    -->
+
+    <script>
+        // Lazy load a JavaScript module when needed
+        function loadModule() {
+            import('./module.js')
+                .then((module) => {
+                    // Use the module here
+                    module.someFunction();
+                })
+                .catch((error) => {
+                    console.error('Error loading module:', error);
+                });
+        }
+
+        // Add an event listener to trigger the lazy loading
+        const button = document.getElementById('lazyLoadButton');
+        button.addEventListener('click', loadModule);
+    </script>
+</body>
+
+</html>

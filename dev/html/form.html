@@ -1,0 +1,27 @@
+<form action="#">
+
+    <!-- Input hints -->
+    <label for="ice-cream-choice">Choose a flavor:</label>
+    <input list="ice-cream-flavors" id="ice-cream-choice" name="ice-cream-choice" />
+    
+    <datalist id="ice-cream-flavors">
+      <option value="Chocolate"></option>
+      <option value="Coconut"></option>
+      <option value="Mint"></option>
+      <option value="Strawberry"></option>
+      <option value="Vanilla"></option>
+    </datalist>
+
+    <!-- Date picker -->
+    <label for="dateInput">Choose date:</label>
+    <input type="date" id="dateInput">
+    <button onclick="dateInput.showPicker()" type="button">Select date</button>
+
+    <!-- Autocompletion -->
+    <label for="address">Address:</label>
+    <input id="address" name="address_firstline" autocomplete="billing street-address" />
+
+    <!-- Files -->
+    <label for="videofile">Video file:</label>
+    <input id="videofile" type="file" accept="video/*" capture>
+</form>

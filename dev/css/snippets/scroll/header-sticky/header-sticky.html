@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000; /* Set a high z-index to make sure it stays on top of other elements */
+        }
+
+        /* Add some padding to the content to prevent it from being hidden behind the header */
+        .content {
+            padding-top: 160px;
+            /* Adjust the value based on the height of your header */
+        }
+
+        /* Optional: Add some styling to the links in the header */
+        header a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        header.scrolled h1 {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Sticky Header</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <div class="content">
+        <!-- Your website content goes here -->
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+    </div>
+
+    <script>
+        // Optional: Add JavaScript to handle scrolling and apply styles
+        window.onscroll = function() {
+            const header = document.querySelector('header');
+
+            // Add or remove a class based on whether the user has scrolled down
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        };
+    </script>
+
+</body>
+</html>

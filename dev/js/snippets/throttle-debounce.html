@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Throttle and Debounce Example</title>
+</head>
+
+<body>
+    <!-- 
+    Throttling and debouncing are techniques used to optimize event handlers,
+    especially for events that can fire rapidly, such as window resizing or scrolling.
+    Throttling limits the rate at which a function can be executed,
+    while debouncing ensures a function is executed after a certain delay since the last invocation.
+    -->
+
+    <input type="text" id="searchInput" placeholder="Search...">
+    <p id="searchResult"></p>
+
+    <script>
+        // Throttle function to limit the rate of execution
+        function throttle(func, delay) {
+            let timer;
+            return function () {
+                if (!timer) {
+                    timer = setTimeout(() => {
+                        func.apply(this, arguments);
+                        timer = null;
+                    }, delay);
+                }
+            };
+        }
+
+        // Debounce function to execute after a certain delay
+        function debounce(func, delay) {
+            let timer;
+            return function () {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, arguments);
+                }, delay);
+            };
+        }
+
+        // Example usage of throttle and debounce
+        const searchInput = document.getElementById('searchInput');
+        const searchResult = document.getElementById('searchResult');
+
+        function handleSearch() {
+            // Perform search operation here
+            searchResult.textContent = `Searching for: ${searchInput.value}`;
+        }
+
+        searchInput.addEventListener('input', debounce(handleSearch, 500));
+    </script>
+</body>
+
+</html>

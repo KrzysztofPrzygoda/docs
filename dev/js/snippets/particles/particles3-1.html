@@ -1,191 +1,167 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Particles Morphing</title>
-<style>
-    body { margin: 0; overflow: hidden; background: #111; }
-    canvas { display: block; }
-</style>
+    <meta charset="UTF-8">
+    <title>Morphing Particles 1:1 Effect (Three.js)</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1;
+        }
+        canvas { display: block; }
+    </style>
 </head>
 <body>
-
-<script type="module">
-</script>
-<canvas id="particles-canvas"></canvas>
+<div id="container"></div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
 <script>
-// ===============================
-// CONFIG
-// ===============================
-const PARTICLE_COUNT = 3000;
-const PARTICLE_SIZE = 1;
-// const MORPH_IMAGE = 'https://upload.wikimedia.org/wikipedia/commons/8/89/HD_transparent_picture.png'; // <- podmień na swój kształt (czarno-biały, najlepiej SVG lub PNG z przezroczystością)
-const MORPH_IMAGE = 'shape-transparent.png'; // <- podmień na swój kształt (czarno-biały, najlepiej SVG lub PNG z przezroczystością)
-const CANVAS_BG = '#0000';
+// --- Config ---
+const PARTICLE_COUNT = 1200;
+const PARTICLE_SIZE = 0.05;
+const MORPH_DURATION = 1.0; // seconds
+const SPREAD = 3.5;
 
-// ===============================
-// UTILS
-// ===============================
-function lerp(a, b, t) {
-    return a + (b - a) * t;
+// --- Scene Setup ---
+const container = document.getElementById('container');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.z = 7;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setClearColor(0x0a0a0a, 1);
+renderer.setSize(window.innerWidth, window.innerHeight);
+container.appendChild(renderer.domElement);
+
+// --- Particle Geometry ---
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(PARTICLE_COUNT * 3);
+const morphPositions = new Float32Array(PARTICLE_COUNT * 3);
+
+// --- Poisson Disk Sampling (approximate, circle) ---
+function poissonDiskCircle(count, radius) {
+    const points = [];
+    while (points.length < count) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.sqrt(Math.random()) * radius;
+        points.push([
+            Math.cos(a) * r,
+            Math.sin(a) * r,
+            (Math.random() - 0.5) * 0.2
+        ]);
+    }
+    return points;
 }
 
-function dist(a, b) {
-    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+// --- Initial (cloud) and morph (circle) positions ---
+const basePoints = [];
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+    // Random cloud
+    positions[i*3+0] = (Math.random() - 0.5) * SPREAD;
+    positions[i*3+1] = (Math.random() - 0.5) * SPREAD;
+    positions[i*3+2] = (Math.random() - 0.5) * 0.7;
+    basePoints.push([positions[i*3+0], positions[i*3+1], positions[i*3+2]]);
+}
+const circlePoints = poissonDiskCircle(PARTICLE_COUNT, 1.7);
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+    morphPositions[i*3+0] = circlePoints[i][0];
+    morphPositions[i*3+1] = circlePoints[i][1];
+    morphPositions[i*3+2] = circlePoints[i][2];
 }
 
-// ===============================
-// PARTICLE SYSTEM
-// ===============================
-const canvas = document.getElementById('particles-canvas');
-const ctx = canvas.getContext('2d');
-let W = window.innerWidth, H = window.innerHeight;
-canvas.width = W;
-canvas.height = H;
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('morphTarget', new THREE.BufferAttribute(morphPositions, 3));
 
-window.addEventListener('resize', () => {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    canvas.width = W;
-    canvas.height = H;
-    if (shapePoints.length) fitShapePoints();
+// --- Shader Material ---
+const vertexShader = `
+attribute vec3 morphTarget;
+uniform float morph;
+varying float vAlpha;
+void main() {
+    vec3 newPosition = mix(position, morphTarget, morph);
+    vAlpha = 0.7 + 0.3 * morph;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+    gl_PointSize = ${PARTICLE_SIZE.toFixed(2)} * 400.0 / length(gl_Position.xyz);
+}
+`;
+const fragmentShader = `
+varying float vAlpha;
+void main() {
+    float d = length(gl_PointCoord - 0.5);
+    if (d > 0.5) discard;
+    gl_FragColor = vec4(1.0, 1.0, 1.0, vAlpha * (1.0 - smoothstep(0.45, 0.5, d)));
+}
+`;
+const material = new THREE.ShaderMaterial({
+    uniforms: {
+        morph: { value: 0 }
+    },
+    vertexShader,
+    fragmentShader,
+    transparent: true,
+    depthWrite: false
 });
 
-// Particle structure
-class Particle {
-    constructor(x, y) {
-        this.base = { x, y };
-        this.x = x;
-        this.y = y;
-        this.tx = x;
-        this.ty = y;
-        this.vx = 0;
-        this.vy = 0;
-        this.noiseSeed = Math.random() * 1000;
-        this.morphTarget = null;
-    }
-    update(morphing) {
-        // Gentle floating
-        const t = Date.now() * 0.0005 + this.noiseSeed;
-        const floatX = Math.sin(t * 2) * 8;
-        const floatY = Math.cos(t * 1.5) * 8;
-        let target = morphing && this.morphTarget ? this.morphTarget : { x: this.base.x + floatX, y: this.base.y + floatY };
-        this.x = lerp(this.x, target.x, morphing ? 0.18 : 0.08);
-        this.y = lerp(this.y, target.y, morphing ? 0.18 : 0.08);
-    }
-    draw(ctx) {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, PARTICLE_SIZE, 0, Math.PI * 2);
-        ctx.fillStyle = '#fff';
-        ctx.globalAlpha = 0.85;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-    }
-}
+const points = new THREE.Points(geometry, material);
+scene.add(points);
 
-let particles = [];
-let shapePoints = [];
+// --- Morph Animation State ---
+let morphTarget = 0; // 0 = cloud, 1 = circle
+let morph = 0;
+let morphStart = 0;
+let morphFrom = 0;
+let morphTo = 0;
 let morphing = false;
 
-// Generate random base positions
-function initParticles() {
-    particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        let angle = Math.random() * Math.PI * 2;
-        let radius = Math.random() * (Math.min(W, H) * 0.35);
-        let x = W / 2 + Math.cos(angle) * radius;
-        let y = H / 2 + Math.sin(angle) * radius;
-        particles.push(new Particle(x, y));
+function startMorph(to) {
+    if (morphTarget !== to) {
+        morphTarget = to;
+        morphFrom = material.uniforms.morph.value;
+        morphTo = to;
+        morphStart = performance.now() / 1000;
+        morphing = true;
     }
 }
 
-// ===============================
-// SHAPE SAMPLING
-// ===============================
-function fitShapePoints() {
-    // Dopasuj shapePoints do rozmiaru canvasu
-    let minX = Math.min(...shapePoints.map(p => p.x));
-    let maxX = Math.max(...shapePoints.map(p => p.x));
-    let minY = Math.min(...shapePoints.map(p => p.y));
-    let maxY = Math.max(...shapePoints.map(p => p.y));
-    let scale = Math.min(W * 0.6 / (maxX - minX), H * 0.6 / (maxY - minY));
-    let offsetX = W / 2 - ((minX + maxX) / 2) * scale;
-    let offsetY = H / 2 - ((minY + maxY) / 2) * scale;
-    shapePoints = shapePoints.map(p => ({
-        x: p.x * scale + offsetX,
-        y: p.y * scale + offsetY
-    }));
-}
+// --- Mouse Events ---
+container.addEventListener('mouseenter', () => startMorph(1));
+container.addEventListener('mouseleave', () => startMorph(0));
+container.addEventListener('touchstart', () => startMorph(1));
+container.addEventListener('touchend', () => startMorph(0));
 
-function sampleImageShape(img, count = PARTICLE_COUNT) {
-    // Sample non-transparent pixels from image
-    let temp = document.createElement('canvas');
-    temp.width = img.width;
-    temp.height = img.height;
-    let tctx = temp.getContext('2d');
-    tctx.drawImage(img, 0, 0);
-    let data = tctx.getImageData(0, 0, img.width, img.height).data;
-    let points = [];
-    for (let y = 0; y < img.height; y += 2) {
-        for (let x = 0; x < img.width; x += 2) {
-            let idx = (y * img.width + x) * 4;
-            if (data[idx + 3] > 128) points.push({ x, y });
-        }
-    }
-    // losowo wybierz count punktów
-    let selected = [];
-    for (let i = 0; i < count; i++) {
-        selected.push(points[Math.floor(Math.random() * points.length)]);
-    }
-    shapePoints = selected;
-    fitShapePoints();
-}
-
-// ===============================
-// ANIMATION
-// ===============================
+// --- Animation Loop ---
 function animate() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = CANVAS_BG;
-    ctx.fillRect(0, 0, W, H);
-    for (let p of particles) {
-        p.update(morphing);
-        p.draw(ctx);
-    }
     requestAnimationFrame(animate);
-}
-
-// ===============================
-// INTERACTION
-// ===============================
-canvas.addEventListener('mouseenter', () => {
-    morphing = true;
-    if (shapePoints.length) {
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].morphTarget = shapePoints[i % shapePoints.length];
+    // Morphing
+    if (morphing) {
+        const now = performance.now() / 1000;
+        let t = (now - morphStart) / MORPH_DURATION;
+        if (t >= 1) {
+            t = 1;
+            morphing = false;
         }
+        morph = morphFrom + (morphTo - morphFrom) * t;
+        material.uniforms.morph.value = morph;
     }
-});
-canvas.addEventListener('mouseleave', () => {
-    morphing = false;
-    for (let p of particles) p.morphTarget = null;
-});
-
-// ===============================
-// INIT
-// ===============================
-initParticles();
-
-// Wczytaj obrazek i pobierz shape
-const img = new window.Image();
-img.crossOrigin = 'anonymous';
-img.onload = () => {
-    sampleImageShape(img);
-};
-img.src = MORPH_IMAGE;
-
+    renderer.render(scene, camera);
+}
 animate();
-</script>
+
+// --- Responsive ---
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
 </script>
 </body>
 </html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!-- https://variable-font-weight-hover-with-gsap.webflow.io/ -->
+<!-- https://www.youtube.com/watch?v=K5CLg58oiNU -->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Hover</title>
+</head>
+
+<body>
+    <style>
+        @font-face {
+            font-family: 'Satoshi Variable';
+            src: url('https://uploads-ssl.webflow.com/65fcb8873f4d58b8a1e614a7/65fcb9ed74ea532d184617c4_Satoshi-Variable.ttf') format('truetype');
+            font-weight: 300 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: Satoshi Variable, sans-serif;
+        }
+        .word,
+        .char {
+            display: inline-block;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 70rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .font-weight-hover-wrap {
+            position: relative;
+            word-break: keep-all;
+        }
+        .heading-style-h2 {
+            line-height: 1.2;
+            font-weight: 400;
+            color: #111111;
+        }
+        .is-big {
+            font-size: 7.2rem;
+        }
+        .text-align-center {
+            text-align: center;
+        }
+    </style>
+
+    <h2 data-animate="font-weight" class="heading-style-h2 is-big text-align-center">
+        Hover me to see some real magic.
+        Hover me to see some real magic.
+        Hover me to see some real magic.
+    </h2>
+
+    <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=65fcb8873f4d58b8a1e614a7" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script>
+        const fontWeightItems = $('[data-animate=font-weight]')
+        const maxDistance = 300
+        // Adjust the maximum distance for font weight change as needed
+        const maxFontWeight = 800
+        // Maximum font weight
+        const minFontWeight = 100
+        // Minimum font weight
+
+        fontWeightItems.each( (index, item) => {
+            $(item).attr('data-cursor', '-lg')
+            let splitChars
+            if ($(item).find('.char').length === 0) {
+                const splitCharType = new SplitType(item,{
+                    types: 'chars,words'
+                })
+                splitChars = splitCharType.chars
+            } else {
+                splitChars = $(item).find('.char')
+            }
+            $(splitChars).each( (index, char) => {
+                $(char).data('initialWeight', parseInt($(char).css('font-weight')))
+                // Store initial font weight
+
+                $(char).on('mouseenter', () => {
+                    const charTl = gsap.timeline()
+                    charTl.to(char, {
+                        fontWeight: maxFontWeight,
+                        duration: 0.5,
+                    })
+                }
+                )
+
+                $(char).on('mouseleave', () => {
+                    const charTl = gsap.timeline()
+                    charTl.to(char, {
+                        fontWeight: $(char).data('initialWeight'),
+                        duration: 0.5,
+                    })
+                }
+                )
+            }
+            )
+        }
+        )
+
+        $(document).mousemove(function(event) {
+            const mouseX = event.pageX
+            const mouseY = event.pageY
+
+            fontWeightItems.find('.char').each( (index, item) => {
+                const itemPosition = $(item).offset()
+                const itemWidth = $(item).outerWidth()
+                const itemHeight = $(item).outerHeight()
+
+                const itemCenterX = itemPosition.left + itemWidth / 2
+                const itemCenterY = itemPosition.top + itemHeight / 2
+
+                const distance = Math.sqrt(Math.pow(mouseX - itemCenterX, 2) + Math.pow(mouseY - itemCenterY, 2))
+
+                let fontWeight = minFontWeight
+
+                if (distance < maxDistance) {
+                    const weightRange = maxFontWeight - minFontWeight
+                    const distanceRatio = (maxDistance - distance) / maxDistance
+                    fontWeight = minFontWeight + weightRange * distanceRatio
+                }
+
+                gsap.to(item, {
+                    fontWeight: fontWeight,
+                    duration: 0.5
+                })
+            }
+            )
+        })
+    </script>
+</body>
+
+</html>

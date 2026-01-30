@@ -1,0 +1,87 @@
+<p>This is an example of a PDF embedded in an HTML document using an iframe.</p>
+<p>The PDF is displayed with a specific aspect ratio and without navigation panes or toolbars.</p>
+<p>Ensure that the PDF file is accessible and the URL is correct.</p>
+<p>Adjust the aspect ratio and iframe styles as needed for your design.</p>
+<p>Note: Some browsers may have limitations on displaying PDFs directly in iframes.</p>
+<p>For better compatibility, consider using a PDF viewer library or service.</p>
+<p>For more information on embedding PDFs, refer to the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">MDN Web Docs</a>.</p>
+<p>Always test the embedded PDF across different browsers to ensure consistent behavior.</p>
+<p>Remember to provide a fallback link for users who may not be able to view the PDF directly in the browser.</p>
+<p>Use the <code>loading="lazy"</code> attribute to improve page load performance by deferring the loading of the iframe until it is needed.</p>
+<p>Consider accessibility best practices when embedding content, such as providing alternative text or descriptions for users with disabilities.</p>
+<p>Keep in mind that some users may have browser settings that block iframes or embedded content, so always provide a direct link to the PDF file.</p>
+
+https://pdfobject.com/examples/pdf-open-params.html
+https://pdfobject.com/guide/quick-start.html
+https://github.com/mozilla/pdf.js
+
+<div style="aspect-ratio: 210 / 297; width: 100%; max-width: 808px;">
+  <iframe
+    title="Title"
+    src="https://example.com/example.pdf#navpanes=0&toolbar=0&scrollbar=0&view=fit&page=1"
+    style="width: 100%; height: 100%; border: none;"
+    loading="lazy">
+    <p><a href="https://example.com/example.pdf">Download PDF file</a>.</p>
+  </iframe>
+</div>
+
+<div style="aspect-ratio: 210 / 594; width: 100%; max-width: 808px; margin: 0 auto;">
+  <iframe
+    title="Systemy Ostrzegania i Alarmowania"
+    src="https://innergo.pl/public-files/INNERGO_SOiA.pdf#navpanes=0&toolbar=0&scrollbar=1&view=fit"
+    style="width: 100%; height: 100%; border: none;"
+    loading="lazy">
+    <p><a href="https://innergo.pl/public-files/INNERGO_SOiA.pdf">Pobierz plik PDF</a>.</p>
+  </iframe>
+</div>
+
+<div style="aspect-ratio: 210 / 297; width: 100%; max-width: 808px;">
+    <object data="https://innergo.pl/public-files/INNERGO_SOiA.pdf#navpanes=0&toolbar=0&scrollbar=1&view=fit" type="application/pdf" width="100%" height="100%">
+    <p style="text-align: center;">
+        Przeglądarka nie obsługuje wyświetlania dokumentów PDF.<br>
+        <br>
+        <a href="https://innergo.pl/public-files/INNERGO_SOiA.pdf">Pobierz plik PDF</a>
+    </p>
+    </object>
+</div>
+
+<div style="aspect-ratio: 210 / 297; width: 100%; max-width: 808px;">
+    <object data="https://innergo.pl/public-files/INNERGO_SOiA.pdf#navpanes=0&toolbar=0&scrollbar=1&view=fit" type="application/pdf" width="100%" height="100%">
+    <iframe
+        title="Systemy Ostrzegania i Alarmowania"
+        src="https://innergo.pl/public-files/INNERGO_SOiA.pdf#navpanes=0&toolbar=0&scrollbar=1&view=fit"
+        width="100%" height="100%"
+        style="width: 100%; height: 100%; border: none;"
+        loading="lazy">
+        <p style="text-align: center;">
+            Przeglądarka nie obsługuje wyświetlania dokumentów PDF.<br>
+            <br>
+            <a href="https://innergo.pl/public-files/INNERGO_SOiA.pdf">Pobierz plik PDF</a>
+        </p>
+    </iframe>
+    </object>
+</div>
+
+<div id="pdf-viewer" style="aspect-ratio: 210 / 594; width: 100%; max-width: 808px; margin: 0 auto;"></div>
+<script src="https://unpkg.com/pdfobject"></script>
+<script>PDFObject.embed("https://innergo.pl/public-files/INNERGO_SOiA.pdf", "#pdf-viewer", {
+    title: "Systemy Ostrzegania i Alarmowania",
+    fallbackLink: '<p style="text-align: center;">Przeglądarka nie obsługuje wyświetlania dokumentów PDF.<br><br>Aby przeczytać dokument <a href="https://innergo.pl/public-files/INNERGO_SOiA.pdf">pobierz plik PDF</a>.</p>',
+    pdfOpenParams: {
+        pagemode: 'none',
+        view: 'Fit',
+        toolbar: 0,
+        navpanes: 0,
+        scrollbar: 1,
+    }
+});</script>
+
+<div style="aspect-ratio: 210 / 594; width: 100%; max-width: 808px; margin: 0 auto;">
+  <iframe
+    title="Systemy Ostrzegania i Alarmowania"
+    src="https://docs.google.com/viewer?url=https://innergo.pl/public-files/INNERGO_SOiA.pdf#navpanes=0&toolbar=0&scrollbar=1&view=fit"
+    style="width: 100%; height: 100%; border: none;"
+    loading="lazy">
+    <p><a href="https://innergo.pl/public-files/INNERGO_SOiA.pdf">Pobierz plik PDF</a>.</p>
+  </iframe>
+</div>

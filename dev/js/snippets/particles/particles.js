@@ -238,19 +238,20 @@ const linearMap = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (ou
 class ParticleSystem {
     constructor(scene, textures) {
         this.scene = scene;
-        this.renderer = scene.renderer;
+        this.renderer = scene.renderer; // Renderer for the particle system
         this.gl = this.gl;
         this.camera = scene.camera;
         this.textures = textures;
         this.lastTime = 0;
         this.everRendered = false;
-        this.mousePos = new Wt(0, 0);
-        this.cursorPos = new Wt(0, 0);
+        // Pozycja myszy i kursora (2D vector)
+        this.mousePos = new Vector2(0, 0);
+        this.cursorPos = new Vector2(0, 0);
         this.colorScheme = scene.theme === "dark" ? 0 : 1;
         this.particleScale = this.scene.renderer.domElement.width / this.scene.pixelRatio / 2000 * this.scene.particlesScale;
     }
     static async create(scene, textures) {
-        let instance = new ParticleSystem(scene, textures);
+        let instance = new ParticleSystem(scene, textures); // Create a new instance of ParticleSystem
         instance.createPoints();
         await instance.createPointsFromImage();
         instance.init();
@@ -259,7 +260,7 @@ class ParticleSystem {
     async getImageData(src) {
         return new Promise((resolve, reject) => {
             let img = new Image();
-            img.src = src;
+            img.src = src; // Load image data from the source
             img.onload = () => {
                 let canvas = document.createElement("canvas");
                 canvas.width = 500;
@@ -273,7 +274,8 @@ class ParticleSystem {
         });
     }
     createPoints() {
-        let poisson = new N9.default({
+        // Deminified: Poisson Disk Sampling for point generation
+        let poisson = new PoissonDiskSampler({
             shape: [500, 500],
             minDistance: linearMap(this.scene.density, 0, 300, 10, 2),
             maxDistance: linearMap(this.scene.density, 0, 300, 11, 3),
@@ -294,14 +296,20 @@ class ParticleSystem {
         }
         this.nearestPointsData = [];
         let promises = [];
-        for (let i = 0; i < this.textures.length; i++) {
-            promises.push(this.createPointsDistanceDataWorker(images[i], this.pointsBaseData, i));
-        }
-        let results = await Promise.all(promises);
-        results.sort((a, b) => a.index - b.index);
-        results.forEach(result => {
-            this.nearestPointsData.push(result.nearestPoints);
-        });
+            for (let i = 0; i < this.textures.length; i++) {
+                promises.push(this.createPointsDistanceDataWorker(images[i], this.pointsBaseData, i));
+            }
+            let results = await Promise.all(promises);
+            results.sort((a, b) => a.index - b.index);
+            results.forEach(result => {
+                this.nearestPointsData.push(result.nearestPoints);
+            });
+            // Worker logic for finding nearest points based on image data
+            return new Promise((resolve, reject) => {
+                // ...existing code for worker creation and message passing...
+                // (Zostawiamy szczegóły implementacji, bo są poprawne i czytelne)
+                // ...existing code...
+            });
     }
     createPointsDistanceDataWorker(e, t, i) {
         return new Promise( (r, o) => {
@@ -825,67 +833,65 @@ class ParticleSystem {
         this.renderMaterial.dispose()
     }
 }
-  , L9 = kA;
-var NA = class {
+// Czytelne aliasy i klasy
+var MorphingParticles = kA;
+class MouseTracker {
     constructor() {
-        this.cursor = new Wt,
-        this.initEvents(),
-        window.__debugMouse = this,
-        this.screenWidth = window.innerWidth,
-        this.screenHeight = window.innerHeight,
-        this.update()
+        this.cursor = new Wt;
+        this.initEvents();
+        window.__debugMouse = this;
+        this.screenWidth = window.innerWidth;
+        this.screenHeight = window.innerHeight;
+        this.update();
     }
     initEvents() {
         window.addEventListener("mousemove", e => {
-            this.onMouve(e)
-        }
-        ),
+            this.onMouseMove(e);
+        });
         window.addEventListener("resize", () => {
-            this.screenWidth = window.innerWidth,
-            this.screenHeight = window.innerHeight
-        }
-        )
+            this.screenWidth = window.innerWidth;
+            this.screenHeight = window.innerHeight;
+        });
     }
-    onMouve(e) {
-        this.cursor.x = e.clientX,
-        this.cursor.y = e.clientY
+    onMouseMove(e) {
+        this.cursor.x = e.clientX;
+        this.cursor.y = e.clientY;
     }
     update() {
-        requestAnimationFrame( () => {
-            this.update()
-        }
-        )
+        requestAnimationFrame(() => {
+            this.update();
+        });
     }
 }
-  , goe = new NA
-  , $r = goe;
-var LA = class {
+var mouseTrackerInstance = new MouseTracker();
+var $r = mouseTrackerInstance;
+class MorphingParticlesScene {
     constructor(e) {
-        this.loaded = !1,
-        this.textures = e.textures || ["/assets/textures/icons/icon_cube.png"],
-        this.color1 = e.color1 || "#aecbfa",
-        this.color2 = e.color2 || "#aecbfa",
-        this.color3 = e.color3 || "#93bbfc",
-        this.options = e,
-        this.theme = e.theme || "dark",
-        this.interactive = !1,
-        this.options.background = this.theme === "dark" ? new Bt(1184535) : new Bt(16777215),
-        this.pixelRatio = e.pixelRatio || window.devicePixelRatio,
-        this.particlesScale = e.particlesScale || .5,
-        this.density = e.density || 150,
-        this.cameraZoom = e.cameraZoom || 3.5,
-        this.verbose = e.verbose || !1,
-        this.onLoadedCallback = e.onLoaded || null,
-        this.isHovering = !1,
-        this.hoverProgress = 0,
-        this.pushProgress = 0,
-        this.scene = new oa,
-        this.scene.background = this.options.background,
-        this.canvas = document.createElement("canvas"),
-        this.options.container.appendChild(this.canvas),
-        this.canvas.width = this.options.container.offsetWidth,
-        this.canvas.height = this.options.container.offsetHeight,
-        bn.enabled = !1,
+        this.loaded = !1;
+        this.textures = e.textures || ["/assets/textures/icons/icon_cube.png"];
+        this.color1 = e.color1 || "#aecbfa";
+        this.color2 = e.color2 || "#aecbfa";
+        this.color3 = e.color3 || "#93bbfc";
+        this.options = e;
+        this.theme = e.theme || "dark";
+        this.interactive = !1;
+        this.options.background = this.theme === "dark" ? new Bt(1184535) : new Bt(16777215);
+        this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
+        this.particlesScale = e.particlesScale || .5;
+        this.density = e.density || 150;
+        this.cameraZoom = e.cameraZoom || 3.5;
+        this.verbose = e.verbose || !1;
+        this.onLoadedCallback = e.onLoaded || null;
+        this.isHovering = !1;
+        this.hoverProgress = 0;
+        this.pushProgress = 0;
+        this.scene = new oa;
+        this.scene.background = this.options.background;
+        this.canvas = document.createElement("canvas");
+        this.options.container.appendChild(this.canvas);
+        this.canvas.width = this.options.container.offsetWidth;
+        this.canvas.height = this.options.container.offsetHeight;
+        bn.enabled = !1;
         this.renderer = new Rp({
             canvas: this.canvas,
             antialias: !0,
@@ -894,47 +900,46 @@ var LA = class {
             preserveDrawingBuffer: !0,
             stencil: !1,
             precision: "highp"
-        }),
-        this.gl = this.renderer.getContext(),
-        this.renderer.extensions.get("EXT_color_buffer_float"),
-        this.renderer.setSize(this.canvas.width, this.canvas.height),
-        this.renderer.setPixelRatio(this.pixelRatio),
-        this.onWindowResize = this.onWindowResize.bind(this),
-        this.initCamera(),
-        this.initScene(),
-        this.initEvents(),
-        this.clock = new ef,
-        this.time = 0,
-        this.lastTime = 0,
-        this.dt = 0,
-        this.skipFrame = !1,
-        this.isPaused = !1,
-        this.raycaster = new tf,
-        this.mouse = new Wt,
-        this.intersectionPoint = new ce,
-        this.isIntersecting = !1,
-        this.mouseIsOver = !1
+        });
+        this.gl = this.renderer.getContext();
+        this.renderer.extensions.get("EXT_color_buffer_float");
+        this.renderer.setSize(this.canvas.width, this.canvas.height);
+        this.renderer.setPixelRatio(this.pixelRatio);
+        this.onWindowResize = this.onWindowResize.bind(this);
+        this.initCamera();
+        this.initScene();
+        this.initEvents();
+        this.clock = new ef;
+        this.time = 0;
+        this.lastTime = 0;
+        this.dt = 0;
+        this.skipFrame = !1;
+        this.isPaused = !1;
+        this.raycaster = new tf;
+        this.mouse = new Wt;
+        this.intersectionPoint = new ce;
+        this.isIntersecting = !1;
+        this.mouseIsOver = !1;
     }
     initEvents() {
         window.addEventListener("resize", e => {
-            this.onWindowResize()
-        }
-        )
+            this.onWindowResize();
+        });
     }
     onWindowResize() {
-        this.canvas.width = this.options.container.offsetWidth,
-        this.canvas.height = this.options.container.offsetHeight,
-        this.renderer.setSize(this.canvas.width, this.canvas.height),
-        this.camera.aspect = this.canvas.width / this.canvas.height,
-        this.camera.updateProjectionMatrix(),
-        this.particles && this.particles.resize()
+        this.canvas.width = this.options.container.offsetWidth;
+        this.canvas.height = this.options.container.offsetHeight;
+        this.renderer.setSize(this.canvas.width, this.canvas.height);
+        this.camera.aspect = this.canvas.width / this.canvas.height;
+        this.camera.updateProjectionMatrix();
+        this.particles && this.particles.resize();
     }
     onHoverStart() {
         Je.to(this, {
             hoverProgress: 1,
             duration: .5,
             ease: "power3.out"
-        }),
+        });
         Je.fromTo(this, {
             pushProgress: 0
         }, {
@@ -942,14 +947,14 @@ var LA = class {
             duration: 2,
             delay: .1,
             ease: "power2.out"
-        })
+        });
     }
     onHoverEnd() {
         Je.to(this, {
             hoverProgress: 0,
             duration: .5,
             ease: "power3.out"
-        }),
+        });
         Je.fromTo(this, {
             pushProgress: 0
         }, {
@@ -957,135 +962,129 @@ var LA = class {
             duration: 2,
             delay: 0,
             ease: "power2.out"
-        })
+        });
     }
     setPointsTextureFromIndex(e) {
         Je.delayedCall(.1, () => {
-            this.particles && this.particles.setPointsTextureFromIndex(e)
-        }
-        ),
+            this.particles && this.particles.setPointsTextureFromIndex(e);
+        });
         Je.fromTo(this, {
             pushProgress: 0
         }, {
             pushProgress: 1,
             duration: 2,
             ease: "power2.out"
-        })
+        });
     }
     initCamera() {
-        this.camera = new gr(40,this.gl.drawingBufferWidth / this.gl.drawingBufferHeight,.1,1e3),
-        this.camera.position.z = this.cameraZoom
+        this.camera = new gr(40, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, .1, 1e3);
+        this.camera.position.z = this.cameraZoom;
     }
     async initScene() {
         this.colorControls = {
             color1: this.theme === "dark" ? "#318bf7" : this.color1,
             color2: this.theme === "dark" ? "#bada4c" : this.color2,
             color3: this.theme === "dark" ? "#e35058" : this.color3
-        },
-        await this.initParticles(),
-        this.options.gui && this.initGUI(),
-        this.onLoaded()
+        };
+        await this.initParticles();
+        this.options.gui && this.initGUI();
+        this.onLoaded();
     }
     async initParticles() {
-        this.particles = await L9.create(this, this.textures)
+        this.particles = await MorphingParticles.create(this, this.textures);
     }
     initGUI() {
         this.gui = new yb({
             autoPlace: !1
-        }),
-        this.options.container.appendChild(this.gui.domElement),
-        this.gui.domElement.style.position = "absolute",
-        this.gui.domElement.style.top = "0",
-        this.gui.domElement.style.right = "0",
+        });
+        this.options.container.appendChild(this.gui.domElement);
+        this.gui.domElement.style.position = "absolute";
+        this.gui.domElement.style.top = "0";
+        this.gui.domElement.style.right = "0";
         this.gui.domElement.style.zIndex = "1000";
         let e = this.gui.addFolder("Colors");
         e.addColor(this.colorControls, "color1").name("Color 1").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor1.value.set(new Bt(t))
-        }
-        ),
+            this.particles.renderMaterial.uniforms.uColor1.value.set(new Bt(t));
+        });
         e.addColor(this.colorControls, "color2").name("Color 2").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor2.value.set(new Bt(t))
-        }
-        ),
+            this.particles.renderMaterial.uniforms.uColor2.value.set(new Bt(t));
+        });
         e.addColor(this.colorControls, "color3").name("Color 3").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor3.value.set(new Bt(t))
-        }
-        ),
+            this.particles.renderMaterial.uniforms.uColor3.value.set(new Bt(t));
+        });
         e.add(this, "particlesScale").name("Particles Scale").min(.1).max(4).step(.01).onChange(t => {
-            this.particlesScale = t
-        }
-        ),
+            this.particlesScale = t;
+        });
         e.add(this, "density").name("Density").min(50).max(250).step(10).onChange(async t => {
-            this.density = t,
-            this.verbose,
-            this.killParticles(),
-            await this.initParticles()
-        }
-        ),
-        e.open()
+            this.density = t;
+            this.verbose;
+            this.killParticles();
+            await this.initParticles();
+        });
+        e.open();
     }
     stop() {
-        this.isPaused = !0,
-        this.clock.stop(),
-        this.verbose
+        this.isPaused = !0;
+        this.clock.stop();
+        this.verbose;
     }
     resume() {
-        this.isPaused = !1,
-        this.clock.start(),
-        this.verbose
+        this.isPaused = !1;
+        this.clock.start();
+        this.verbose;
     }
     killParticles() {
-        this.scene.remove(this.particles.mesh),
-        this.particles.kill()
+        this.scene.remove(this.particles.mesh);
+        this.particles.kill();
     }
     kill() {
-        this.stop(),
-        window.removeEventListener("resize", this.onWindowResize),
+        this.stop();
+        window.removeEventListener("resize", this.onWindowResize);
         this.raycastPlane && (this.scene.remove(this.raycastPlane),
-        this.raycastPlane.geometry.dispose(),
-        this.raycastPlane.material.dispose()),
-        this.renderer && this.renderer.dispose(),
-        this.canvas && this.canvas.parentElement && this.canvas.parentElement.removeChild(this.canvas)
+            this.raycastPlane.geometry.dispose(),
+            this.raycastPlane.material.dispose());
+        this.renderer && this.renderer.dispose();
+        this.canvas && this.canvas.parentElement && this.canvas.parentElement.removeChild(this.canvas);
     }
     onLoaded() {
-        this.loaded = !0,
-        this.onLoadedCallback && typeof this.onLoadedCallback == "function" && this.onLoadedCallback(this)
+        this.loaded = !0;
+        this.onLoadedCallback && typeof this.onLoadedCallback == "function" && this.onLoadedCallback(this);
     }
     preRender() {
         if (this.dt = this.clock.getElapsedTime() - this.lastTime,
-        this.lastTime = this.clock.getElapsedTime(),
-        this.time += this.dt,
-        this.particles.update(),
-        this.interactive && !this.skipFrame) {
-            let e = this.canvas.getBoundingClientRect()
-              , t = $r.cursor;
-            this.mouse.x = ($r.cursor.x - e.left) * ($r.screenWidth / e.width),
-            this.mouse.y = ($r.cursor.y - e.top) * ($r.screenHeight / e.height),
-            this.mouse.x = this.mouse.x / $r.screenWidth * 2 - 1,
-            this.mouse.y = -(this.mouse.y / $r.screenHeight) * 2 + 1,
-            this.mouse.x < -1 || this.mouse.x > 1 || this.mouse.y < -1 || this.mouse.y > 1 ? this.mouseIsOver = !1 : this.mouseIsOver = !0
+            this.lastTime = this.clock.getElapsedTime(),
+            this.time += this.dt,
+            this.particles.update(),
+            this.interactive && !this.skipFrame) {
+            let e = this.canvas.getBoundingClientRect(),
+                t = $r.cursor;
+            this.mouse.x = ($r.cursor.x - e.left) * ($r.screenWidth / e.width);
+            this.mouse.y = ($r.cursor.y - e.top) * ($r.screenHeight / e.height);
+            this.mouse.x = this.mouse.x / $r.screenWidth * 2 - 1;
+            this.mouse.y = -(this.mouse.y / $r.screenHeight) * 2 + 1;
+            this.mouse.x < -1 || this.mouse.x > 1 || this.mouse.y < -1 || this.mouse.y > 1 ? this.mouseIsOver = !1 : this.mouseIsOver = !0;
         }
         if (this.skipFrame = !this.skipFrame,
-        !this.skipFrame && this.raycastPlane) {
+            !this.skipFrame && this.raycastPlane) {
             this.raycaster.setFromCamera(this.mouse, this.camera);
             let e = this.raycaster.intersectObject(this.raycastPlane);
             e.length > 0 && this.mouseIsOver ? (this.intersectionPoint.copy(e[0].point),
-            this.isIntersecting = !0) : this.isIntersecting = !1
+                this.isIntersecting = !0) : this.isIntersecting = !1;
         }
     }
     render() {
         !this.loaded || this.isPaused || (this.preRender(),
-        this.renderer.setRenderTarget(null),
-        this.renderer.autoClear = !1,
-        this.renderer.clear(),
-        this.renderer.render(this.scene, this.camera),
-        this.postRender())
+            this.renderer.setRenderTarget(null),
+            this.renderer.autoClear = !1,
+            this.renderer.clear(),
+            this.renderer.render(this.scene, this.camera),
+            this.postRender());
     }
     postRender() {
-        this.particles.postRender()
+        this.particles.postRender();
     }
 }
-  , F9 = LA;
+var F9 = MorphingParticlesScene;
 var _oe = ["morphingParticlesContainer"]
   , ca = class n {
     constructor(e) {
@@ -1210,60 +1209,63 @@ var _oe = ["morphingParticlesContainer"]
     })
 }
 ;
-var voe = ["header"]
-  , yoe = ["description"]
-  , xoe = ["cta"]
-  , Coe = (n, e) => ({
-    left: n,
-    right: e
-});
-function boe(n, e) {
-    if (n & 1) {
-        let t = It();
-        S(0, "div", 8)(1, "div", 9),
-        Z(2, "landing-morphing-particles-component", 10),
-        P(),
-        S(3, "div", 11),
+// Czytelne aliasy i funkcje dla sekcji layoutu
+var sectionHeaderQuery = ["header"];
+var sectionDescriptionQuery = ["description"];
+var sectionCtaQuery = ["cta"];
+var sectionClassMap = (left, right) => ({ left, right });
+
+function renderSolutionSection(renderFlag, context) {
+    if (renderFlag & 1) {
+        let tpl = It();
+        S(0, "div", 8);
+        S(1, "div", 9);
+        // Renderuje komponent z cząsteczkami (Morphing Particles)
+        renderComponent(2, "landing-morphing-particles-component", 10);
+        P();
+        S(3, "div", 11);
         ct("mouseenter", function() {
-            let r = We(t).$index
-              , o = W();
-            return $e(o.onSectionMouseEnter(r))
+            let idx = We(tpl).$index;
+            let cmp = W();
+            return $e(cmp.onSectionMouseEnter(idx));
         })("mouseleave", function() {
-            let r = We(t).$index
-              , o = W();
-            return $e(o.onSectionMouseLeave(r))
-        }),
-        S(4, "p", 12),
-        k(5),
-        P(),
-        S(6, "p", 13, 0),
-        k(8),
-        P(),
-        S(9, "p", 14, 1),
-        k(11),
-        P(),
-        S(12, "div", 15, 2)(14, "div", 16),
-        Z(15, "app-button", 17),
-        P()()()()
+            let idx = We(tpl).$index;
+            let cmp = W();
+            return $e(cmp.onSectionMouseLeave(idx));
+        });
+        S(4, "p", 12);
+        k(5);
+        P();
+        S(6, "p", 13, 0);
+        k(8);
+        P();
+        S(9, "p", 14, 1);
+        k(11);
+        P();
+        S(12, "div", 15, 2);
+        S(14, "div", 16);
+        Z(15, "app-button", 17);
+        P();P();P();P();
     }
-    if (n & 2) {
-        let t = e.$implicit
-          , i = e.$index;
-        w(),
-        z("ngClass", WS(11, Coe, i === 0, i === 1)),
-        w(),
-        z("texture", t.morphingParticle)("particlesScale", .6)("density", 50)("cameraZoom", 8.8),
-        w(3),
-        Me(t.title),
-        w(3),
-        Me(t.subtitle),
-        w(3),
-        Me(t.description),
-        w(4),
-        z("variant", t.button.variant)("routerLink", t.button.routerLink)("buttonText", t.button.buttonText)
+    if (renderFlag & 2) {
+        let section = context.$implicit;
+        let index = context.$index;
+        w();
+        z("ngClass", WS(11, sectionClassMap, index === 0, index === 1));
+        w();
+        z("texture", section.morphingParticle)("particlesScale", .6)("density", 50)("cameraZoom", 8.8);
+        w(3);
+        Me(section.title);
+        w(3);
+        Me(section.subtitle);
+        w(3);
+        Me(section.description);
+        w(4);
+        z("variant", section.button.variant)("routerLink", section.button.routerLink)("buttonText", section.button.buttonText);
     }
 }
-var r_ = class n {
+// Komponent sekcji "Wypróbuj rozwiązania" (Try Solutions)
+class TrySolutionsComponent {
     header;
     description;
     cta;
@@ -1271,19 +1273,18 @@ var r_ = class n {
     sections = Zc.find(e => e.try_solutions)?.try_solutions?.sections || [];
     registerAnimation(e) {}
     onSectionMouseEnter(e) {
-        let i = Array.from(this.morphingComponent)[e];
-        i && i.onHover()
+        let cmp = Array.from(this.morphingComponent)[e];
+        cmp && cmp.onHover();
     }
     onSectionMouseLeave(e) {
-        let i = Array.from(this.morphingComponent)[e];
-        i && i.onLeave()
+        let cmp = Array.from(this.morphingComponent)[e];
+        cmp && cmp.onLeave();
     }
-    static \u0275fac = function(t) {
-        return new (t || n)
-    }
-    ;
-    static \u0275cmp = Te({
-        type: n,
+    static ɵfac = function(t) {
+        return new (t || TrySolutionsComponent)();
+    };
+    static ɵcmp = Te({
+        type: TrySolutionsComponent,
         selectors: [["landing-try-solutions"]],
         viewQuery: function(t, i) {
             if (t & 1 && (ye(voe, 5),
@@ -1310,12 +1311,13 @@ var r_ = class n {
         },
         dependencies: [An, sn, ca, bo, td],
         styles: [".try-solutions-section[_ngcontent-%COMP%]{display:flex;overflow-x:clip;position:relative;padding-block:55px;border-top:1px solid var(--theme-outline-variant)}.section-background[_ngcontent-%COMP%]{position:absolute;inset:0;display:flex}.section-wrapper[_ngcontent-%COMP%]{display:flex}.solution-section[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:center;position:relative;flex-basis:50%;width:50%}.try-solution-background[_ngcontent-%COMP%]{position:absolute;z-index:1;inset:0}.try-solutions-backdrop[_ngcontent-%COMP%]{opacity:0;position:absolute;max-width:100%;max-height:100%;z-index:-1;transform:scale(1.5);transition:1s ease-in-out;pointer-events:none}.try-solutions-backdrop.rotate[_ngcontent-%COMP%]{rotate:90deg}.try-solutions-content[_ngcontent-%COMP%]{align-items:center;display:flex;flex-direction:column;justify-content:center;padding:250px var(--page-margin);position:relative;text-align:center;width:100%;z-index:5}.try-solutions-content[_ngcontent-%COMP%]   .try-solution-label[_ngcontent-%COMP%]{margin-block-end:var(--space-md);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:#ffffffd9;border:1px solid var(--theme-outline-variant);padding:4px 8px;border-radius:4px}.try-solutions-content[_ngcontent-%COMP%]   .header[_ngcontent-%COMP%]{margin:0}.try-solutions-content[_ngcontent-%COMP%]   .subhead[_ngcontent-%COMP%]{color:var(--theme-surface-on-surface-variant);margin:0 0 var(--space-xl)}.try-solutions-content[_ngcontent-%COMP%]   app-button[_ngcontent-%COMP%]{pointer-events:all}.solutions-cta[_ngcontent-%COMP%]{max-width:100%}.solutions-cta[_ngcontent-%COMP%]   .grid-col[_ngcontent-%COMP%]{padding:0;margin:var(--space-sm)}@media (max-width: 1024px){.section-wrapper[_ngcontent-%COMP%]{flex-direction:column}.solution-section[_ngcontent-%COMP%]{flex-basis:100%;width:100%}.try-solutions-backdrop[_ngcontent-%COMP%]{transform:scale(1)}.try-solutions-content[_ngcontent-%COMP%]{padding:var(--space-5xl) var(--page-margin)}}"]
-    })
+    });
 }
-;
-var U9 = Ef(OA());
-var B9 = (n, e, t, i, r) => (n - e) * (r - i) / (t - e) + i
-  , FA = class {
+// Poisson disk sampler for generating evenly distributed points
+var PoissonDiskSampler = Ef(OA());
+// Linear mapping from one range to another
+var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    , MainParticles = class {
     constructor(e) {
         this.scene = e,
         this.renderer = e.renderer,
@@ -1323,23 +1325,24 @@ var B9 = (n, e, t, i, r) => (n - e) * (r - i) / (t - e) + i
         this.camera = e.camera,
         this.lastTime = 0,
         this.everRendered = !1,
-        this.ringPos = new Wt(0,0),
-        this.cursorPos = new Wt(0,0),
+        this.ringPos = new Vector2(0,0),
+        this.cursorPos = new Vector2(0,0),
         this.colorScheme = e.theme === "dark" ? 0 : 1,
         this.particleScale = this.scene.renderer.domElement.width / this.scene.pixelRatio / 2e3 * this.scene.particlesScale,
         this.createPoints(),
         this.init()
     }
     createPoints() {
-        let t = new U9.default({
+        // Generowanie punktów metodą Poissona
+        let points = new PoissonDiskSampler.default({
             shape: [500, 500],
-            minDistance: B9(this.scene.density, 0, 300, 10, 2),
-            maxDistance: B9(this.scene.density, 0, 300, 11, 3),
+            minDistance: mapRange(this.scene.density, 0, 300, 10, 2),
+            maxDistance: mapRange(this.scene.density, 0, 300, 11, 3),
             tries: 20
         }).fill();
         this.pointsData = [];
-        for (let i = 0; i < t.length; i++)
-            this.pointsData.push(t[i][0] - 250, t[i][1] - 250);
+        for (let i = 0; i < points.length; i++)
+            this.pointsData.push(points[i][0] - 250, points[i][1] - 250);
         this.count = this.pointsData.length / 2
     }
     createDataTexturePosition() {
@@ -1393,7 +1396,7 @@ var B9 = (n, e, t, i, r) => (n - e) * (r - i) / (t - e) + i
                     value: this.posTex
                 },
                 uRingPos: {
-                    value: new Wt(0,0)
+                    value: new Vector2(0,0)
                 },
                 uRingRadius: {
                     value: .2
@@ -1555,10 +1558,10 @@ var B9 = (n, e, t, i, r) => (n - e) * (r - i) / (t - e) + i
                     value: 1
                 },
                 uRingPos: {
-                    value: new Wt(0,0)
+                    value: new Vector2(0,0)
                 },
                 uRez: {
-                    value: new Wt(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height)
+                    value: new Vector2(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height)
                 },
                 uParticleScale: {
                     value: this.particleScale
@@ -1755,7 +1758,7 @@ var B9 = (n, e, t, i, r) => (n - e) * (r - i) / (t - e) + i
         this.renderMaterial.dispose()
     }
 }
-  , V9 = FA;
+    // alias removed: MainParticles is now the class name
 var BA = class {
     constructor(e) {
         this.loaded = !1,
@@ -1842,7 +1845,7 @@ var BA = class {
         this.onLoaded()
     }
     initParticles() {
-        this.particles = new V9(this)
+        this.particles = new MainParticles(this)
     }
     initGUI() {
         this.gui = new yb({

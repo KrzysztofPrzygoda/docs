@@ -1141,70 +1141,72 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
     setPointsTextureFromIndex(e) {
         this.scene && this.scene.setPointsTextureFromIndex(e)
     }
-    // Angular-specific lifecycle hook ngOnDestroy removed
-    // This method has been removed to prevent resource leaks.
-    static \u0275fac = function(t) {
-        return new (t || n)(Ue(Sr))
+    };
+    // Web Component replacement for the Angular morphing component
+    // <landing-morphing-particles> will instantiate `MorphingParticlesScene` and manage lifecycle
+    class LandingMorphingParticles extends HTMLElement {
+        constructor(){
+            super();
+            this._container = document.createElement('div');
+            this._container.className = 'morphing-particles-container';
+            this._isVisible = false;
+            this._animationFrameId = null;
+            this._intersectionObserver = null;
+            this.scene = null;
+        }
+        connectedCallback(){
+            // append container and initialize scene with attributes (fallback to defaults)
+            this.appendChild(this._container);
+            const theme = this.getAttribute('theme') || 'dark';
+            const density = parseInt(this.getAttribute('density')) || 100;
+            const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
+            const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
+            const texture = this.getAttribute('texture') || '/assets/textures/icons/icon_cube.png';
+            let textures = [];
+            try { textures = this.hasAttribute('textures') ? JSON.parse(this.getAttribute('textures')) : []; } catch(e){}
+            const color1 = this.getAttribute('color1');
+            const color2 = this.getAttribute('color2');
+            const color3 = this.getAttribute('color3');
+
+            if (typeof MorphingParticlesScene === 'function') {
+                this.scene = new MorphingParticlesScene({
+                    container: this._container,
+                    theme,
+                    density,
+                    particlesScale,
+                    cameraZoom,
+                    texture,
+                    textures,
+                    color1,
+                    color2,
+                    color3,
+                    interactive: true
+                });
+            }
+            this._initIntersectionObserver();
+            this._animate();
+        }
+        _initIntersectionObserver(){
+            const opts = { root: null, rootMargin: '0px', threshold: 0 };
+            this._intersectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    this._isVisible = e.isIntersecting;
+                    if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
+                });
+            }, opts);
+            this._intersectionObserver.observe(this._container);
+        }
+        _animate = () => {
+            this._animationFrameId = requestAnimationFrame(this._animate);
+            if (this._isVisible) this.scene && this.scene.render();
+        }
+        disconnectedCallback(){
+            this._intersectionObserver && this._intersectionObserver.disconnect();
+            this._animationFrameId && cancelAnimationFrame(this._animationFrameId);
+            this.scene && this.scene.kill();
+        }
     }
-    ;
-    static \u0275cmp = Te({
-        type: n,
-        selectors: [["landing-morphing-particles-component"]],
-        viewQuery: function(t, i) {
-            if (t & 1 && ye(_oe, 5),
-            t & 2) {
-                let r;
-                ge(r = _e()) && (i.morphingParticlesContainer = r.first)
-            }
-        },
-        inputs: {
-            theme: "theme",
-            density: "density",
-            particlesScale: "particlesScale",
-            cameraZoom: "cameraZoom",
-            texture: "texture",
-            textures: "textures",
-            color1: "color1",
-            color2: "color2",
-            color3: "color3"
-        },
-        outputs: {
-            loaded: "loaded"
-        },
-        decls: 3,
-        vars: 0,
-        consts: [["morphingParticlesContainer", ""], [1, "morphing-particles-component-section"], [1, "morphing-particles-container"]],
-        template: function(renderFlag, context) {
-            if (renderFlag & 1) {
-                S(9, "p", 14, 1);
-                k(11);
-                P();
-                S(12, "div", 15, 2);
-                S(14, "div", 16);
-                Z(15, "app-button", 17);
-                P();P();P();P();
-            }
-            if (renderFlag & 2) {
-                let section = context.$implicit;
-                let index = context.$index;
-                w();
-                z("ngClass", WS(11, sectionClassMap, index === 0, index === 1));
-                w();
-                z("texture", section.morphingParticle)("particlesScale", .6)("density", 50)("cameraZoom", 8.8);
-                w(3);
-                Me(section.title);
-                w(3);
-                Me(section.subtitle);
-                w(3);
-                Me(section.description);
-                w(4);
-                z("variant", section.button.variant)("routerLink", section.button.routerLink)("buttonText", section.button.buttonText);
-            }
-        },
-        styles: []
-    });
-}
-;
+    customElements.define('landing-morphing-particles', LandingMorphingParticles);
 // Komponent sekcji "Wypróbuj rozwiązania" (Try Solutions)
 class TrySolutionsComponent {
     header;
@@ -1700,7 +1702,7 @@ var MainParticles = class {
     }
 }
     // alias removed: MainParticles is now the class name
-var BA = class {
+var MainScene = class {
     constructor(e) {
         this.loaded = !1,
         this.texture = null,
@@ -1894,10 +1896,10 @@ var BA = class {
     postRender() {
         this.particles.postRender()
     }
-}
-  , H9 = BA;
-var woe = ["mainParticlesContainer"]
-  , Ns = class n {
+        }
+    , H9 = MainScene;
+var mainParticlesContainerQuery = ["mainParticlesContainer"]
+    , MainParticlesAngularComponent = class n {
     theme = "light";
     ringWidth = .15;
     ringWidth2 = .05;
@@ -1952,40 +1954,66 @@ var woe = ["mainParticlesContainer"]
         this.animationFrameId !== null && cancelAnimationFrame(this.animationFrameId),
         this.scene && this.scene.kill()
     }
-    static \u0275fac = function(t) {
-        return new (t || n)
-    }
-    ;
-    static \u0275cmp = Te({
-        type: n,
-        selectors: [["landing-main-particles-component"]],
-        viewQuery: function(t, i) {
-            if (t & 1 && ye(woe, 5),
-            t & 2) {
-                let r;
-                ge(r = _e()) && (i.mainParticlesContainer = r.first)
+    };
+    // Web Component replacement for the Angular main particles component
+    // <landing-main-particles> will instantiate `H9` (Main scene) and manage lifecycle
+    class LandingMainParticles extends HTMLElement {
+        constructor(){
+            super();
+            this._container = document.createElement('div');
+            this._container.className = 'main-particles-container';
+            this._isVisible = false;
+            this._animationFrameId = null;
+            this._intersectionObserver = null;
+            this.scene = null;
+        }
+        connectedCallback(){
+            this.appendChild(this._container);
+            const theme = this.getAttribute('theme') || 'light';
+            const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 0.75;
+            const density = parseInt(this.getAttribute('density')) || 200;
+            const ringWidth = parseFloat(this.getAttribute('ringWidth')) || 0.15;
+            const ringWidth2 = parseFloat(this.getAttribute('ringWidth2')) || 0.05;
+            const ringDisplacement = parseFloat(this.getAttribute('ringDisplacement')) || 0.15;
+
+            if (typeof H9 === 'function') {
+                this.scene = new H9({
+                    container: this._container,
+                    theme,
+                    particlesScale,
+                    density,
+                    interactive: true,
+                    gui: false,
+                    verbose: false,
+                    ringWidth,
+                    ringWidth2,
+                    ringDisplacement
+                });
             }
-        },
-        inputs: {
-            theme: "theme",
-            ringWidth: "ringWidth",
-            ringWidth2: "ringWidth2",
-            ringDisplacement: "ringDisplacement",
-            density: "density",
-            particlesScale: "particlesScale"
-        },
-        decls: 3,
-        vars: 0,
-        consts: [["mainParticlesContainer", ""], [1, "main-particles-component-section"], [1, "main-particles-container"]],
-        template: function(t, i) {
-            t & 1 && (Ne(0, "div", 1),
-            _t(1, "div", 2, 0),
-            He())
-        },
-        styles: [".main-particles-component-section[_ngcontent-%COMP%]{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden}.main-particles-component-section[_ngcontent-%COMP%]   .main-particles-container[_ngcontent-%COMP%]{position:absolute;top:0;left:0;width:100%;height:100%}.main-particles-component-section[_ngcontent-%COMP%]   .main-particles-container[_ngcontent-%COMP%]   canvas[_ngcontent-%COMP%]{position:absolute;width:100%;height:100%;top:0;left:0}"]
-    })
-}
-;
+            this._initIntersectionObserver();
+            this._animate();
+        }
+        _initIntersectionObserver(){
+            const opts = { root: null, rootMargin: '0px', threshold: 0 };
+            this._intersectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    this._isVisible = e.isIntersecting;
+                    if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
+                });
+            }, opts);
+            this._intersectionObserver.observe(this._container);
+        }
+        _animate = () => {
+            this._animationFrameId = requestAnimationFrame(this._animate);
+            if (this._isVisible) this.scene && this.scene.render();
+        }
+        disconnectedCallback(){
+            this._intersectionObserver && this._intersectionObserver.disconnect();
+            this._animationFrameId && cancelAnimationFrame(this._animationFrameId);
+            this.scene && this.scene.kill();
+        }
+    }
+    customElements.define('landing-main-particles', LandingMainParticles);
 
 // <landing-main-particles-component _ngcontent-ng-c828328313="" theme="light" _nghost-ng-c2879464184=""><div _ngcontent-ng-c2879464184="" class="main-particles-component-section"><div _ngcontent-ng-c2879464184="" class="main-particles-container"><canvas width="2932" height="1924" data-engine="three.js r180" style="width: 1466px; height: 962px;"></canvas></div></div></landing-main-particles-component>
 // <landing-morphing-particles-component _ngcontent-ng-c1380444292="" theme="light" color1="#676A72" color2="#FF4641" color3="#346BF1" _nghost-ng-c1438398064=""><div _ngcontent-ng-c1438398064="" class="morphing-particles-component-section"><div _ngcontent-ng-c1438398064="" class="morphing-particles-container"><canvas width="1322" height="1456" data-engine="three.js r180" style="width: 661px; height: 728px;"></canvas></div></div></landing-morphing-particles-component>

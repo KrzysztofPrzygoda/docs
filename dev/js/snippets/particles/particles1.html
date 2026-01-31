@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Particles Morphing</title>
+<style>
+    body { margin: 0; overflow: hidden; background: #111; }
+    canvas { display: block; }
+</style>
+</head>
+<body>
+
+<script type="module">
+import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
+
+// ===============================
+// CONFIG
+// ===============================
+const IMG_SRC = "shape.png";   // <- Twoja bitmapa
+const PARTICLE_SIZE = 0.01;
+const SPREAD = 10;
+const MORPH_SPEED = 0.1;
+
+// ===============================
+let scene, camera, renderer;
+let particles, particlePositions, targetPositions;
+let hover = false;
+
+// ===============================
+init();
+loadShape(IMG_SRC).then(points => {
+    createParticles(points);
+    animate();
+});
+
+// ===============================
+function loadShape(src) {
+    return new Promise(resolve => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            const data = ctx.getImageData(0, 0, img.width, img.height).data;
+            const points = [];
+
+            for (let y = 0; y < img.height; y++) {
+                for (let x = 0; x < img.width; x++) {
+                    const i = (y * img.width + x) * 4;
+                    const r = data[i], g = data[i+1], b = data[i+2];
+
+                    if (r < 50 && g < 50 && b < 50) {
+                        points.push({
+                            x: (x - img.width/2) / img.width * 4,
+                            y: -(y - img.height/2) / img.height * 4,
+                            z: 0
+                        });
+                    }
+                }
+            }
+            resolve(points);
+        };
+    });
+}
+
+// ===============================
+function createParticles(points) {
+    const geometry = new THREE.BufferGeometry();
+    const count = points.length;
+
+    particlePositions = new Float32Array(count * 3);
+    targetPositions = new Float32Array(count * 3);
+
+    for (let i = 0; i < count; i++) {
+        particlePositions[i*3]   = (Math.random() - 0.5) * SPREAD;
+        particlePositions[i*3+1] = (Math.random() - 0.5) * SPREAD;
+        particlePositions[i*3+2] = (Math.random() - 0.5) * SPREAD;
+
+        targetPositions[i*3]   = points[i].x;
+        targetPositions[i*3+1] = points[i].y;
+        targetPositions[i*3+2] = points[i].z;
+    }
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+
+    const material = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: PARTICLE_SIZE
+    });
+
+    particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+}
+
+// ===============================
+function init() {
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+    camera.position.z = 6;
+
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    window.addEventListener("resize", () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+    });
+
+    window.addEventListener("mousemove", () => hover = true);
+    window.addEventListener("mouseleave", () => hover = false);
+}
+
+// ===============================
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (!particles) return;
+
+    const pos = particles.geometry.attributes.position.array;
+
+    for (let i = 0; i < pos.length; i += 3) {
+        const tx = targetPositions[i];
+        const ty = targetPositions[i+1];
+        const tz = targetPositions[i+2];
+
+        if (hover) {
+            pos[i]   += (tx - pos[i]) * MORPH_SPEED;
+            pos[i+1] += (ty - pos[i+1]) * MORPH_SPEED;
+            pos[i+2] += (tz - pos[i+2]) * MORPH_SPEED;
+        } else {
+            pos[i]   += ((Math.random() - 0.5) * SPREAD - pos[i]) * MORPH_SPEED;
+            pos[i+1] += ((Math.random() - 0.5) * SPREAD - pos[i+1]) * MORPH_SPEED;
+            pos[i+2] += ((Math.random() - 0.5) * SPREAD - pos[i+2]) * MORPH_SPEED;
+        }
+    }
+
+    particles.geometry.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+}
+</script>
+
+</body>
+</html>

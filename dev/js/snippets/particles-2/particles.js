@@ -315,6 +315,7 @@ class ParticleSystem {
     }
     createPoints() {
         // Deminified: Poisson Disk Sampling for point generation
+        console.log('[ParticleSystem] createPoints start, density=', this.scene && this.scene.density);
         const minDistance = linearMap(this.scene.density, 0, 300, 10, 2);
         const maxDistance = linearMap(this.scene.density, 0, 300, 10, 50);
         let poisson = new PoissonDiskSampler({
@@ -323,6 +324,7 @@ class ParticleSystem {
             maxDistance: maxDistance,
             tries: 20
         }).fill();
+        console.log('[ParticleSystem] poisson samples', poisson && poisson.length);
         this.pointsBaseData = poisson.map(point => [point[0] - 250, point[1] - 250]);
         this.pointsData = [];
         for (let i = 0; i < poisson.length; i++) {
@@ -333,16 +335,23 @@ class ParticleSystem {
     }
     async createPointsFromImage() {
         let images = [];
+        if (!this.textures || this.textures.length === 0) {
+            console.log('[ParticleSystem] no textures provided — using base points as nearestPoints fallback');
+            this.nearestPointsData = [this.pointsData.slice()];
+            return;
+        }
         for (let i = 0; i < this.textures.length; i++) {
             let imgData = await this.getImageData(this.textures[i]);
             images.push(imgData);
         }
         this.nearestPointsData = [];
         let promises = [];
+        console.log('[ParticleSystem] createPointsFromImage images count=', images.length);
         for (let i = 0; i < this.textures.length; i++) {
             promises.push(this.createPointsDistanceDataWorker(images[i], this.pointsBaseData, i));
         }
         let results = await Promise.all(promises);
+        console.log('[ParticleSystem] createPointsFromImage results count=', results && results.length);
         results.sort((a, b) => a.index - b.index);
         results.forEach(result => {
             this.nearestPointsData.push(result.nearestPoints);
@@ -357,8 +366,10 @@ class ParticleSystem {
     createPointsDistanceDataWorker(imageData, pointsBase, index) {
         return new Promise((resolve, reject) => {
             try {
+                console.log('[ParticleSystem] creating points worker, index=', index);
                 const worker = new Worker(new URL('./points-worker.js', import.meta.url), { type: 'module' });
                 worker.onmessage = (evt) => {
+                    try { console.log('[ParticleSystem] worker.onmessage index=', evt.data && evt.data.index, 'nearestPoints length=', evt.data && evt.data.nearestPoints && evt.data.nearestPoints.length); } catch(e){}
                     resolve(evt.data);
                     worker.terminate();
                 };
@@ -366,6 +377,7 @@ class ParticleSystem {
                     reject(err);
                     worker.terminate();
                 };
+                console.log('[ParticleSystem] posting to worker index=', index);
                 worker.postMessage({ imageData, pointsBase, index, density: this.scene.density });
             } catch (err) {
                 reject(err);
@@ -763,6 +775,7 @@ class ParticleSystem {
         this.mesh.position.set(0, 0, 0),
         this.mesh.scale.set(5, -5, 5),
         this.scene.scene.add(this.mesh)
+        try { console.log('[ParticleSystem] mesh added', 'count=', this.count, 'positionAttrCount=', this.mesh && this.mesh.geometry && this.mesh.geometry.attributes && this.mesh.geometry.attributes.position && this.mesh.geometry.attributes.position.count); } catch(e) {}
     }
     resize() {
         this.renderMaterial.uniforms.uRez.value = new Vector2(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height),

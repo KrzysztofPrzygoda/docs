@@ -26,13 +26,17 @@ self.onmessage = function(e) {
     });
     const points = poissonDisk.fill();
 
-    const nearestPoints = []
-    for (let i = 0; i < pointsBase.length; i++) {
+    // Convert pointsBase (which may be centered around 0) back to image coords
+    const pointsBaseAbs = pointsBase.map(p => [p[0] + 250, p[1] + 250]);
+    const nearestPoints = [];
+    for (let i = 0; i < pointsBaseAbs.length; i++) {
         let nearestPoint = null;
         let nearestDistance = Infinity;
         for (let j = 0; j < points.length; j++) {
             if (Math.random() < .75) { continue; }
-            const distance = Math.sqrt(Math.pow(points[j][0] - pointsBase[i][0], 2) + Math.pow(points[j][1] - pointsBase[i][1], 2));
+            const dx = points[j][0] - pointsBaseAbs[i][0];
+            const dy = points[j][1] - pointsBaseAbs[i][1];
+            const distance = Math.sqrt(dx * dx + dy * dy);
             const pixelRedValue = distanceFunction(points[j], imageData);
             if (pixelRedValue < 1 && distance < nearestDistance) {
                 nearestDistance = distance;
@@ -40,13 +44,11 @@ self.onmessage = function(e) {
             }
         }
         if (nearestPoint === null) {
-            // fallback: push base point
+            // fallback: push centered base point (original pointsBase was already centered)
             nearestPoints.push(pointsBase[i][0], pointsBase[i][1]);
         } else {
-            nearestPoints.push(
-                nearestPoint[0] - 250,
-                nearestPoint[1] - 250
-            );
+            // convert selected nearestPoint (image coords) to centered coords before posting
+            nearestPoints.push(nearestPoint[0] - 250, nearestPoint[1] - 250);
         }
     }
 

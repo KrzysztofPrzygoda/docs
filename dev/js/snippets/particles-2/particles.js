@@ -1,4 +1,6 @@
 import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
+import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
+// import { PoissonDiskSampling } from './poisson-disk-sampling.js';
 
 // GLSL Simplex Noise Functions
 var GLSL_NOISE = `
@@ -263,88 +265,11 @@ class PerlinNoise1D {
     }
 }
 
-// Ensure PoissonDiskSampler name is available (alias to PoissonDiskSampling).
-// If the donor module is present it will be used; otherwise provide a simple
-// fallback sampler so the demo remains functional during progressive fixes.
-var PoissonDiskSampler = (function() {
-    function fallback(options) {
-        // Bridson's Poisson Disk Sampling (2D) fallback implementation.
-        const width = options.shape[0] || 500;
-        const height = options.shape[1] || 500;
-        const minDistance = options.minDistance || 2;
-        const maxDistance = options.maxDistance || minDistance * 2;
-        const tries = Math.max(1, Math.floor(options.tries || 30));
-        const rngFn = Math && Math.random ? Math.random : (Math.random.bind ? Math.random.bind(Math) : () => Math.random());
-
-        const cellSize = minDistance / Math.SQRT2;
-        const cols = Math.ceil(width / cellSize);
-        const rows = Math.ceil(height / cellSize);
-        const grid = new Array(cols * rows).fill(null);
-
-        const samples = [];
-        const processList = [];
-
-        function gridIndex(x, y) {
-            const col = Math.floor(x / cellSize);
-            const row = Math.floor(y / cellSize);
-            if (col < 0 || col >= cols || row < 0 || row >= rows) return -1;
-            return col + row * cols;
-        }
-
-        function inNeighbourhood(x, y) {
-            const col = Math.floor(x / cellSize);
-            const row = Math.floor(y / cellSize);
-            const r = 2; // check neighbours within 2 cells
-            const minDistSq = minDistance * minDistance;
-            for (let i = Math.max(0, col - r); i <= Math.min(cols - 1, col + r); i++) {
-                for (let j = Math.max(0, row - r); j <= Math.min(rows - 1, row + r); j++) {
-                    const idx = i + j * cols;
-                    const p = grid[idx];
-                    if (p) {
-                        const dx = p[0] - x;
-                        const dy = p[1] - y;
-                        if (dx * dx + dy * dy < minDistSq) return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        // start with a random initial point
-        const x0 = rngFn() * width;
-        const y0 = rngFn() * height;
-        samples.push([x0, y0]);
-        const gi0 = gridIndex(x0, y0);
-        if (gi0 >= 0) grid[gi0] = [x0, y0];
-        processList.push([x0, y0]);
-
-        while (processList.length > 0) {
-            const idx = Math.floor(rngFn() * processList.length);
-            const point = processList[idx];
-            let found = false;
-            for (let t = 0; t < tries; t++) {
-                const radius = minDistance + (maxDistance - minDistance) * rngFn();
-                const angle = 2 * Math.PI * rngFn();
-                const nx = point[0] + Math.cos(angle) * radius;
-                const ny = point[1] + Math.sin(angle) * radius;
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height && !inNeighbourhood(nx, ny)) {
-                    samples.push([nx, ny]);
-                    const gidx = gridIndex(nx, ny);
-                    if (gidx >= 0) grid[gidx] = [nx, ny];
-                    processList.push([nx, ny]);
-                    found = true;
-                }
-            }
-            if (!found) processList.splice(idx, 1);
-        }
-
-        return { fill: function () { return samples; } };
-    }
-    return function(options, rng) {
-        if (typeof PoissonDiskSampling !== 'undefined') return new PoissonDiskSampling(options, rng);
-        return fallback(options);
-    };
-})();
+// Use the imported UMD build which exposes `PoissonDiskSampling` on globalThis.
+const PoissonDiskSampler = function(options, rng) {
+    if (typeof PoissonDiskSampling === 'function') return new PoissonDiskSampling(options, rng);
+    throw new Error('PoissonDiskSampling not available — ensure poisson-disk-sampling.umd.js is loaded');
+};
 
 // --- Linear Mapping Utility ---
 const linearMap = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;

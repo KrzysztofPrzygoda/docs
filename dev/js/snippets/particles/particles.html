@@ -15,11 +15,8 @@
 </head>
 <body>
 
-<!-- Load non-module Three.js (exposes global classes expected by particles.js) -->
-<script src="https://unpkg.com/three@0.180.0/build/three.min.js"></script>
-
 <!-- Load particle system (the file in this folder) -->
-<script src="./particles.js"></script>
+<script type="module" src="./particles.js"></script>
 
 <!-- Demo markup: instantiate web components that wrap the original scenes -->
 <landing-main-particles id="mainParticles" theme="light" particlesScale="0.75" density="200" ringWidth="0.107" ringWidth2="0.05" ringDisplacement="0.15"></landing-main-particles>

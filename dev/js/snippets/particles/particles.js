@@ -1,216 +1,240 @@
+import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
+
 // GLSL Simplex Noise Functions
 var GLSL_NOISE = `
-  // MATHS
-  vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-  vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-  float permute(float x){return floor(mod(((x*34.0)+1.0)*x, 289.0));}
+    // MATHS
+    vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+    vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);} 
+    float permute(float x){return floor(mod(((x*34.0)+1.0)*x, 289.0));}
 
-  vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-  float taylorInvSqrt(float r){return 1.79284291400159 - 0.85373472095314 * r;}
+    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+    float taylorInvSqrt(float r){return 1.79284291400159 - 0.85373472095314 * r;}
 
-  // SIMPLEX NOISES
-  // Simplex 2D noise
-  //
-  float snoise(vec2 v){
-    const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-            -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy) );
-    vec2 x0 = v -   i + dot(i, C.xx);
-    vec2 i1;
-    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    i = mod(i, 289.0);
-    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-    + i.x + vec3(0.0, i1.x, 1.0 ));
-    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
-      dot(x12.zw,x12.zw)), 0.0);
-    m = m*m ;
-    m = m*m ;
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-    vec3 g;
-    g.x  = a0.x  * x0.x  + h.x  * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
-  }
+    // SIMPLEX NOISES
+    // Simplex 2D noise
+    //
+    float snoise(vec2 v){
+        const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                        -0.577350269189626, 0.024390243902439);
+        vec2 i  = floor(v + dot(v, C.yy) );
+        vec2 x0 = v -   i + dot(i, C.xx);
+        vec2 i1;
+        i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+        vec4 x12 = x0.xyxy + C.xxzz;
+        x12.xy -= i1;
+        i = mod(i, 289.0);
+        vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+        + i.x + vec3(0.0, i1.x, 1.0 ));
+        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
+            dot(x12.zw,x12.zw)), 0.0);
+        m = m*m ;
+        m = m*m ;
+        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+        vec3 h = abs(x) - 0.5;
+        vec3 ox = floor(x + 0.5);
+        vec3 a0 = x - ox;
+        m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+        vec3 g;
+        g.x  = a0.x  * x0.x  + h.x  * x0.y;
+        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+        return 130.0 * dot(m, g);
+    }
 
-  //	Simplex 3D Noise
-  //	by Ian McEwan, Ashima Arts
-  //
-  float snoise(vec3 v){
-    const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
-    const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+    //	Simplex 3D Noise
+    //	by Ian McEwan, Ashima Arts
+    //
+    float snoise(vec3 v){
+        const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+        const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
 
-  // First corner
-    vec3 i  = floor(v + dot(v, C.yyy) );
-    vec3 x0 =   v - i + dot(i, C.xxx) ;
+    // First corner
+        vec3 i  = floor(v + dot(v, C.yyy) );
+        vec3 x0 =   v - i + dot(i, C.xxx) ;
 
-  // Other corners
-    vec3 g = step(x0.yzx, x0.xyz);
-    vec3 l = 1.0 - g;
-    vec3 i1 = min( g.xyz, l.zxy );
-    vec3 i2 = max( g.xyz, l.zxy );
+    // Other corners
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min( g.xyz, l.zxy );
+        vec3 i2 = max( g.xyz, l.zxy );
 
-    //  x0 = x0 - 0. + 0.0 * C
-    vec3 x1 = x0 - i1 + 1.0 * C.xxx;
-    vec3 x2 = x0 - i2 + 2.0 * C.xxx;
-    vec3 x3 = x0 - 1. + 3.0 * C.xxx;
+        //  x0 = x0 - 0. + 0.0 * C
+        vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+        vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+        vec3 x3 = x0 - 1. + 3.0 * C.xxx;
 
-  // Permutations
-    i = mod(i, 289.0 );
-    vec4 p = permute( permute( permute(
-              i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
-            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+    // Permutations
+        i = mod(i, 289.0 );
+        vec4 p = permute( permute( permute(
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
 
-  // Gradients
-  // ( N*N points uniformly over a square, mapped onto an octahedron.)
-    float n_ = 1.0/7.0; // N=7
-    vec3  ns = n_ * D.wyz - D.xzx;
+    // Gradients
+    // ( N*N points uniformly over a square, mapped onto an octahedron.)
+        float n_ = 1.0/7.0; // N=7
+        vec3  ns = n_ * D.wyz - D.xzx;
 
-    vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  //  mod(p,N*N)
+        vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  //  mod(p,N*N)
 
-    vec4 x_ = floor(j * ns.z);
-    vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
 
-    vec4 x = x_ *ns.x + ns.yyyy;
-    vec4 y = y_ *ns.x + ns.yyyy;
-    vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 x = x_ *ns.x + ns.yyyy;
+        vec4 y = y_ *ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
 
-    vec4 b0 = vec4( x.xy, y.xy );
-    vec4 b1 = vec4( x.zw, y.zw );
+        vec4 b0 = vec4( x.xy, y.xy );
+        vec4 b1 = vec4( x.zw, y.zw );
 
-    vec4 s0 = floor(b0)*2.0 + 1.0;
-    vec4 s1 = floor(b1)*2.0 + 1.0;
-    vec4 sh = -step(h, vec4(0.0));
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
 
-    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
-    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
 
-    vec3 p0 = vec3(a0.xy,h.x);
-    vec3 p1 = vec3(a0.zw,h.y);
-    vec3 p2 = vec3(a1.xy,h.z);
-    vec3 p3 = vec3(a1.zw,h.w);
+        vec3 p0 = vec3(a0.xy,h.x);
+        vec3 p1 = vec3(a0.zw,h.y);
+        vec3 p2 = vec3(a1.xy,h.z);
+        vec3 p3 = vec3(a1.zw,h.w);
 
-  //Normalise gradients
-    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-    p0 *= norm.x;
-    p1 *= norm.y;
-    p2 *= norm.z;
-    p3 *= norm.w;
+    //Normalise gradients
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+        p0 *= norm.x;
+        p1 *= norm.y;
+        p2 *= norm.z;
+        p3 *= norm.w;
 
-  // Mix final noise value
-    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-    m = m * m;
-    return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
-                                  dot(p2,x2), dot(p3,x3) ) );
-  }
+    // Mix final noise value
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                                                    dot(p2,x2), dot(p3,x3) ) );
+    }
 
 
-  //	Simplex 4D Noise
-  //	by Ian McEwan, Ashima Arts
-  //
-  vec4 grad4(float j, vec4 ip){
-    const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);
-    vec4 p,s;
+    //	Simplex 4D Noise
+    //	by Ian McEwan, Ashima Arts
+    //
+    vec4 grad4(float j, vec4 ip){
+        const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);
+        vec4 p,s;
 
-    p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;
-    p.w = 1.5 - dot(abs(p.xyz), ones.xyz);
-    s = vec4(lessThan(p, vec4(0.0)));
-    p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www;
+        p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;
+        p.w = 1.5 - dot(abs(p.xyz), ones.xyz);
+        s = vec4(lessThan(p, vec4(0.0)));
+        p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www;
 
-    return p;
-  }
+        return p;
+    }
 
-  float snoise(vec4 v){
-    const vec2  C = vec2( 0.138196601125010504,  // (5 - sqrt(5))/20  G4
-                          0.309016994374947451); // (sqrt(5) - 1)/4   F4
-  // First corner
-    vec4 i  = floor(v + dot(v, C.yyyy) );
-    vec4 x0 = v -   i + dot(i, C.xxxx);
+    float snoise(vec4 v){
+        const vec2  C = vec2( 0.138196601125010504,  // (5 - sqrt(5))/20  G4
+                                                    0.309016994374947451); // (sqrt(5) - 1)/4   F4
+    // First corner
+        vec4 i  = floor(v + dot(v, C.yyyy) );
+        vec4 x0 = v -   i + dot(i, C.xxxx);
 
-  // Other corners
+    // Other corners
 
-  // Rank sorting originally contributed by Bill Licea-Kane, AMD (formerly ATI)
-    vec4 i0;
+    // Rank sorting originally contributed by Bill Licea-Kane, AMD (formerly ATI)
+        vec4 i0;
 
-    vec3 isX = step( x0.yzw, x0.xxx );
-    vec3 isYZ = step( x0.zww, x0.yyz );
-  //  i0.x = dot( isX, vec3( 1.0 ) );
-    i0.x = isX.x + isX.y + isX.z;
-    i0.yzw = 1.0 - isX;
+        vec3 isX = step( x0.yzw, x0.xxx );
+        vec3 isYZ = step( x0.zww, x0.yyz );
+    //  i0.x = dot( isX, vec3( 1.0 ) );
+        i0.x = isX.x + isX.y + isX.z;
+        i0.yzw = 1.0 - isX;
 
-  //  i0.y += dot( isYZ.xy, vec2( 1.0 ) );
-    i0.y += isYZ.x + isYZ.y;
-    i0.zw += 1.0 - isYZ.xy;
+    //  i0.y += dot( isYZ.xy, vec2( 1.0 ) );
+        i0.y += isYZ.x + isYZ.y;
+        i0.zw += 1.0 - isYZ.xy;
 
-    i0.z += isYZ.z;
-    i0.w += 1.0 - isYZ.z;
+        i0.z += isYZ.z;
+        i0.w += 1.0 - isYZ.z;
 
-    // i0 now contains the unique values 0,1,2,3 in each channel
-    vec4 i3 = clamp( i0, 0.0, 1.0 );
-    vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );
-    vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );
+        // i0 now contains the unique values 0,1,2,3 in each channel
+        vec4 i3 = clamp( i0, 0.0, 1.0 );
+        vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );
+        vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );
 
-    //  x0 = x0 - 0.0 + 0.0 * C
-    vec4 x1 = x0 - i1 + 1.0 * C.xxxx;
-    vec4 x2 = x0 - i2 + 2.0 * C.xxxx;
-    vec4 x3 = x0 - i3 + 3.0 * C.xxxx;
-    vec4 x4 = x0 - 1.0 + 4.0 * C.xxxx;
+        //  x0 = x0 - 0.0 + 0.0 * C
+        vec4 x1 = x0 - i1 + 1.0 * C.xxxx;
+        vec4 x2 = x0 - i2 + 2.0 * C.xxxx;
+        vec4 x3 = x0 - i3 + 3.0 * C.xxxx;
+        vec4 x4 = x0 - 1.0 + 4.0 * C.xxxx;
 
-  // Permutations
-    i = mod(i, 289.0);
-    float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);
-    vec4 j1 = permute( permute( permute( permute (
-              i.w + vec4(i1.w, i2.w, i3.w, 1.0 ))
-            + i.z + vec4(i1.z, i2.z, i3.z, 1.0 ))
-            + i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))
-            + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));
-  // Gradients
-  // ( 7*7*6 points uniformly over a cube, mapped onto a 4-octahedron.)
-  // 7*7*6 = 294, which is close to the ring size 17*17 = 289.
+    // Permutations
+        i = mod(i, 289.0);
+        float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);
+        vec4 j1 = permute( permute( permute( permute (
+                            i.w + vec4(i1.w, i2.w, i3.w, 1.0 ))
+                        + i.z + vec4(i1.z, i2.z, i3.z, 1.0 ))
+                        + i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))
+                        + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));
+    // Gradients
+    // ( 7*7*6 points uniformly over a cube, mapped onto a 4-octahedron.)
+    // 7*7*6 = 294, which is close to the ring size 17*17 = 289.
 
-    vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;
+        vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;
 
-    vec4 p0 = grad4(j0,   ip);
-    vec4 p1 = grad4(j1.x, ip);
-    vec4 p2 = grad4(j1.y, ip);
-    vec4 p3 = grad4(j1.z, ip);
-    vec4 p4 = grad4(j1.w, ip);
+        vec4 p0 = grad4(j0,   ip);
+        vec4 p1 = grad4(j1.x, ip);
+        vec4 p2 = grad4(j1.y, ip);
+        vec4 p3 = grad4(j1.z, ip);
+        vec4 p4 = grad4(j1.w, ip);
 
-  // Normalise gradients
-    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-    p0 *= norm.x;
-    p1 *= norm.y;
-    p2 *= norm.z;
-    p3 *= norm.w;
-    p4 *= taylorInvSqrt(dot(p4,p4));
+    // Normalise gradients
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+        p0 *= norm.x;
+        p1 *= norm.y;
+        p2 *= norm.z;
+        p3 *= norm.w;
+        p4 *= taylorInvSqrt(dot(p4,p4));
 
-  // Mix contributions from the five corners
-    vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
-    vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
-    m0 = m0 * m0;
-    m1 = m1 * m1;
-    return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
-                + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
+    // Mix contributions from the five corners
+        vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
+        vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
+        m0 = m0 * m0;
+        m1 = m1 * m1;
+        return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
+                                + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
 
-  }
+    }
 `
-
-// Minimal EventEmitter shim to replace Angular's `EventEmitter` (used as `hn`)
-class SimpleEventEmitter {
-    constructor(){ this._listeners = [] }
-    emit(...args){ this._listeners.forEach(fn=>{ try{ fn(...args) }catch(e){} }) }
-    subscribe(fn){ this._listeners.push(fn); return { unsubscribe: ()=>{ this._listeners = this._listeners.filter(f=>f!==fn) } } }
-    on(fn){ return this.subscribe(fn) }
-}
-var GLSL_NOISE_WRAPPER = {
-    noise: GLSL_NOISE
+    , Bp = {
+        noise: GLSL_NOISE
 };
+
+    // Expect `THREE` to be provided as an ES module import (top of file) or as
+    // a global script loaded before this file. Use destructuring from the
+    // imported `THREE` namespace rather than creating ad-hoc runtime shims.
+    const {
+        Vector2,
+        Color,
+        Scene,
+        WebGLRenderer,
+        Clock,
+        Raycaster,
+        Vector3,
+        BufferGeometry,
+        BufferAttribute,
+        ShaderMaterial,
+        Mesh,
+        PlaneGeometry,
+        Points,
+        DataTexture,
+        WebGLRenderTarget,
+        RepeatWrapping,
+        NearestFilter,
+        RGBAFormat,
+        FloatType,
+        PerspectiveCamera,
+        OrthographicCamera
+    } = THREE;
+    const { ColorManagement } = THREE;
+    const { DoubleSide } = THREE;
+    const { MeshBasicMaterial } = THREE;
 
 // --- PerlinNoise1D ---
 class PerlinNoise1D {
@@ -238,6 +262,22 @@ class PerlinNoise1D {
         return a * (1 - t) + b * t;
     }
 }
+
+// Ensure PoissonDiskSampler name is available (alias to PoissonDiskSampling).
+// If the donor module is present it will be used; otherwise provide a simple
+// fallback sampler so the demo remains functional during progressive fixes.
+var PoissonDiskSampler = (function() {
+    function fallback(options) {
+        var pts = [];
+        var N = Math.max(200, Math.min(1000, Math.floor((options.shape[0]*options.shape[1])/1000)));
+        for (var i = 0; i < N; i++) pts.push([Math.random() * options.shape[0], Math.random() * options.shape[1]]);
+        return { fill: function() { return pts; } };
+    }
+    return function(options, rng) {
+        if (typeof PoissonDiskSampling !== 'undefined') return new PoissonDiskSampling(options, rng);
+        return fallback(options);
+    };
+})();
 
 // --- Linear Mapping Utility ---
 const linearMap = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
@@ -412,21 +452,21 @@ class ParticleSystem {
             t[o + 2] = 0,
             t[o + 3] = 0
         }
-        let i = new DataTexture(t, this.size, this.size, vr, Io);
+        let i = new DataTexture(t, this.size, this.size, RGBAFormat, FloatType);
         return i.needsUpdate = !0,
         i
     }
     createRenderTarget() {
-        return new RenderTarget(this.size,this.size,{
-            wrapS: ja,
-            wrapT: ja,
-            minFilter: qi,
-            magFilter: qi,
+        return new WebGLRenderTarget(this.size,this.size,{
+            wrapS: RepeatWrapping,
+            wrapT: RepeatWrapping,
+            minFilter: NearestFilter,
+            magFilter: NearestFilter,
             texture: this.posTex,
-            format: vr,
-            type: qa,
-            depthBuffer: !1,
-            stencilBuffer: !1
+            format: RGBAFormat,
+            type: FloatType,
+            depthBuffer: false,
+            stencilBuffer: false
         })
     }
     setPointsTextureFromIndex(e) {
@@ -842,10 +882,10 @@ class ParticleSystem {
     }
 }
 // Czytelne aliasy i klasy
-var MorphingParticles = kA;
+var MorphingParticles = ParticleSystem;
 class MouseTracker {
     constructor() {
-        this.cursor = new Wt;
+        this.cursor = new THREE.Vector2();
         this.initEvents();
         window.__debugMouse = this;
         this.screenWidth = window.innerWidth;
@@ -899,7 +939,7 @@ class MorphingParticlesScene {
         this.options.container.appendChild(this.canvas);
         this.canvas.width = this.options.container.offsetWidth;
         this.canvas.height = this.options.container.offsetHeight;
-        bn.enabled = !1;
+        ColorManagement.enabled = false;
         this.renderer = new WebGLRenderer({
             canvas: this.canvas,
             antialias: !0,
@@ -924,7 +964,7 @@ class MorphingParticlesScene {
         this.skipFrame = !1;
         this.isPaused = !1;
         this.raycaster = new Raycaster();
-        this.mouse = new Wt;
+        this.mouse = new THREE.Vector2();
         this.intersectionPoint = new Vector3();
         this.isIntersecting = !1;
         this.mouseIsOver = !1;
@@ -1274,21 +1314,21 @@ var MainParticles = class {
             e[r + 2] = 0,
             e[r + 3] = 0
         }
-        let t = new DataTexture(e,this.size,this.size,vr,Io);
-        return t.needsUpdate = !0,
-        t
+        let t = new DataTexture(e,this.size,this.size,RGBAFormat,FloatType);
+        t.needsUpdate = true;
+        return t
     }
     createRenderTarget() {
-        return new RenderTarget(this.size,this.size,{
-            wrapS: ja,
-            wrapT: ja,
-            minFilter: qi,
-            magFilter: qi,
+        return new WebGLRenderTarget(this.size,this.size,{
+            wrapS: RepeatWrapping,
+            wrapT: RepeatWrapping,
+            minFilter: NearestFilter,
+            magFilter: NearestFilter,
             texture: this.posTex,
-            format: vr,
-            type: qa,
-            depthBuffer: !1,
-            stencilBuffer: !1
+            format: RGBAFormat,
+            type: FloatType,
+            depthBuffer: false,
+            stencilBuffer: false
         })
     }
     init() {
@@ -1639,8 +1679,8 @@ var MainParticles = class {
     update() {
         let e = this.scene.clock.getElapsedTime() - this.lastTime;
         this.lastTime = this.scene.clock.getElapsedTime();
-        let t = (this.noise.getVal(this.scene.time * .66 + 94.234) - .5) * 2
-          , i = (this.noise.getVal(this.scene.time * .75 + 21.028) - .5) * 2;
+                let t = (this.noise.getValue(this.scene.time * .66 + 94.234) - .5) * 2
+                    , i = (this.noise.getValue(this.scene.time * .75 + 21.028) - .5) * 2;
         this.cursorPos.set(t * .2, i * .1),
         this.scene.isIntersecting ? (this.cursorPos.set(this.scene.intersectionPoint.x * .175 + t * .1, this.scene.intersectionPoint.y * .175 + i * .1),
         this.ringPos.set(this.ringPos.x + (this.cursorPos.x - this.ringPos.x) * .02, this.ringPos.y + (this.cursorPos.y - this.ringPos.y) * .02)) : (this.cursorPos.set(t * .2, i * .1),
@@ -1697,7 +1737,7 @@ var MainScene = class {
         this.options.container.appendChild(this.canvas),
         this.canvas.width = this.options.container.offsetWidth,
         this.canvas.height = this.options.container.offsetHeight,
-        bn.enabled = !1,
+        ColorManagement.enabled = false,
         this.renderer = new WebGLRenderer({
             canvas: this.canvas,
             antialias: !0,
@@ -1722,14 +1762,14 @@ var MainScene = class {
         this.skipFrame = !1,
         this.isPaused = !1,
         this.raycaster = new Raycaster(),
-        this.mouse = new Wt,
+        this.mouse = new THREE.Vector2(),
         this.intersectionPoint = new Vector3(),
         this.isIntersecting = !1,
         this.mouseIsOver = !1,
         this.raycastPlane = new Mesh(new PlaneGeometry(12.5,12.5), new MeshBasicMaterial({
             color: 16711680,
             visible: !1,
-            side: ks
+            side: DoubleSide
         })),
         this.scene.add(this.raycastPlane)
     }
@@ -1748,8 +1788,8 @@ var MainScene = class {
         this.particles && this.particles.resize()
     }
     initCamera() {
-        this.camera = new gr(40,this.gl.drawingBufferWidth / this.gl.drawingBufferHeight,.1,1e3),
-        this.camera.position.z = 3.1
+        this.camera = new PerspectiveCamera(40, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, 0.1, 1000);
+        this.camera.position.z = 3.1;
     }
     initScene() {
         this.colorControls = {

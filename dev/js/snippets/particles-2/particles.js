@@ -2,6 +2,54 @@ import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
 import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
 // import { PoissonDiskSampling } from './poisson-disk-sampling.js';
 
+// Minimal local tween utility to replace missing `Je` (small subset of GSAP API used)
+const Je = (function(){
+    const active = new Set();
+    const eases = {
+        'power3.out': t => 1 - Math.pow(1 - t, 3),
+        'power2.out': t => 1 - Math.pow(1 - t, 2),
+        'linear': t => t
+    };
+    function now(){ return performance.now(); }
+    function tick() {
+        active.forEach(a => {
+            const t = Math.min(1, (now() - a._start) / (a._dur || 1));
+            const eased = (a._ease || eases['linear'])(t);
+            for (const k in a._to) {
+                const sv = a._from[k];
+                const tv = a._to[k];
+                a._target[k] = sv + (tv - sv) * eased;
+            }
+            if (t >= 1) { active.delete(a); a._onComplete && a._onComplete(); }
+        });
+        if (active.size) requestAnimationFrame(tick);
+    }
+    return {
+        to(target, opts){
+            const dur = (opts.duration || 0.5) * 1000;
+            const ease = typeof opts.ease === 'string' ? (eases[opts.ease] || eases['linear']) : (opts.ease || eases['linear']);
+            const from = {};
+            const to = {};
+            for (const k in opts) if (k !== 'duration' && k !== 'ease' && k !== 'delay') { from[k] = target[k] || 0; to[k] = opts[k]; }
+            const job = {_target: target, _from: from, _to: to, _dur: dur, _start: now() + ((opts.delay||0)*1000), _ease: ease, _onComplete: opts.onComplete};
+            // adjust start if delayed
+            job._startTick = () => { job._start = now(); };
+            // schedule start respecting delay
+            if ((opts.delay||0) > 0) {
+                setTimeout(()=>{ job._start = now(); active.add(job); requestAnimationFrame(tick); }, (opts.delay||0)*1000);
+            } else { job._start = now(); active.add(job); requestAnimationFrame(tick); }
+            return job;
+        },
+        fromTo(target, fromProps, toProps){
+            // set initial values
+            for (const k in fromProps) try { target[k] = fromProps[k]; } catch(e){}
+            const opts = Object.assign({}, toProps);
+            return this.to(target, opts);
+        },
+        delayedCall(delay, fn){ return setTimeout(fn, delay*1000); }
+    };
+})();
+
 // GLSL Simplex Noise Functions
 var GLSL_NOISE = `
   // MATHS
@@ -356,12 +404,8 @@ class ParticleSystem {
         results.forEach(result => {
             this.nearestPointsData.push(result.nearestPoints);
         });
-        // Worker logic for finding nearest points based on image data
-        return new Promise((resolve, reject) => {
-            // ...existing code for worker creation and message passing...
-            // (Zostawiamy szczegóły implementacji, bo są poprawne i czytelne)
-            // ...existing code...
-        });
+        // Return the assembled results so caller can continue initialization
+        return results;
     }
     createPointsDistanceDataWorker(imageData, pointsBase, index) {
         return new Promise((resolve, reject) => {
@@ -459,7 +503,7 @@ class ParticleSystem {
                     value: .015
                 },
                 uIsHovering: {
-                    value: 0
+                    value: 1
                 },
                 uRingDisplacement: {
                     value: this.scene.ringDisplacement
@@ -864,7 +908,7 @@ class MorphingParticlesScene {
         this.color3 = e.color3 || "#93bbfc";
         this.options = e;
         this.theme = e.theme || "dark";
-        this.interactive = !1;
+        this.interactive = e.interactive || !1;
         this.options.background = this.theme === "dark" ? new Color(1184535) : new Color(16777215);
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
         this.particlesScale = e.particlesScale || .5;
@@ -913,6 +957,20 @@ class MorphingParticlesScene {
         this.intersectionPoint = new Vector3();
         this.isIntersecting = !1;
         this.mouseIsOver = !1;
+        // create an invisible plane to receive raycasts for this scene
+        this.raycastPlane = new Mesh(new PlaneGeometry(12.5,12.5), new MeshBasicMaterial({
+            color: 16711680,
+            visible: !1,
+            side: DoubleSide
+        }));
+        this.scene.add(this.raycastPlane);
+        // Add an invisible plane to receive raycasts for mouse interaction
+        this.raycastPlane = new Mesh(new PlaneGeometry(12.5,12.5), new MeshBasicMaterial({
+            color: 16711680,
+            visible: !1,
+            side: DoubleSide
+        }));
+        this.scene.add(this.raycastPlane);
     }
     initEvents() {
         window.addEventListener("resize", e => {
@@ -1177,6 +1235,11 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
                 });
             }
             this._initIntersectionObserver();
+            // Enable hover interactions directly on the component container
+            try {
+                this._container.addEventListener('mouseenter', () => { this.scene && this.scene.onHoverStart(); });
+                this._container.addEventListener('mouseleave', () => { this.scene && this.scene.onHoverEnd(); });
+            } catch (e) {}
             this._animate();
         }
         _initIntersectionObserver(){

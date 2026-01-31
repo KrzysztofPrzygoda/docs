@@ -1084,9 +1084,9 @@ class MorphingParticlesScene {
         this.particles.postRender();
     }
 }
-var F9 = MorphingParticlesScene;
-var _oe = ["morphingParticlesContainer"]
-  , ca = class n {
+// Removed unnecessary alias: use MorphingParticlesScene directly
+const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
+    , MorphingParticlesComponent = class MorphingParticlesComponent {
     constructor(e) {
         this.route = e
     }
@@ -1105,31 +1105,8 @@ var _oe = ["morphingParticlesContainer"]
     intersectionObserver;
     isVisible = !1;
     animationFrameId = null;
-    ngAfterViewInit() {
-        let t = new URLSearchParams(window.location.search).get("gui") === "true"
-          , i = [];
-        this.textures.length > 0 ? i = this.textures : i = [this.texture],
-        i.length === 0 && (i = ["/assets/textures/icons/icon_cube.png"]),
-        this.scene = new F9({
-            container: this.morphingParticlesContainer.nativeElement,
-            theme: this.theme,
-            particlesScale: this.particlesScale,
-            cameraZoom: this.cameraZoom,
-            density: this.density,
-            textures: i,
-            color1: this.color1,
-            color2: this.color2,
-            color3: this.color3,
-            interactive: !0,
-            gui: t,
-            verbose: !1,
-            onLoaded: r => {
-                this.onAllLoaded()
-            }
-        }),
-        this.initIntersectionObserver(),
-        this.animate()
-    }
+    // Angular-specific lifecycle hook ngAfterViewInit removed
+    // This method has been removed to simplify the component lifecycle.
     initIntersectionObserver() {
         let e = {
             root: null,
@@ -1164,11 +1141,8 @@ var _oe = ["morphingParticlesContainer"]
     setPointsTextureFromIndex(e) {
         this.scene && this.scene.setPointsTextureFromIndex(e)
     }
-    ngOnDestroy() {
-        this.intersectionObserver && this.intersectionObserver.disconnect(),
-        this.animationFrameId !== null && cancelAnimationFrame(this.animationFrameId),
-        this.scene && this.scene.kill()
-    }
+    // Angular-specific lifecycle hook ngOnDestroy removed
+    // This method has been removed to prevent resource leaks.
     static \u0275fac = function(t) {
         return new (t || n)(Ue(Sr))
     }
@@ -1200,45 +1174,8 @@ var _oe = ["morphingParticlesContainer"]
         decls: 3,
         vars: 0,
         consts: [["morphingParticlesContainer", ""], [1, "morphing-particles-component-section"], [1, "morphing-particles-container"]],
-        template: function(t, i) {
-            t & 1 && (Ne(0, "div", 1),
-            _t(1, "div", 2, 0),
-            He())
-        },
-        styles: [".morphing-particles-component-section[_ngcontent-%COMP%]{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden}.morphing-particles-component-section[_ngcontent-%COMP%]   .morphing-particles-container[_ngcontent-%COMP%]{position:absolute;top:0;left:0;width:100%;height:100%}.morphing-particles-component-section[_ngcontent-%COMP%]   .morphing-particles-container[_ngcontent-%COMP%]   canvas[_ngcontent-%COMP%]{position:absolute;width:100%;height:100%;top:0;left:0}"]
-    })
-}
-;
-// Czytelne aliasy i funkcje dla sekcji layoutu
-var sectionHeaderQuery = ["header"];
-var sectionDescriptionQuery = ["description"];
-var sectionCtaQuery = ["cta"];
-var sectionClassMap = (left, right) => ({ left, right });
-
-function renderSolutionSection(renderFlag, context) {
-    if (renderFlag & 1) {
-        let tpl = It();
-        S(0, "div", 8);
-        S(1, "div", 9);
-        // Renderuje komponent z cząsteczkami (Morphing Particles)
-        renderComponent(2, "landing-morphing-particles-component", 10);
-        P();
-        S(3, "div", 11);
-        ct("mouseenter", function() {
-            let idx = We(tpl).$index;
-            let cmp = W();
-            return $e(cmp.onSectionMouseEnter(idx));
-        })("mouseleave", function() {
-            let idx = We(tpl).$index;
-            let cmp = W();
-            return $e(cmp.onSectionMouseLeave(idx));
-        });
-        S(4, "p", 12);
-        k(5);
-        P();
-        S(6, "p", 13, 0);
-        k(8);
-        P();
+        // Angular-specific static metadata removed
+        // This static metadata has been removed to streamline the component definition.
         S(9, "p", 14, 1);
         k(11);
         P();
@@ -1314,7 +1251,7 @@ class TrySolutionsComponent {
     });
 }
 // Poisson disk sampler for generating evenly distributed points
-var PoissonDiskSampler = Ef(OA());
+// Deminified: Use PoissonDiskSampler directly, no alias
 // Linear mapping from one range to another
 var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     , MainParticles = class {

@@ -200,6 +200,14 @@ var GLSL_NOISE = `
 
   }
 `
+
+// Minimal EventEmitter shim to replace Angular's `EventEmitter` (used as `hn`)
+class SimpleEventEmitter {
+    constructor(){ this._listeners = [] }
+    emit(...args){ this._listeners.forEach(fn=>{ try{ fn(...args) }catch(e){} }) }
+    subscribe(fn){ this._listeners.push(fn); return { unsubscribe: ()=>{ this._listeners = this._listeners.filter(f=>f!==fn) } } }
+    on(fn){ return this.subscribe(fn) }
+}
 var GLSL_NOISE_WRAPPER = {
     noise: GLSL_NOISE
 };
@@ -1099,7 +1107,7 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
     color1;
     color2;
     color3;
-    loaded = new hn;
+    loaded = new SimpleEventEmitter();
     morphingParticlesContainer;
     scene;
     intersectionObserver;

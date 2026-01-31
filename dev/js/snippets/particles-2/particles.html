@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Particles Demo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+    html,body{height:100%;margin:0;background:#0b0b0b}
+    /* container inside components will size canvases to their parent; ensure the small demo has explicit size */
+    landing-morphing-particles > div { width:100%; height:100%; }
+    landing-main-particles > div { width:100%; height:100%; }
+</style>
+</head>
+<body>
+
+<!-- Load particle system (the file in this folder) -->
+<script type="module" src="./particles.js"></script>
+
+<!-- Demo markup: instantiate web components that wrap the original scenes -->
+<landing-main-particles id="mainParticles" theme="light" particlesScale="0.75" density="200" ringWidth="0.107" ringWidth2="0.05" ringDisplacement="0.15"></landing-main-particles>
+
+<landing-morphing-particles id="morphParticles" theme="light" density="100" particlesScale="1" cameraZoom="3.5" color1="#676A72" color2="#FF4641" color3="#346BF1"></landing-morphing-particles>
+
+<!-- Optional small controller for demo (toggle GUI) -->
+<script>
+// Show how to access components from JS if needed
+window.addEventListener('load', ()=>{
+    const main = document.getElementById('mainParticles');
+    const morph = document.getElementById('morphParticles');
+    // components self-initialize on connect; no further action required.
+});
+</script>
+
+</body>
+</html>

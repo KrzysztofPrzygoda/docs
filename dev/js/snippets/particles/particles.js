@@ -1223,38 +1223,7 @@ class TrySolutionsComponent {
         let cmp = Array.from(this.morphingComponent)[e];
         cmp && cmp.onLeave();
     }
-    static ɵfac = function(t) {
-        return new (t || TrySolutionsComponent)();
-    };
-    static ɵcmp = Te({
-        type: TrySolutionsComponent,
-        selectors: [["landing-try-solutions"]],
-        viewQuery: function(t, i) {
-            if (t & 1 && (ye(voe, 5),
-            ye(yoe, 5),
-            ye(xoe, 5),
-            ye(ca, 5)),
-            t & 2) {
-                let r;
-                ge(r = _e()) && (i.header = r.first),
-                ge(r = _e()) && (i.description = r.first),
-                ge(r = _e()) && (i.cta = r.first),
-                ge(r = _e()) && (i.morphingComponent = r)
-            }
-        },
-        decls: 7,
-        vars: 0,
-        consts: [["header", ""], ["description", ""], ["cta", ""], [1, "try-solutions-section"], [1, "grid-container"], [1, "grid-row"], [1, "grid-col", "col-md-12"], [1, "section-wrapper"], [1, "solution-section"], [1, "try-solution-background", 3, "ngClass"], ["theme", "light", "color1", "#676A72", "color2", "#FF4641", "color3", "#346BF1", 3, "texture", "particlesScale", "density", "cameraZoom"], [1, "try-solutions-content", 3, "mouseenter", "mouseleave"], [1, "try-solution-label", "small"], [1, "heading-4", "header"], [1, "heading-4", "subhead"], [1, "grid-row", "solutions-cta"], [1, "grid-col"], [3, "variant", "routerLink", "buttonText"]],
-        template: function(t, i) {
-            t & 1 && (S(0, "section", 3)(1, "div", 4)(2, "div", 5)(3, "div", 6)(4, "div", 7),
-            Ze(5, boe, 16, 14, "div", 8, Ft),
-            P()()()()()),
-            t & 2 && (w(5),
-            Qe(i.sections))
-        },
-        dependencies: [An, sn, ca, bo, td],
-        styles: [".try-solutions-section[_ngcontent-%COMP%]{display:flex;overflow-x:clip;position:relative;padding-block:55px;border-top:1px solid var(--theme-outline-variant)}.section-background[_ngcontent-%COMP%]{position:absolute;inset:0;display:flex}.section-wrapper[_ngcontent-%COMP%]{display:flex}.solution-section[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:center;position:relative;flex-basis:50%;width:50%}.try-solution-background[_ngcontent-%COMP%]{position:absolute;z-index:1;inset:0}.try-solutions-backdrop[_ngcontent-%COMP%]{opacity:0;position:absolute;max-width:100%;max-height:100%;z-index:-1;transform:scale(1.5);transition:1s ease-in-out;pointer-events:none}.try-solutions-backdrop.rotate[_ngcontent-%COMP%]{rotate:90deg}.try-solutions-content[_ngcontent-%COMP%]{align-items:center;display:flex;flex-direction:column;justify-content:center;padding:250px var(--page-margin);position:relative;text-align:center;width:100%;z-index:5}.try-solutions-content[_ngcontent-%COMP%]   .try-solution-label[_ngcontent-%COMP%]{margin-block-end:var(--space-md);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:#ffffffd9;border:1px solid var(--theme-outline-variant);padding:4px 8px;border-radius:4px}.try-solutions-content[_ngcontent-%COMP%]   .header[_ngcontent-%COMP%]{margin:0}.try-solutions-content[_ngcontent-%COMP%]   .subhead[_ngcontent-%COMP%]{color:var(--theme-surface-on-surface-variant);margin:0 0 var(--space-xl)}.try-solutions-content[_ngcontent-%COMP%]   app-button[_ngcontent-%COMP%]{pointer-events:all}.solutions-cta[_ngcontent-%COMP%]{max-width:100%}.solutions-cta[_ngcontent-%COMP%]   .grid-col[_ngcontent-%COMP%]{padding:0;margin:var(--space-sm)}@media (max-width: 1024px){.section-wrapper[_ngcontent-%COMP%]{flex-direction:column}.solution-section[_ngcontent-%COMP%]{flex-basis:100%;width:100%}.try-solutions-backdrop[_ngcontent-%COMP%]{transform:scale(1)}.try-solutions-content[_ngcontent-%COMP%]{padding:var(--space-5xl) var(--page-margin)}}"]
-    });
+    // Angular component metadata removed: TrySolutionsComponent converted/unused in vanilla context
 }
 // Poisson disk sampler for generating evenly distributed points
 // Deminified: Use PoissonDiskSampler directly, no alias
@@ -2015,5 +1984,4 @@ var mainParticlesContainerQuery = ["mainParticlesContainer"]
     }
     customElements.define('landing-main-particles', LandingMainParticles);
 
-// <landing-main-particles-component _ngcontent-ng-c828328313="" theme="light" _nghost-ng-c2879464184=""><div _ngcontent-ng-c2879464184="" class="main-particles-component-section"><div _ngcontent-ng-c2879464184="" class="main-particles-container"><canvas width="2932" height="1924" data-engine="three.js r180" style="width: 1466px; height: 962px;"></canvas></div></div></landing-main-particles-component>
-// <landing-morphing-particles-component _ngcontent-ng-c1380444292="" theme="light" color1="#676A72" color2="#FF4641" color3="#346BF1" _nghost-ng-c1438398064=""><div _ngcontent-ng-c1438398064="" class="morphing-particles-component-section"><div _ngcontent-ng-c1438398064="" class="morphing-particles-container"><canvas width="1322" height="1456" data-engine="three.js r180" style="width: 661px; height: 728px;"></canvas></div></div></landing-morphing-particles-component>
+// Angular component markup examples removed (migrated to native Web Components)

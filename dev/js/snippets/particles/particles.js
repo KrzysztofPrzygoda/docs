@@ -1325,7 +1325,7 @@ var MainParticles = class {
         this.renderer.setClearColor(0, 0),
         this.renderer.clear(),
         this.renderer.setRenderTarget(null),
-        this.noise = new xb,
+        this.noise = new PerlinNoise1D(),
         this.simScene = new Scene,
         this.simCamera = new OrthographicCamera(-1,1,1,-1,0,1),
         this.simMaterial = new ShaderMaterial({

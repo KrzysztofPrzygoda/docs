@@ -268,10 +268,77 @@ class PerlinNoise1D {
 // fallback sampler so the demo remains functional during progressive fixes.
 var PoissonDiskSampler = (function() {
     function fallback(options) {
-        var pts = [];
-        var N = Math.max(200, Math.min(1000, Math.floor((options.shape[0]*options.shape[1])/1000)));
-        for (var i = 0; i < N; i++) pts.push([Math.random() * options.shape[0], Math.random() * options.shape[1]]);
-        return { fill: function() { return pts; } };
+        // Bridson's Poisson Disk Sampling (2D) fallback implementation.
+        const width = options.shape[0] || 500;
+        const height = options.shape[1] || 500;
+        const minDistance = options.minDistance || 2;
+        const maxDistance = options.maxDistance || minDistance * 2;
+        const tries = Math.max(1, Math.floor(options.tries || 30));
+        const rngFn = Math && Math.random ? Math.random : (Math.random.bind ? Math.random.bind(Math) : () => Math.random());
+
+        const cellSize = minDistance / Math.SQRT2;
+        const cols = Math.ceil(width / cellSize);
+        const rows = Math.ceil(height / cellSize);
+        const grid = new Array(cols * rows).fill(null);
+
+        const samples = [];
+        const processList = [];
+
+        function gridIndex(x, y) {
+            const col = Math.floor(x / cellSize);
+            const row = Math.floor(y / cellSize);
+            if (col < 0 || col >= cols || row < 0 || row >= rows) return -1;
+            return col + row * cols;
+        }
+
+        function inNeighbourhood(x, y) {
+            const col = Math.floor(x / cellSize);
+            const row = Math.floor(y / cellSize);
+            const r = 2; // check neighbours within 2 cells
+            const minDistSq = minDistance * minDistance;
+            for (let i = Math.max(0, col - r); i <= Math.min(cols - 1, col + r); i++) {
+                for (let j = Math.max(0, row - r); j <= Math.min(rows - 1, row + r); j++) {
+                    const idx = i + j * cols;
+                    const p = grid[idx];
+                    if (p) {
+                        const dx = p[0] - x;
+                        const dy = p[1] - y;
+                        if (dx * dx + dy * dy < minDistSq) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // start with a random initial point
+        const x0 = rngFn() * width;
+        const y0 = rngFn() * height;
+        samples.push([x0, y0]);
+        const gi0 = gridIndex(x0, y0);
+        if (gi0 >= 0) grid[gi0] = [x0, y0];
+        processList.push([x0, y0]);
+
+        while (processList.length > 0) {
+            const idx = Math.floor(rngFn() * processList.length);
+            const point = processList[idx];
+            let found = false;
+            for (let t = 0; t < tries; t++) {
+                const radius = minDistance + (maxDistance - minDistance) * rngFn();
+                const angle = 2 * Math.PI * rngFn();
+                const nx = point[0] + Math.cos(angle) * radius;
+                const ny = point[1] + Math.sin(angle) * radius;
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height && !inNeighbourhood(nx, ny)) {
+                    samples.push([nx, ny]);
+                    const gidx = gridIndex(nx, ny);
+                    if (gidx >= 0) grid[gidx] = [nx, ny];
+                    processList.push([nx, ny]);
+                    found = true;
+                }
+            }
+            if (!found) processList.splice(idx, 1);
+        }
+
+        return { fill: function () { return samples; } };
     }
     return function(options, rng) {
         if (typeof PoissonDiskSampling !== 'undefined') return new PoissonDiskSampling(options, rng);
@@ -323,10 +390,12 @@ class ParticleSystem {
     }
     createPoints() {
         // Deminified: Poisson Disk Sampling for point generation
+        const minDistance = linearMap(this.scene.density, 0, 300, 10, 2);
+        const maxDistance = linearMap(this.scene.density, 0, 300, 10, 50);
         let poisson = new PoissonDiskSampler({
             shape: [500, 500],
-            minDistance: linearMap(this.scene.density, 0, 300, 10, 2),
-            maxDistance: linearMap(this.scene.density, 0, 300, 11, 3),
+            minDistance: minDistance,
+            maxDistance: maxDistance,
             tries: 20
         }).fill();
         this.pointsBaseData = poisson.map(point => [point[0] - 250, point[1] - 250]);
@@ -335,6 +404,7 @@ class ParticleSystem {
             this.pointsData.push(poisson[i][0] - 250, poisson[i][1] - 250);
         }
         this.count = this.pointsData.length / 2;
+        console.log('[ParticleSystem] density=', this.scene.density, 'points=', this.count, 'minDistance=', minDistance, 'maxDistance=', maxDistance);
     }
     async createPointsFromImage() {
         let images = [];
@@ -952,7 +1022,10 @@ class MorphingParticlesScene {
         this.gl = this.renderer.getContext();
         this.renderer.extensions.get("EXT_color_buffer_float");
         this.renderer.setSize(this.canvas.width, this.canvas.height);
-        this.renderer.setPixelRatio(this.pixelRatio);
+        // Ensure renderer uses device DPR and correct color/tone settings to match donor environment
+        this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMapping = THREE.NoToneMapping;
         this.onWindowResize = this.onWindowResize.bind(this);
         this.initCamera();
         this.initScene();
@@ -1294,16 +1367,19 @@ var MainParticles = class {
     }
     createPoints() {
         // Generowanie punktów metodą Poissona
+        const minDistance = mapRange(this.scene.density, 0, 300, 10, 2);
+        const maxDistance = mapRange(this.scene.density, 0, 300, 10, 50);
         let points = new PoissonDiskSampler({
             shape: [500, 500],
-            minDistance: mapRange(this.scene.density, 0, 300, 10, 2),
-            maxDistance: mapRange(this.scene.density, 0, 300, 11, 3),
+            minDistance: minDistance,
+            maxDistance: maxDistance,
             tries: 20
         }).fill();
         this.pointsData = [];
         for (let i = 0; i < points.length; i++)
             this.pointsData.push(points[i][0] - 250, points[i][1] - 250);
         this.count = this.pointsData.length / 2
+        console.log('[MainParticles] density=', this.scene.density, 'points=', this.count, 'minDistance=', minDistance, 'maxDistance=', maxDistance);
     }
     createDataTexturePosition() {
         let e = new Float32Array(this.length * 4);

@@ -239,7 +239,7 @@ class ParticleSystem {
     constructor(scene, textures) {
         this.scene = scene;
         this.renderer = scene.renderer; // Renderer for the particle system
-        this.gl = this.gl;
+        this.gl = scene.gl; 
         this.camera = scene.camera;
         this.textures = textures;
         this.lastTime = 0;
@@ -281,7 +281,7 @@ class ParticleSystem {
             maxDistance: linearMap(this.scene.density, 0, 300, 11, 3),
             tries: 20
         }).fill();
-        this.pointsBaseData = poisson;
+        this.pointsBaseData = poisson.map(point => [point[0] - 250, point[1] - 250]);
         this.pointsData = [];
         for (let i = 0; i < poisson.length; i++) {
             this.pointsData.push(poisson[i][0] - 250, poisson[i][1] - 250);
@@ -404,12 +404,12 @@ class ParticleSystem {
             t[o + 2] = 0,
             t[o + 3] = 0
         }
-        let i = new Qd(t,this.size,this.size,vr,Io);
+        let i = new DataTexture(t, this.size, this.size, vr, Io);
         return i.needsUpdate = !0,
         i
     }
     createRenderTarget() {
-        return new Ao(this.size,this.size,{
+        return new RenderTarget(this.size,this.size,{
             wrapS: ja,
             wrapT: ja,
             minFilter: qi,
@@ -440,10 +440,10 @@ class ParticleSystem {
         this.renderer.setClearColor(0, 0),
         this.renderer.clear(),
         this.renderer.setRenderTarget(null),
-        this.noise = new xb,
-        this.simScene = new oa,
-        this.simCamera = new uu(-1,1,1,-1,0,1),
-        this.simMaterial = new Ir({
+        this.noise = new PerlinNoise1D(),
+        this.simScene = new Scene,
+        this.simCamera = new OrthographicCamera(-1,1,1,-1,0,1),
+        this.simMaterial = new ShaderMaterial({
             uniforms: {
                 uPosition: {
                     value: this.posTex
@@ -455,7 +455,7 @@ class ParticleSystem {
                     value: this.posNearestTex
                 },
                 uMousePos: {
-                    value: new Wt(0,0)
+                    value: new Vector2(0,0)
                 },
                 uRingRadius: {
                     value: .2
@@ -563,9 +563,9 @@ class ParticleSystem {
                 }
             `
         });
-        let e = new _r(new sa(2,2),this.simMaterial);
-        this.simScene.add(e);
-        let t = new os
+                let e = new Mesh(new PlaneGeometry(2,2),this.simMaterial);
+                this.simScene.add(e);
+                let t = new BufferGeometry
           , i = new Float32Array(this.count * 2)
           , r = new Float32Array(this.count * 3)
           , o = new Float32Array(this.count * 4);
@@ -580,10 +580,10 @@ class ParticleSystem {
             o[s * 4 + 1] = Math.random(),
             o[s * 4 + 2] = Math.random(),
             o[s * 4 + 3] = Math.random();
-        t.setAttribute("position", new Ii(r,3)),
-        t.setAttribute("uv", new Ii(i,2)),
-        t.setAttribute("seeds", new Ii(o,4)),
-        this.renderMaterial = new Ir({
+        t.setAttribute("position", new BufferAttribute(r,3)),
+        t.setAttribute("uv", new BufferAttribute(i,2)),
+        t.setAttribute("seeds", new BufferAttribute(o,4)),
+        this.renderMaterial = new ShaderMaterial({
             uniforms: {
                 uPosition: {
                     value: this.posTex
@@ -592,13 +592,13 @@ class ParticleSystem {
                     value: 0
                 },
                 uColor1: {
-                    value: new Bt(this.scene.colorControls.color1)
+                    value: new Color(this.scene.colorControls.color1)
                 },
                 uColor2: {
-                    value: new Bt(this.scene.colorControls.color2)
+                    value: new Color(this.scene.colorControls.color2)
                 },
                 uColor3: {
-                    value: new Bt(this.scene.colorControls.color3)
+                    value: new Color(this.scene.colorControls.color3)
                 },
                 uAlpha: {
                     value: 1
@@ -610,10 +610,10 @@ class ParticleSystem {
                     value: 0
                 },
                 uMousePos: {
-                    value: new Wt(0,0)
+                    value: new Vector2(0,0)
                 },
                 uRez: {
-                    value: new Wt(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height)
+                    value: new Vector2(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height)
                 },
                 uParticleScale: {
                     value: this.particleScale
@@ -782,13 +782,13 @@ class ParticleSystem {
             depthTest: !1,
             depthWrite: !1
         }),
-        this.mesh = new Kd(t,this.renderMaterial),
+        this.mesh = new Points(t,this.renderMaterial),
         this.mesh.position.set(0, 0, 0),
         this.mesh.scale.set(5, -5, 5),
         this.scene.scene.add(this.mesh)
     }
     resize() {
-        this.renderMaterial.uniforms.uRez.value = new Wt(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height),
+        this.renderMaterial.uniforms.uRez.value = new Vector2(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height),
         this.renderMaterial.uniforms.uPixelRatio.value = this.scene.pixelRatio,
         this.renderMaterial.needsUpdate = !0
     }
@@ -875,7 +875,7 @@ class MorphingParticlesScene {
         this.options = e;
         this.theme = e.theme || "dark";
         this.interactive = !1;
-        this.options.background = this.theme === "dark" ? new Bt(1184535) : new Bt(16777215);
+        this.options.background = this.theme === "dark" ? new Color(1184535) : new Color(16777215);
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
         this.particlesScale = e.particlesScale || .5;
         this.density = e.density || 150;
@@ -885,14 +885,14 @@ class MorphingParticlesScene {
         this.isHovering = !1;
         this.hoverProgress = 0;
         this.pushProgress = 0;
-        this.scene = new oa;
+        this.scene = new Scene;
         this.scene.background = this.options.background;
         this.canvas = document.createElement("canvas");
         this.options.container.appendChild(this.canvas);
         this.canvas.width = this.options.container.offsetWidth;
         this.canvas.height = this.options.container.offsetHeight;
         bn.enabled = !1;
-        this.renderer = new Rp({
+        this.renderer = new WebGLRenderer({
             canvas: this.canvas,
             antialias: !0,
             alpha: !0,
@@ -909,15 +909,15 @@ class MorphingParticlesScene {
         this.initCamera();
         this.initScene();
         this.initEvents();
-        this.clock = new ef;
+        this.clock = new Clock();
         this.time = 0;
         this.lastTime = 0;
         this.dt = 0;
         this.skipFrame = !1;
         this.isPaused = !1;
-        this.raycaster = new tf;
+        this.raycaster = new Raycaster();
         this.mouse = new Wt;
-        this.intersectionPoint = new ce;
+        this.intersectionPoint = new Vector3();
         this.isIntersecting = !1;
         this.mouseIsOver = !1;
     }
@@ -977,7 +977,7 @@ class MorphingParticlesScene {
         });
     }
     initCamera() {
-        this.camera = new gr(40, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, .1, 1e3);
+        this.camera = new PerspectiveCamera(40, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, .1, 1e3);
         this.camera.position.z = this.cameraZoom;
     }
     async initScene() {
@@ -994,7 +994,7 @@ class MorphingParticlesScene {
         this.particles = await MorphingParticles.create(this, this.textures);
     }
     initGUI() {
-        this.gui = new yb({
+        this.gui = new GUI({
             autoPlace: !1
         });
         this.options.container.appendChild(this.gui.domElement);
@@ -1004,13 +1004,13 @@ class MorphingParticlesScene {
         this.gui.domElement.style.zIndex = "1000";
         let e = this.gui.addFolder("Colors");
         e.addColor(this.colorControls, "color1").name("Color 1").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor1.value.set(new Bt(t));
+            this.particles.renderMaterial.uniforms.uColor1.value.set(new Color(t));
         });
         e.addColor(this.colorControls, "color2").name("Color 2").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor2.value.set(new Bt(t));
+            this.particles.renderMaterial.uniforms.uColor2.value.set(new Color(t));
         });
         e.addColor(this.colorControls, "color3").name("Color 3").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor3.value.set(new Bt(t));
+            this.particles.renderMaterial.uniforms.uColor3.value.set(new Color(t));
         });
         e.add(this, "particlesScale").name("Particles Scale").min(.1).max(4).step(.01).onChange(t => {
             this.particlesScale = t;
@@ -1174,33 +1174,37 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
         decls: 3,
         vars: 0,
         consts: [["morphingParticlesContainer", ""], [1, "morphing-particles-component-section"], [1, "morphing-particles-container"]],
-        // Angular-specific static metadata removed
-        // This static metadata has been removed to streamline the component definition.
-        S(9, "p", 14, 1);
-        k(11);
-        P();
-        S(12, "div", 15, 2);
-        S(14, "div", 16);
-        Z(15, "app-button", 17);
-        P();P();P();P();
-    }
-    if (renderFlag & 2) {
-        let section = context.$implicit;
-        let index = context.$index;
-        w();
-        z("ngClass", WS(11, sectionClassMap, index === 0, index === 1));
-        w();
-        z("texture", section.morphingParticle)("particlesScale", .6)("density", 50)("cameraZoom", 8.8);
-        w(3);
-        Me(section.title);
-        w(3);
-        Me(section.subtitle);
-        w(3);
-        Me(section.description);
-        w(4);
-        z("variant", section.button.variant)("routerLink", section.button.routerLink)("buttonText", section.button.buttonText);
-    }
+        template: function(renderFlag, context) {
+            if (renderFlag & 1) {
+                S(9, "p", 14, 1);
+                k(11);
+                P();
+                S(12, "div", 15, 2);
+                S(14, "div", 16);
+                Z(15, "app-button", 17);
+                P();P();P();P();
+            }
+            if (renderFlag & 2) {
+                let section = context.$implicit;
+                let index = context.$index;
+                w();
+                z("ngClass", WS(11, sectionClassMap, index === 0, index === 1));
+                w();
+                z("texture", section.morphingParticle)("particlesScale", .6)("density", 50)("cameraZoom", 8.8);
+                w(3);
+                Me(section.title);
+                w(3);
+                Me(section.subtitle);
+                w(3);
+                Me(section.description);
+                w(4);
+                z("variant", section.button.variant)("routerLink", section.button.routerLink)("buttonText", section.button.buttonText);
+            }
+        },
+        styles: []
+    });
 }
+;
 // Komponent sekcji "Wypróbuj rozwiązania" (Try Solutions)
 class TrySolutionsComponent {
     header;
@@ -1254,7 +1258,7 @@ class TrySolutionsComponent {
 // Deminified: Use PoissonDiskSampler directly, no alias
 // Linear mapping from one range to another
 var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-    , MainParticles = class {
+var MainParticles = class {
     constructor(e) {
         this.scene = e,
         this.renderer = e.renderer,
@@ -1271,7 +1275,7 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
     }
     createPoints() {
         // Generowanie punktów metodą Poissona
-        let points = new PoissonDiskSampler.default({
+        let points = new PoissonDiskSampler({
             shape: [500, 500],
             minDistance: mapRange(this.scene.density, 0, 300, 10, 2),
             maxDistance: mapRange(this.scene.density, 0, 300, 11, 3),
@@ -1291,12 +1295,12 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
             e[r + 2] = 0,
             e[r + 3] = 0
         }
-        let t = new Qd(e,this.size,this.size,vr,Io);
+        let t = new DataTexture(e,this.size,this.size,vr,Io);
         return t.needsUpdate = !0,
         t
     }
     createRenderTarget() {
-        return new Ao(this.size,this.size,{
+        return new RenderTarget(this.size,this.size,{
             wrapS: ja,
             wrapT: ja,
             minFilter: qi,
@@ -1322,9 +1326,9 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
         this.renderer.clear(),
         this.renderer.setRenderTarget(null),
         this.noise = new xb,
-        this.simScene = new oa,
-        this.simCamera = new uu(-1,1,1,-1,0,1),
-        this.simMaterial = new Ir({
+        this.simScene = new Scene,
+        this.simCamera = new OrthographicCamera(-1,1,1,-1,0,1),
+        this.simMaterial = new ShaderMaterial({
             uniforms: {
                 uPosition: {
                     value: this.posTex
@@ -1454,9 +1458,9 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
                 }
             `
         });
-        let e = new _r(new sa(2,2),this.simMaterial);
+        let e = new Mesh(new PlaneGeometry(2,2), this.simMaterial);
         this.simScene.add(e);
-        let t = new os
+        let t = new BufferGeometry
           , i = new Float32Array(this.count * 2)
           , r = new Float32Array(this.count * 3)
           , o = new Float32Array(this.count * 4);
@@ -1471,10 +1475,10 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
             o[s * 4 + 1] = Math.random(),
             o[s * 4 + 2] = Math.random(),
             o[s * 4 + 3] = Math.random();
-        t.setAttribute("position", new Ii(r,3)),
-        t.setAttribute("uv", new Ii(i,2)),
-        t.setAttribute("seeds", new Ii(o,4)),
-        this.renderMaterial = new Ir({
+        t.setAttribute("position", new BufferAttribute(r,3)),
+        t.setAttribute("uv", new BufferAttribute(i,2)),
+        t.setAttribute("seeds", new BufferAttribute(o,4)),
+        this.renderMaterial = new ShaderMaterial({
             uniforms: {
                 uPosition: {
                     value: this.posTex
@@ -1483,13 +1487,13 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
                     value: 0
                 },
                 uColor1: {
-                    value: new Bt(this.scene.colorControls.color1)
+                    value: new Color(this.scene.colorControls.color1)
                 },
                 uColor2: {
-                    value: new Bt(this.scene.colorControls.color2)
+                    value: new Color(this.scene.colorControls.color2)
                 },
                 uColor3: {
-                    value: new Bt(this.scene.colorControls.color3)
+                    value: new Color(this.scene.colorControls.color3)
                 },
                 uAlpha: {
                     value: 1
@@ -1643,13 +1647,13 @@ var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMa
             depthTest: !1,
             depthWrite: !1
         }),
-        this.mesh = new Kd(t,this.renderMaterial),
+        this.mesh = new Points(t,this.renderMaterial),
         this.mesh.position.set(0, 0, 0),
         this.mesh.scale.set(5, 5, 5),
         this.scene.scene.add(this.mesh)
     }
     resize() {
-        this.renderMaterial.uniforms.uRez.value = new Wt(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height),
+        this.renderMaterial.uniforms.uRez.value = new Vector2(this.scene.renderer.domElement.width,this.scene.renderer.domElement.height),
         this.renderMaterial.uniforms.uPixelRatio.value = this.scene.pixelRatio,
         this.renderMaterial.needsUpdate = !0
     }
@@ -1703,19 +1707,19 @@ var BA = class {
         this.options = e,
         this.theme = e.theme || "dark",
         this.interactive = e.interactive || !1,
-        this.options.background = this.theme === "dark" ? new Bt(0) : new Bt(16777215),
+        this.options.background = this.theme === "dark" ? new Color(0) : new Color(16777215),
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio,
         this.particlesScale = e.particlesScale || 1,
         this.density = e.density || 200,
         this.verbose = e.verbose || !1,
-        this.scene = new oa,
+        this.scene = new Scene,
         this.scene.background = this.options.background,
         this.canvas = document.createElement("canvas"),
         this.options.container.appendChild(this.canvas),
         this.canvas.width = this.options.container.offsetWidth,
         this.canvas.height = this.options.container.offsetHeight,
         bn.enabled = !1,
-        this.renderer = new Rp({
+        this.renderer = new WebGLRenderer({
             canvas: this.canvas,
             antialias: !0,
             alpha: !0,
@@ -1732,18 +1736,18 @@ var BA = class {
         this.initCamera(),
         this.initScene(),
         this.initEvents(),
-        this.clock = new ef,
+        this.clock = new Clock(),
         this.time = 0,
         this.lastTime = 0,
         this.dt = 0,
         this.skipFrame = !1,
         this.isPaused = !1,
-        this.raycaster = new tf,
+        this.raycaster = new Raycaster(),
         this.mouse = new Wt,
-        this.intersectionPoint = new ce,
+        this.intersectionPoint = new Vector3(),
         this.isIntersecting = !1,
         this.mouseIsOver = !1,
-        this.raycastPlane = new _r(new sa(12.5,12.5),new Zd({
+        this.raycastPlane = new Mesh(new PlaneGeometry(12.5,12.5), new MeshBasicMaterial({
             color: 16711680,
             visible: !1,
             side: ks
@@ -1795,15 +1799,15 @@ var BA = class {
         this.gui.domElement.style.zIndex = "1000";
         let e = this.gui.addFolder("Colors");
         e.addColor(this.colorControls, "color1").name("Color 1").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor1.value.set(new Bt(t))
+            this.particles.renderMaterial.uniforms.uColor1.value.set(new Color(t))
         }
         ),
         e.addColor(this.colorControls, "color2").name("Color 2").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor2.value.set(new Bt(t))
+            this.particles.renderMaterial.uniforms.uColor2.value.set(new Color(t))
         }
         ),
         e.addColor(this.colorControls, "color3").name("Color 3").onChange(t => {
-            this.particles.renderMaterial.uniforms.uColor3.value.set(new Bt(t))
+            this.particles.renderMaterial.uniforms.uColor3.value.set(new Color(t))
         }
         ),
         e.add(this, "ringWidth").name("Ring Width").min(.001).max(.2).step(.001).onChange(t => {

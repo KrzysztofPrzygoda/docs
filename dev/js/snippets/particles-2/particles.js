@@ -4,6 +4,33 @@ import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampl
 import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm';
 const Animator = gsap;
 
+const {
+    Vector2,
+    Color,
+    Scene,
+    WebGLRenderer,
+    Clock,
+    Raycaster,
+    Vector3,
+    BufferGeometry,
+    BufferAttribute,
+    ShaderMaterial,
+    Mesh,
+    PlaneGeometry,
+    Points,
+    DataTexture,
+    WebGLRenderTarget,
+    RepeatWrapping,
+    NearestFilter,
+    RGBAFormat,
+    FloatType,
+    PerspectiveCamera,
+    OrthographicCamera,
+    ColorManagement,
+    DoubleSide,
+    MeshBasicMaterial
+} = THREE;
+
 // GLSL Simplex Noise Functions
 var GLSL_NOISE = `
   // MATHS
@@ -205,42 +232,16 @@ var GLSL_NOISE = `
                 + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
 
   }
-`
-    , Bp = {
-        noise: GLSL_NOISE
-};
+`;
 
-    // Expect `THREE` to be provided as an ES module import (top of file) or as
-    // a global script loaded before this file. Use destructuring from the
-    // imported `THREE` namespace rather than creating ad-hoc runtime shims.
-    const {
-        Vector2,
-        Color,
-        Scene,
-        WebGLRenderer,
-        Clock,
-        Raycaster,
-        Vector3,
-        BufferGeometry,
-        BufferAttribute,
-        ShaderMaterial,
-        Mesh,
-        PlaneGeometry,
-        Points,
-        DataTexture,
-        WebGLRenderTarget,
-        RepeatWrapping,
-        NearestFilter,
-        RGBAFormat,
-        FloatType,
-        PerspectiveCamera,
-        OrthographicCamera
-    } = THREE;
-    const { ColorManagement } = THREE;
-    const { DoubleSide } = THREE;
-    const { MeshBasicMaterial } = THREE;
-
-// --- PerlinNoise1D ---
+/**
+ * 1D Perlin Noise Class
+ * 
+ * It generates smooth noise values for a given 1D input.
+ * Used here to create smooth variations in particle properties.
+ * 
+ * Based on https://stackoverflow.com/questions/4753055/perlin-noise-algorithm-in-javascript
+ */
 class PerlinNoise1D {
     constructor() {
         this.MAX_VERTICES = 256;
@@ -620,7 +621,7 @@ class ParticleSystem {
                 varying vec2 vScreenPos;
                 varying float vScale;
 
-                ${Bp.noise}
+                ${GLSL_NOISE}
 
                 void main() {
 
@@ -684,7 +685,7 @@ class ParticleSystem {
 
                 uniform int uColorScheme;
 
-                ${Bp.noise}
+                ${GLSL_NOISE}
 
                 #define PI 3.1415926535897932384626433832795
 
@@ -1293,7 +1294,7 @@ var MainParticles = class {
                 uniform float uRingWidth2;
                 uniform float uRingDisplacement;
 
-                ${Bp.noise}
+                ${GLSL_NOISE}
 
                 void main() {
 
@@ -1485,7 +1486,7 @@ var MainParticles = class {
 
                 uniform int uColorScheme;
 
-                ${Bp.noise}
+                ${GLSL_NOISE}
 
                 #define PI 3.1415926535897932384626433832795
 

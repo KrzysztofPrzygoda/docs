@@ -1044,9 +1044,8 @@ class MorphingParticlesScene {
         this.particles.postRender();
     }
 }
-// Removed unnecessary alias: use MorphingParticlesScene directly
-const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
-    , MorphingParticlesComponent = class MorphingParticlesComponent {
+
+const MorphingParticlesComponent = class MorphingParticlesComponent {
     constructor(e) {
         this.route = e
     }
@@ -1099,94 +1098,77 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
     setPointsTextureFromIndex(e) {
         this.scene && this.scene.setPointsTextureFromIndex(e)
     }
-    };
+};
 
-    class LandingMorphingParticles extends HTMLElement {
-        constructor(){
-            super();
-            this._container = document.createElement('div');
-            this._container.className = 'morphing-particles-container';
-            this._isVisible = false;
-            this._animationFrameId = null;
-            this._intersectionObserver = null;
-            this.scene = null;
-        }
-        connectedCallback(){
-            // append container and initialize scene with attributes (fallback to defaults)
-            this.appendChild(this._container);
-            const theme = this.getAttribute('theme') || 'dark';
-            const density = parseInt(this.getAttribute('density')) || 100;
-            const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
-            const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
-            const texture = this.getAttribute('texture') || 'icon_cube.png';
-            let textures = [];
-            try { textures = this.hasAttribute('textures') ? JSON.parse(this.getAttribute('textures')) : []; } catch(e){}
-            const color1 = this.getAttribute('color1');
-            const color2 = this.getAttribute('color2');
-            const color3 = this.getAttribute('color3');
+class LandingMorphingParticles extends HTMLElement {
+    constructor(){
+        super();
+        this._container = document.createElement('div');
+        this._container.className = 'morphing-particles-container';
+        this._isVisible = false;
+        this._animationFrameId = null;
+        this._intersectionObserver = null;
+        this.scene = null;
+    }
+    connectedCallback(){
+        // append container and initialize scene with attributes (fallback to defaults)
+        this.appendChild(this._container);
+        const theme = this.getAttribute('theme') || 'dark';
+        const density = parseInt(this.getAttribute('density')) || 100;
+        const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
+        const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
+        const texture = this.getAttribute('texture') || 'icon_cube.png';
+        let textures = [];
+        try { textures = this.hasAttribute('textures') ? JSON.parse(this.getAttribute('textures')) : []; } catch(e){}
+        const color1 = this.getAttribute('color1');
+        const color2 = this.getAttribute('color2');
+        const color3 = this.getAttribute('color3');
 
-            if (typeof MorphingParticlesScene === 'function') {
-                this.scene = new MorphingParticlesScene({
-                    container: this._container,
-                    theme,
-                    density,
-                    particlesScale,
-                    cameraZoom,
-                    texture,
-                    textures,
-                    color1,
-                    color2,
-                    color3,
-                    interactive: true
-                });
-            }
-            this._initIntersectionObserver();
-            // Enable hover interactions directly on the component container
-            try {
-                this._container.addEventListener('mouseenter', () => { this.scene && this.scene.onHoverStart(); });
-                this._container.addEventListener('mouseleave', () => { this.scene && this.scene.onHoverEnd(); });
-            } catch (e) {}
-            this._animate();
+        if (typeof MorphingParticlesScene === 'function') {
+            this.scene = new MorphingParticlesScene({
+                container: this._container,
+                theme,
+                density,
+                particlesScale,
+                cameraZoom,
+                texture,
+                textures,
+                color1,
+                color2,
+                color3,
+                interactive: true
+            });
         }
-        _initIntersectionObserver(){
-            const opts = { root: null, rootMargin: '0px', threshold: 0 };
-            this._intersectionObserver = new IntersectionObserver(entries => {
-                entries.forEach(e => {
-                    this._isVisible = e.isIntersecting;
-                    if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
-                });
-            }, opts);
-            this._intersectionObserver.observe(this._container);
-        }
-        _animate = () => {
-            this._animationFrameId = requestAnimationFrame(this._animate);
-            if (this._isVisible) this.scene && this.scene.render();
-        }
-        disconnectedCallback(){
-            this._intersectionObserver && this._intersectionObserver.disconnect();
-            this._animationFrameId && cancelAnimationFrame(this._animationFrameId);
-            this.scene && this.scene.kill();
-        }
+        this._initIntersectionObserver();
+        // Enable hover interactions directly on the component container
+        try {
+            this._container.addEventListener('mouseenter', () => { this.scene && this.scene.onHoverStart(); });
+            this._container.addEventListener('mouseleave', () => { this.scene && this.scene.onHoverEnd(); });
+        } catch (e) {}
+        this._animate();
     }
-    customElements.define('landing-morphing-particles', LandingMorphingParticles);
-// Komponent sekcji "Wypróbuj rozwiązania" (Try Solutions)
-class TrySolutionsComponent {
-    header;
-    description;
-    cta;
-    morphingComponent;
-    sections = Zc.find(e => e.try_solutions)?.try_solutions?.sections || [];
-    registerAnimation(e) {}
-    onSectionMouseEnter(e) {
-        let cmp = Array.from(this.morphingComponent)[e];
-        cmp && cmp.onHover();
+    _initIntersectionObserver(){
+        const opts = { root: null, rootMargin: '0px', threshold: 0 };
+        this._intersectionObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                this._isVisible = e.isIntersecting;
+                if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
+            });
+        }, opts);
+        this._intersectionObserver.observe(this._container);
     }
-    onSectionMouseLeave(e) {
-        let cmp = Array.from(this.morphingComponent)[e];
-        cmp && cmp.onLeave();
+    _animate = () => {
+        this._animationFrameId = requestAnimationFrame(this._animate);
+        if (this._isVisible) this.scene && this.scene.render();
     }
-    // Angular component metadata removed: TrySolutionsComponent converted/unused in vanilla context
+    disconnectedCallback(){
+        this._intersectionObserver && this._intersectionObserver.disconnect();
+        this._animationFrameId && cancelAnimationFrame(this._animationFrameId);
+        this.scene && this.scene.kill();
+    }
 }
+customElements.define('landing-morphing-particles', LandingMorphingParticles);
+
 // Poisson disk sampler for generating evenly distributed points
 // Deminified: Use PoissonDiskSampler directly, no alias
 // Linear mapping from one range to another
@@ -1830,123 +1812,64 @@ var MainScene = class {
     postRender() {
         this.particles.postRender()
     }
-        }
-    , H9 = MainScene;
-var mainParticlesContainerQuery = ["mainParticlesContainer"]
-    , MainParticlesAngularComponent = class n {
-    theme = "light";
-    ringWidth = .15;
-    ringWidth2 = .05;
-    ringDisplacement = .15;
-    density = 200;
-    particlesScale = .75;
-    mainParticlesContainer;
-    scene;
-    intersectionObserver;
-    isVisible = !1;
-    animationFrameId = null;
-    ngAfterViewInit() {
-        let t = new URLSearchParams(window.location.search).get("gui") === "true";
-        this.scene = new H9({
-            container: this.mainParticlesContainer.nativeElement,
-            theme: this.theme,
-            particlesScale: this.particlesScale,
-            density: this.density,
-            interactive: !0,
-            gui: t,
-            verbose: !1,
-            ringWidth: this.ringWidth,
-            ringWidth2: this.ringWidth2,
-            ringDisplacement: this.ringDisplacement
-        }),
-        this.initIntersectionObserver(),
-        this.animate()
-    }
-    initIntersectionObserver() {
-        let e = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0
-        };
-        this.intersectionObserver = new IntersectionObserver(t => {
-            t.forEach(i => {
-                this.isVisible = i.isIntersecting,
-                i.isIntersecting ? this.scene.resume() : this.scene.stop()
-            }
-            )
-        }
-        ,e),
-        this.intersectionObserver.observe(this.mainParticlesContainer.nativeElement)
-    }
-    animate = () => {
-        this.animationFrameId = requestAnimationFrame(this.animate),
-        this.isVisible && this.scene.render()
-    }
-    ;
-    ngOnDestroy() {
-        this.intersectionObserver && this.intersectionObserver.disconnect(),
-        this.animationFrameId !== null && cancelAnimationFrame(this.animationFrameId),
-        this.scene && this.scene.kill()
-    }
-    };
-    // Web Component replacement for the Angular main particles component
-    // <landing-main-particles> will instantiate `H9` (Main scene) and manage lifecycle
-    class LandingMainParticles extends HTMLElement {
-        constructor(){
-            super();
-            this._container = document.createElement('div');
-            this._container.className = 'main-particles-container';
-            this._isVisible = false;
-            this._animationFrameId = null;
-            this._intersectionObserver = null;
-            this.scene = null;
-        }
-        connectedCallback(){
-            this.appendChild(this._container);
-            const theme = this.getAttribute('theme') || 'light';
-            const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 0.75;
-            const density = parseInt(this.getAttribute('density')) || 200;
-            const ringWidth = parseFloat(this.getAttribute('ringWidth')) || 0.15;
-            const ringWidth2 = parseFloat(this.getAttribute('ringWidth2')) || 0.05;
-            const ringDisplacement = parseFloat(this.getAttribute('ringDisplacement')) || 0.15;
+};
 
-            if (typeof H9 === 'function') {
-                this.scene = new H9({
-                    container: this._container,
-                    theme,
-                    particlesScale,
-                    density,
-                    interactive: true,
-                    gui: false,
-                    verbose: false,
-                    ringWidth,
-                    ringWidth2,
-                    ringDisplacement
-                });
-            }
-            this._initIntersectionObserver();
-            this._animate();
-        }
-        _initIntersectionObserver(){
-            const opts = { root: null, rootMargin: '0px', threshold: 0 };
-            this._intersectionObserver = new IntersectionObserver(entries => {
-                entries.forEach(e => {
-                    this._isVisible = e.isIntersecting;
-                    if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
-                });
-            }, opts);
-            this._intersectionObserver.observe(this._container);
-        }
-        _animate = () => {
-            this._animationFrameId = requestAnimationFrame(this._animate);
-            if (this._isVisible) this.scene && this.scene.render();
-        }
-        disconnectedCallback(){
-            this._intersectionObserver && this._intersectionObserver.disconnect();
-            this._animationFrameId && cancelAnimationFrame(this._animationFrameId);
-            this.scene && this.scene.kill();
-        }
+class LandingMainParticles extends HTMLElement {
+    constructor(){
+        super();
+        this._container = document.createElement('div');
+        this._container.className = 'main-particles-container';
+        this._isVisible = false;
+        this._animationFrameId = null;
+        this._intersectionObserver = null;
+        this.scene = null;
     }
-    customElements.define('landing-main-particles', LandingMainParticles);
+    connectedCallback(){
+        this.appendChild(this._container);
+        const theme = this.getAttribute('theme') || 'light';
+        const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 0.75;
+        const density = parseInt(this.getAttribute('density')) || 200;
+        const ringWidth = parseFloat(this.getAttribute('ringWidth')) || 0.15;
+        const ringWidth2 = parseFloat(this.getAttribute('ringWidth2')) || 0.05;
+        const ringDisplacement = parseFloat(this.getAttribute('ringDisplacement')) || 0.15;
+
+        if (typeof MainScene === 'function') {
+            this.scene = new MainScene({
+                container: this._container,
+                theme,
+                particlesScale,
+                density,
+                interactive: true,
+                gui: false,
+                verbose: false,
+                ringWidth,
+                ringWidth2,
+                ringDisplacement
+            });
+        }
+        this._initIntersectionObserver();
+        this._animate();
+    }
+    _initIntersectionObserver(){
+        const opts = { root: null, rootMargin: '0px', threshold: 0 };
+        this._intersectionObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                this._isVisible = e.isIntersecting;
+                if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
+            });
+        }, opts);
+        this._intersectionObserver.observe(this._container);
+    }
+    _animate = () => {
+        this._animationFrameId = requestAnimationFrame(this._animate);
+        if (this._isVisible) this.scene && this.scene.render();
+    }
+    disconnectedCallback(){
+        this._intersectionObserver && this._intersectionObserver.disconnect();
+        this._animationFrameId && cancelAnimationFrame(this._animationFrameId);
+        this.scene && this.scene.kill();
+    }
+}
+customElements.define('landing-main-particles', LandingMainParticles);
 
 // Angular component markup examples removed (migrated to native Web Components)

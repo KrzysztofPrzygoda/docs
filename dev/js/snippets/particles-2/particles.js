@@ -853,15 +853,8 @@ class MorphingParticlesScene {
         this.theme = e.theme || "dark";
         this.interactive = e.interactive || !1;
         // Set scene background according to theme. Use null for true transparency.
-        if (this.theme === 'dark') {
-            this.options.background = new Color(1184535);
-        } else if (this.theme === 'light') {
-            this.options.background = new Color(0xffffff);
-        } else if (this.theme === 'transparent') {
-            this.options.background = null;
-        } else {
-            this.options.background = new Color(16777215);
-        }
+        // this.options.background = this.theme === "dark" ? new Color(1184535) : new Color(16777215);
+        this.options.background = null;
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
         this.particlesScale = e.particlesScale || .5;
         this.density = e.density || 150;
@@ -895,20 +888,6 @@ class MorphingParticlesScene {
         this.renderer.setPixelRatio(window.devicePixelRatio || 1);
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping = THREE.NoToneMapping;
-        // Set clear color / canvas background according to theme
-        if (this.theme === 'light') {
-            // opaque white background for light theme
-            this.renderer.setClearColor(new Color(0xffffff), 1);
-            this.canvas.style.background = '#ffffff';
-        } else if (this.theme === 'transparent') {
-            // fully transparent canvas background
-            this.renderer.setClearColor(new Color(0x000000), 0);
-            this.canvas.style.background = 'transparent';
-        } else {
-            // default: use scene background color (dark) and opaque clear
-            this.renderer.setClearColor(this.options.background, 1);
-            this.canvas.style.background = null;
-        }
         this.onWindowResize = this.onWindowResize.bind(this);
         this.initCamera();
         this.initScene();
@@ -1086,8 +1065,6 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
     intersectionObserver;
     isVisible = !1;
     animationFrameId = null;
-    // Angular-specific lifecycle hook ngAfterViewInit removed
-    // This method has been removed to simplify the component lifecycle.
     initIntersectionObserver() {
         let e = {
             root: null,
@@ -1123,8 +1100,7 @@ const morphingParticlesContainerQuery = ["morphingParticlesContainer"]
         this.scene && this.scene.setPointsTextureFromIndex(e)
     }
     };
-    // Web Component replacement for the Angular morphing component
-    // <landing-morphing-particles> will instantiate `MorphingParticlesScene` and manage lifecycle
+
     class LandingMorphingParticles extends HTMLElement {
         constructor(){
             super();
@@ -1661,23 +1637,24 @@ var MainParticles = class {
     // alias removed: MainParticles is now the class name
 var MainScene = class {
     constructor(e) {
-        this.loaded = !1,
-        this.texture = null,
-        this.options = e,
-        this.theme = e.theme || "dark",
-        this.interactive = e.interactive || !1,
-        this.options.background = this.theme === "dark" ? new Color(0) : new Color(16777215),
-        this.pixelRatio = e.pixelRatio || window.devicePixelRatio,
-        this.particlesScale = e.particlesScale || 1,
-        this.density = e.density || 200,
-        this.verbose = e.verbose || !1,
-        this.scene = new Scene,
-        this.scene.background = this.options.background,
-        this.canvas = document.createElement("canvas"),
-        this.options.container.appendChild(this.canvas),
-        this.canvas.width = this.options.container.offsetWidth,
-        this.canvas.height = this.options.container.offsetHeight,
-        ColorManagement.enabled = false,
+        this.loaded = !1;
+        this.texture = null;
+        this.options = e;
+        this.theme = e.theme || "dark";
+        this.interactive = e.interactive || !1;
+        // this.options.background = this.theme === "dark" ? new Color(0) : new Color(16777215);
+        this.options.background = null;
+        this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
+        this.particlesScale = e.particlesScale || 1;
+        this.density = e.density || 200;
+        this.verbose = e.verbose || !1;
+        this.scene = new Scene;
+        this.scene.background = this.options.background;
+        this.canvas = document.createElement("canvas");
+        this.options.container.appendChild(this.canvas);
+        this.canvas.width = this.options.container.offsetWidth;
+        this.canvas.height = this.options.container.offsetHeight;
+        ColorManagement.enabled = false;
         this.renderer = new WebGLRenderer({
             canvas: this.canvas,
             antialias: !0,
@@ -1686,32 +1663,32 @@ var MainScene = class {
             preserveDrawingBuffer: !0,
             stencil: !1,
             precision: "highp"
-        }),
-        this.gl = this.renderer.getContext(),
-        this.renderer.extensions.get("EXT_color_buffer_float"),
-        this.renderer.setSize(this.canvas.width, this.canvas.height),
-        this.renderer.setPixelRatio(this.pixelRatio),
-        this.onWindowResize = this.onWindowResize.bind(this),
-        this.initCamera(),
-        this.initScene(),
-        this.initEvents(),
-        this.clock = new Clock(),
-        this.time = 0,
-        this.lastTime = 0,
-        this.dt = 0,
-        this.skipFrame = !1,
-        this.isPaused = !1,
-        this.raycaster = new Raycaster(),
-        this.mouse = new THREE.Vector2(),
-        this.intersectionPoint = new Vector3(),
-        this.isIntersecting = !1,
-        this.mouseIsOver = !1,
+        });
+        this.gl = this.renderer.getContext();
+        this.renderer.extensions.get("EXT_color_buffer_float");
+        this.renderer.setSize(this.canvas.width, this.canvas.height);
+        this.renderer.setPixelRatio(this.pixelRatio);
+        this.onWindowResize = this.onWindowResize.bind(this);
+        this.initCamera();
+        this.initScene();
+        this.initEvents();
+        this.clock = new Clock();
+        this.time = 0;
+        this.lastTime = 0;
+        this.dt = 0;
+        this.skipFrame = !1;
+        this.isPaused = !1;
+        this.raycaster = new Raycaster();
+        this.mouse = new THREE.Vector2();
+        this.intersectionPoint = new Vector3();
+        this.isIntersecting = !1;
+        this.mouseIsOver = !1;
         this.raycastPlane = new Mesh(new PlaneGeometry(12.5,12.5), new MeshBasicMaterial({
             color: 16711680,
             visible: !1,
             side: DoubleSide
-        })),
-        this.scene.add(this.raycastPlane)
+        }));
+        this.scene.add(this.raycastPlane);
     }
     initEvents() {
         window.addEventListener("resize", e => {

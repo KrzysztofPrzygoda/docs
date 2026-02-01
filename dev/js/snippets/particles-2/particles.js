@@ -863,7 +863,16 @@ class MorphingParticlesScene {
         this.options = e;
         this.theme = e.theme || "dark";
         this.interactive = e.interactive || !1;
-        this.options.background = this.theme === "dark" ? new Color(1184535) : new Color(16777215);
+        // Set scene background according to theme. Use null for true transparency.
+        if (this.theme === 'dark') {
+            this.options.background = new Color(1184535);
+        } else if (this.theme === 'light') {
+            this.options.background = new Color(0xffffff);
+        } else if (this.theme === 'transparent') {
+            this.options.background = null;
+        } else {
+            this.options.background = new Color(16777215);
+        }
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
         this.particlesScale = e.particlesScale || .5;
         this.density = e.density || 150;
@@ -874,6 +883,7 @@ class MorphingParticlesScene {
         this.hoverProgress = 0;
         this.pushProgress = 0;
         this.scene = new Scene;
+        // Apply background (if null, the renderer will preserve canvas transparency)
         this.scene.background = this.options.background;
         this.canvas = document.createElement("canvas");
         this.options.container.appendChild(this.canvas);

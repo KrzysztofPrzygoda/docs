@@ -2,7 +2,6 @@ import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
 import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
 // import { PoissonDiskSampling } from './poisson-disk-sampling.js';
 import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm';
-const Animator = gsap;
 
 const {
     Vector2,
@@ -23,13 +22,50 @@ const {
     RepeatWrapping,
     NearestFilter,
     RGBAFormat,
+    sRGBEncoding,
     FloatType,
     PerspectiveCamera,
     OrthographicCamera,
     ColorManagement,
     DoubleSide,
-    MeshBasicMaterial
+    MeshBasicMaterial,
+    NoToneMapping
 } = THREE;
+const Animator = gsap;
+
+/**
+ * Mouse Tracker Class
+ * Tracks mouse movement and screen size.
+ */
+class MouseTracker {
+    constructor() {
+        this.cursor = new Vector2();
+        this.initEvents();
+        window.__debugMouse = this;
+        this.screenWidth = window.innerWidth;
+        this.screenHeight = window.innerHeight;
+        this.update();
+    }
+    initEvents() {
+        window.addEventListener("mousemove", e => {
+            this.onMouseMove(e);
+        });
+        window.addEventListener("resize", () => {
+            this.screenWidth = window.innerWidth;
+            this.screenHeight = window.innerHeight;
+        });
+    }
+    onMouseMove(e) {
+        this.cursor.x = e.clientX;
+        this.cursor.y = e.clientY;
+    }
+    update() {
+        requestAnimationFrame(() => {
+            this.update();
+        });
+    }
+}
+const mt = new MouseTracker();
 
 // GLSL Simplex Noise Functions
 var GLSL_NOISE = `
@@ -268,33 +304,40 @@ class PerlinNoise1D {
     }
 }
 
-// Use the imported UMD build which exposes `PoissonDiskSampling` on globalThis.
+/**
+ * Poisson Disk Sampler Wrapper
+ */
 const PoissonDiskSampler = function(options, rng) {
     if (typeof PoissonDiskSampling === 'function') return new PoissonDiskSampling(options, rng);
     throw new Error('PoissonDiskSampling not available — ensure poisson-disk-sampling.umd.js is loaded');
 };
 
-// --- Linear Mapping Utility ---
+/**
+ * Linear mapping utility function
+ * Maps a value from one range to another.
+ */
 const linearMap = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 
-// --- ParticleSystem ---
+/**
+ * Particle System Class
+ * Manages particle creation, updating, and rendering.
+ */
 class ParticleSystem {
     constructor(scene, textures) {
         this.scene = scene;
-        this.renderer = scene.renderer; // Renderer for the particle system
+        this.renderer = scene.renderer;
         this.gl = scene.gl; 
         this.camera = scene.camera;
         this.textures = textures;
         this.lastTime = 0;
         this.everRendered = false;
-        // Pozycja myszy i kursora (2D vector)
         this.mousePos = new Vector2(0, 0);
         this.cursorPos = new Vector2(0, 0);
         this.colorScheme = scene.theme === "dark" ? 0 : 1;
         this.particleScale = this.scene.renderer.domElement.width / this.scene.pixelRatio / 2000 * this.scene.particlesScale;
     }
     static async create(scene, textures) {
-        let instance = new ParticleSystem(scene, textures); // Create a new instance of ParticleSystem
+        let instance = new ParticleSystem(scene, textures);
         instance.createPoints();
         await instance.createPointsFromImage();
         instance.init();
@@ -541,9 +584,9 @@ class ParticleSystem {
                 }
             `
         });
-                let e = new Mesh(new PlaneGeometry(2,2),this.simMaterial);
-                this.simScene.add(e);
-                let t = new BufferGeometry
+        let e = new Mesh(new PlaneGeometry(2,2),this.simMaterial);
+        this.simScene.add(e);
+        let t = new BufferGeometry
           , i = new Float32Array(this.count * 2)
           , r = new Float32Array(this.count * 3)
           , o = new Float32Array(this.count * 4);
@@ -811,38 +854,11 @@ class ParticleSystem {
         this.renderMaterial.dispose()
     }
 }
-// Czytelne aliasy i klasy
-var MorphingParticles = ParticleSystem;
-class MouseTracker {
-    constructor() {
-        this.cursor = new THREE.Vector2();
-        this.initEvents();
-        window.__debugMouse = this;
-        this.screenWidth = window.innerWidth;
-        this.screenHeight = window.innerHeight;
-        this.update();
-    }
-    initEvents() {
-        window.addEventListener("mousemove", e => {
-            this.onMouseMove(e);
-        });
-        window.addEventListener("resize", () => {
-            this.screenWidth = window.innerWidth;
-            this.screenHeight = window.innerHeight;
-        });
-    }
-    onMouseMove(e) {
-        this.cursor.x = e.clientX;
-        this.cursor.y = e.clientY;
-    }
-    update() {
-        requestAnimationFrame(() => {
-            this.update();
-        });
-    }
-}
-var mouseTrackerInstance = new MouseTracker();
-var $r = mouseTrackerInstance;
+
+/**
+ * Morphing Particles Scene Class
+ * Manages the overall scene, camera, renderer, and interactions.
+ */
 class MorphingParticlesScene {
     constructor(e) {
         this.loaded = !1;
@@ -866,7 +882,6 @@ class MorphingParticlesScene {
         this.hoverProgress = 0;
         this.pushProgress = 0;
         this.scene = new Scene;
-        // Apply background (if null, the renderer will preserve canvas transparency)
         this.scene.background = this.options.background;
         this.canvas = document.createElement("canvas");
         this.options.container.appendChild(this.canvas);
@@ -885,10 +900,9 @@ class MorphingParticlesScene {
         this.gl = this.renderer.getContext();
         this.renderer.extensions.get("EXT_color_buffer_float");
         this.renderer.setSize(this.canvas.width, this.canvas.height);
-        // Ensure renderer uses device DPR and correct color/tone settings to match donor environment
         this.renderer.setPixelRatio(window.devicePixelRatio || 1);
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.toneMapping = THREE.NoToneMapping;
+        this.renderer.outputEncoding = sRGBEncoding;
+        this.renderer.toneMapping = NoToneMapping;
         this.onWindowResize = this.onWindowResize.bind(this);
         this.initCamera();
         this.initScene();
@@ -900,7 +914,7 @@ class MorphingParticlesScene {
         this.skipFrame = !1;
         this.isPaused = !1;
         this.raycaster = new Raycaster();
-        this.mouse = new THREE.Vector2();
+        this.mouse = new Vector2();
         this.intersectionPoint = new Vector3();
         this.isIntersecting = !1;
         this.mouseIsOver = !1;
@@ -952,7 +966,7 @@ class MorphingParticlesScene {
         this.onLoaded();
     }
     async initParticles() {
-        this.particles = await MorphingParticles.create(this, this.textures);
+        this.particles = await ParticleSystem.create(this, this.textures);
     }
     initGUI() {
         this.gui = new GUI({
@@ -1018,11 +1032,11 @@ class MorphingParticlesScene {
             this.particles.update(),
             this.interactive && !this.skipFrame) {
             let e = this.canvas.getBoundingClientRect(),
-                t = $r.cursor;
-            this.mouse.x = ($r.cursor.x - e.left) * ($r.screenWidth / e.width);
-            this.mouse.y = ($r.cursor.y - e.top) * ($r.screenHeight / e.height);
-            this.mouse.x = this.mouse.x / $r.screenWidth * 2 - 1;
-            this.mouse.y = -(this.mouse.y / $r.screenHeight) * 2 + 1;
+                t = mt.cursor;
+            this.mouse.x = (mt.cursor.x - e.left) * (mt.screenWidth / e.width);
+            this.mouse.y = (mt.cursor.y - e.top) * (mt.screenHeight / e.height);
+            this.mouse.x = this.mouse.x / mt.screenWidth * 2 - 1;
+            this.mouse.y = -(this.mouse.y / mt.screenHeight) * 2 + 1;
             this.mouse.x < -1 || this.mouse.x > 1 || this.mouse.y < -1 || this.mouse.y > 1 ? this.mouseIsOver = !1 : this.mouseIsOver = !0;
         }
         if (this.skipFrame = !this.skipFrame,
@@ -1662,7 +1676,7 @@ var MainScene = class {
         this.skipFrame = !1;
         this.isPaused = !1;
         this.raycaster = new Raycaster();
-        this.mouse = new THREE.Vector2();
+        this.mouse = new Vector2();
         this.intersectionPoint = new Vector3();
         this.isIntersecting = !1;
         this.mouseIsOver = !1;
@@ -1787,11 +1801,11 @@ var MainScene = class {
         this.particles.update(),
         this.interactive && !this.skipFrame) {
             let t = this.canvas.getBoundingClientRect()
-              , i = $r.cursor;
-            this.mouse.x = ($r.cursor.x - t.left) * ($r.screenWidth / t.width),
-            this.mouse.y = ($r.cursor.y - t.top) * ($r.screenHeight / t.height),
-            this.mouse.x = this.mouse.x / $r.screenWidth * 2 - 1,
-            this.mouse.y = -(this.mouse.y / $r.screenHeight) * 2 + 1,
+              , i = mt.cursor;
+            this.mouse.x = (mt.cursor.x - t.left) * (mt.screenWidth / t.width),
+            this.mouse.y = (mt.cursor.y - t.top) * (mt.screenHeight / t.height),
+            this.mouse.x = this.mouse.x / mt.screenWidth * 2 - 1,
+            this.mouse.y = -(this.mouse.y / mt.screenHeight) * 2 + 1,
             this.mouse.x < -1 || this.mouse.x > 1 || this.mouse.y < -1 || this.mouse.y > 1 ? this.mouseIsOver = !1 : this.mouseIsOver = !0
         }
         if (this.skipFrame = !this.skipFrame,

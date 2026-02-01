@@ -2,6 +2,7 @@ import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
 import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
 // import { PoissonDiskSampling } from './poisson-disk-sampling.js';
 import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm';
+import GUI from 'https://cdn.jsdelivr.net/npm/lil-gui@0.18.0/+esm';
 
 const {
     Vector2,
@@ -969,6 +970,8 @@ class MorphingParticlesScene {
         this.particles = await ParticleSystem.create(this, this.textures);
     }
     initGUI() {
+        if (typeof GUI === 'undefined') return;
+
         this.gui = new GUI({
             autoPlace: !1
         });
@@ -1020,6 +1023,13 @@ class MorphingParticlesScene {
             this.raycastPlane.material.dispose());
         this.renderer && this.renderer.dispose();
         this.canvas && this.canvas.parentElement && this.canvas.parentElement.removeChild(this.canvas);
+        if (this.gui) {
+            try { if (typeof this.gui.destroy === 'function') this.gui.destroy(); } catch (e) {}
+            if (this.gui.domElement && this.gui.domElement.parentNode) {
+                this.gui.domElement.parentNode.removeChild(this.gui.domElement);
+            }
+            this.gui = null;
+        }
     }
     onLoaded() {
         this.loaded = !0;
@@ -1151,7 +1161,8 @@ class LandingMorphingParticles extends HTMLElement {
                 color1,
                 color2,
                 color3,
-                interactive: true
+                interactive: true,
+                gui: true
             });
         }
         this._initIntersectionObserver();
@@ -1722,7 +1733,9 @@ var MainScene = class {
         this.particles = new MainParticles(this)
     }
     initGUI() {
-        this.gui = new yb({
+        if (typeof GUI === 'undefined') return;
+
+        this.gui = new GUI({
             autoPlace: !1
         }),
         this.options.container.appendChild(this.gui.domElement),
@@ -1790,6 +1803,12 @@ var MainScene = class {
         this.raycastPlane.material.dispose()),
         this.renderer && this.renderer.dispose(),
         this.canvas && this.canvas.parentElement && this.canvas.parentElement.removeChild(this.canvas)
+        ,
+        this.gui && (function(gui){
+            try{ if (typeof gui.destroy === 'function') gui.destroy(); }catch(e){}
+            if (gui.domElement && gui.domElement.parentNode) gui.domElement.parentNode.removeChild(gui.domElement);
+        })(this.gui),
+        this.gui = null
     }
     onLoaded() {
         this.loaded = !0

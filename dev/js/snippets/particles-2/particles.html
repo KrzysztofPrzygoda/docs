@@ -13,10 +13,6 @@
 </head>
 <body>
 
-<!-- Load particle system (the file in this folder) -->
-<!-- GSAP for animations (required) -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-<!-- Load particle system (the file in this folder) -->
 <script type="module" src="./particles.js"></script>
 
 <!-- Demo markup: instantiate web components that wrap the original scenes -->
@@ -24,16 +20,6 @@
     Ensure images are CORS-accessible if they are remote, or use local URLs/Blob URLs. -->
 <landing-morphing-particles id="morphParticles" theme="light" density="100" particlesScale="1" cameraZoom="7.5" color1="#676A72" color2="#FF4641" color3="#346BF1" textures='["./shape.png","./shape2.png"]'></landing-morphing-particles>
 <landing-main-particles id="mainParticles" theme="light" particlesScale="0.75" density="200" ringWidth="0.107" ringWidth2="0.05" ringDisplacement="0.15"></landing-main-particles>
-
-<!-- Optional small controller for demo (toggle GUI) -->
-<script>
-// Show how to access components from JS if needed
-window.addEventListener('load', ()=>{
-    const main = document.getElementById('mainParticles');
-    const morph = document.getElementById('morphParticles');
-    // components self-initialize on connect; no further action required.
-});
-</script>
 
 </body>
 </html>

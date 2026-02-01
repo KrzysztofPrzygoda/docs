@@ -896,6 +896,20 @@ class MorphingParticlesScene {
         this.renderer.setPixelRatio(window.devicePixelRatio || 1);
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping = THREE.NoToneMapping;
+        // Set clear color / canvas background according to theme
+        if (this.theme === 'light') {
+            // opaque white background for light theme
+            this.renderer.setClearColor(new Color(0xffffff), 1);
+            this.canvas.style.background = '#ffffff';
+        } else if (this.theme === 'transparent') {
+            // fully transparent canvas background
+            this.renderer.setClearColor(new Color(0x000000), 0);
+            this.canvas.style.background = 'transparent';
+        } else {
+            // default: use scene background color (dark) and opaque clear
+            this.renderer.setClearColor(this.options.background, 1);
+            this.canvas.style.background = null;
+        }
         this.onWindowResize = this.onWindowResize.bind(this);
         this.initCamera();
         this.initScene();

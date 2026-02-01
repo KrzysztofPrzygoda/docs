@@ -1,8 +1,8 @@
 import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
 import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
 // import { PoissonDiskSampling } from './poisson-disk-sampling.js';
-// Require GSAP to drive animations - no fallbacks allowed in deminified code
-const Animator = (typeof window !== 'undefined' && window.gsap) ? window.gsap : null;
+import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm';
+const Animator = gsap;
 
 // GLSL Simplex Noise Functions
 var GLSL_NOISE = `

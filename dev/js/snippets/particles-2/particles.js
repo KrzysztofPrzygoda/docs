@@ -35,6 +35,20 @@ const {
 const Animator = gsap;
 
 /**
+ * Poisson Disk Sampler Wrapper
+ */
+const PoissonDiskSampler = function(options, rng) {
+    if (typeof PoissonDiskSampling === 'function') return new PoissonDiskSampling(options, rng);
+    throw new Error('PoissonDiskSampling not available — ensure poisson-disk-sampling.umd.js is loaded');
+};
+
+/**
+ * Linear mapping utility function
+ * Maps a value from one range to another.
+ */
+const mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+
+/**
  * Mouse Tracker Class
  * Tracks mouse movement and screen size.
  */
@@ -68,8 +82,11 @@ class MouseTracker {
 }
 const mt = new MouseTracker();
 
-// GLSL Simplex Noise Functions
-var GLSL_NOISE = `
+/**
+ * GLSL Simplex Noise Functions
+ * Provides 2D, 3D, and 4D simplex noise implementations.
+ */
+const GLSL_NOISE = `
   // MATHS
   vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
   vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
@@ -273,11 +290,8 @@ var GLSL_NOISE = `
 
 /**
  * 1D Perlin Noise Class
- * 
  * It generates smooth noise values for a given 1D input.
  * Used here to create smooth variations in particle properties.
- * 
- * Based on https://stackoverflow.com/questions/4753055/perlin-noise-algorithm-in-javascript
  */
 class PerlinNoise1D {
     constructor() {
@@ -306,24 +320,10 @@ class PerlinNoise1D {
 }
 
 /**
- * Poisson Disk Sampler Wrapper
- */
-const PoissonDiskSampler = function(options, rng) {
-    if (typeof PoissonDiskSampling === 'function') return new PoissonDiskSampling(options, rng);
-    throw new Error('PoissonDiskSampling not available — ensure poisson-disk-sampling.umd.js is loaded');
-};
-
-/**
- * Linear mapping utility function
- * Maps a value from one range to another.
- */
-const linearMap = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-
-/**
  * Particle System Class
  * Manages particle creation, updating, and rendering.
  */
-class ParticleSystem {
+class MorphingParticleSystem {
     constructor(scene, textures) {
         this.scene = scene;
         this.renderer = scene.renderer;
@@ -338,7 +338,7 @@ class ParticleSystem {
         this.particleScale = this.scene.renderer.domElement.width / this.scene.pixelRatio / 2000 * this.scene.particlesScale;
     }
     static async create(scene, textures) {
-        let instance = new ParticleSystem(scene, textures);
+        let instance = new MorphingParticleSystem(scene, textures);
         instance.createPoints();
         await instance.createPointsFromImage();
         instance.init();
@@ -361,8 +361,8 @@ class ParticleSystem {
         });
     }
     createPoints() {
-        const minDistance = linearMap(this.scene.density, 0, 300, 10, 2);
-        const maxDistance = linearMap(this.scene.density, 0, 300, 10, 50);
+        const minDistance = mapRange(this.scene.density, 0, 300, 10, 2);
+        const maxDistance = mapRange(this.scene.density, 0, 300, 10, 50);
         let poisson = new PoissonDiskSampler({
             shape: [500, 500],
             minDistance: minDistance,
@@ -919,7 +919,7 @@ class MorphingParticlesScene {
         this.intersectionPoint = new Vector3();
         this.isIntersecting = !1;
         this.mouseIsOver = !1;
-        // create an invisible plane to receive raycasts for this scene
+        // Create an invisible plane to receive raycasts for this scene
         this.raycastPlane = new Mesh(new PlaneGeometry(12.5,12.5), new MeshBasicMaterial({
             color: 16711680,
             visible: !1,
@@ -967,7 +967,7 @@ class MorphingParticlesScene {
         this.onLoaded();
     }
     async initParticles() {
-        this.particles = await ParticleSystem.create(this, this.textures);
+        this.particles = await MorphingParticleSystem.create(this, this.textures);
     }
     initGUI() {
         if (typeof GUI === 'undefined') return;
@@ -1019,17 +1019,10 @@ class MorphingParticlesScene {
         this.stop();
         window.removeEventListener("resize", this.onWindowResize);
         this.raycastPlane && (this.scene.remove(this.raycastPlane),
-            this.raycastPlane.geometry.dispose(),
-            this.raycastPlane.material.dispose());
+        this.raycastPlane.geometry.dispose(),
+        this.raycastPlane.material.dispose());
         this.renderer && this.renderer.dispose();
         this.canvas && this.canvas.parentElement && this.canvas.parentElement.removeChild(this.canvas);
-        if (this.gui) {
-            try { if (typeof this.gui.destroy === 'function') this.gui.destroy(); } catch (e) {}
-            if (this.gui.domElement && this.gui.domElement.parentNode) {
-                this.gui.domElement.parentNode.removeChild(this.gui.domElement);
-            }
-            this.gui = null;
-        }
     }
     onLoaded() {
         this.loaded = !0;
@@ -1070,62 +1063,11 @@ class MorphingParticlesScene {
     }
 }
 
-const MorphingParticlesComponent = class MorphingParticlesComponent {
-    constructor(e) {
-        this.route = e
-    }
-    theme = "dark";
-    density = 100;
-    particlesScale = 1;
-    cameraZoom = 3.5;
-    texture = "icon_cube.png";
-    textures = [];
-    color1;
-    color2;
-    color3;
-    loaded = new SimpleEventEmitter();
-    morphingParticlesContainer;
-    scene;
-    intersectionObserver;
-    isVisible = !1;
-    animationFrameId = null;
-    initIntersectionObserver() {
-        let e = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0
-        };
-        this.intersectionObserver = new IntersectionObserver(t => {
-            t.forEach(i => {
-                this.isVisible = i.isIntersecting,
-                i.isIntersecting ? this.scene.resume() : this.scene.stop()
-            }
-            )
-        }
-        ,e),
-        this.intersectionObserver.observe(this.morphingParticlesContainer.nativeElement)
-    }
-    animate = () => {
-        this.animationFrameId = requestAnimationFrame(this.animate),
-        this.isVisible && this.scene.render()
-    }
-    ;
-    onAllLoaded() {
-        this.loaded.emit()
-    }
-    registerAnimation(e) {}
-    onHover() {
-        this.scene && this.scene.onHoverStart()
-    }
-    onLeave() {
-        this.scene && this.scene.onHoverEnd()
-    }
-    setPointsTextureFromIndex(e) {
-        this.scene && this.scene.setPointsTextureFromIndex(e)
-    }
-};
-
-class LandingMorphingParticles extends HTMLElement {
+/**
+ * Morphing Particles Web Component
+ * Encapsulates the MorphingParticlesScene within a custom HTML element.
+ */
+class MorphingParticlesComponent extends HTMLElement {
     constructor(){
         super();
         this._container = document.createElement('div');
@@ -1162,7 +1104,7 @@ class LandingMorphingParticles extends HTMLElement {
                 color2,
                 color3,
                 interactive: true,
-                gui: true
+                gui: false
             });
         }
         this._initIntersectionObserver();
@@ -1193,13 +1135,13 @@ class LandingMorphingParticles extends HTMLElement {
         this.scene && this.scene.kill();
     }
 }
-customElements.define('landing-morphing-particles', LandingMorphingParticles);
+customElements.define('morphing-particles', MorphingParticlesComponent);
 
-// Poisson disk sampler for generating evenly distributed points
-// Deminified: Use PoissonDiskSampler directly, no alias
-// Linear mapping from one range to another
-var mapRange = (value, inMin, inMax, outMin, outMax) => (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-var MainParticles = class {
+/**
+ * Amoeba Particle System Class
+ * Manages the particle system, including initialization, simulation, and rendering.
+ */
+class AmoebaParticleSystem {
     constructor(e) {
         this.scene = e,
         this.renderer = e.renderer,
@@ -1215,7 +1157,6 @@ var MainParticles = class {
         this.init()
     }
     createPoints() {
-        // Generowanie punktów metodą Poissona
         const minDistance = mapRange(this.scene.density, 0, 300, 10, 2);
         const maxDistance = mapRange(this.scene.density, 0, 300, 10, 50);
         let points = new PoissonDiskSampler({
@@ -1642,8 +1583,12 @@ var MainParticles = class {
         this.renderMaterial.dispose()
     }
 }
-    // alias removed: MainParticles is now the class name
-var MainScene = class {
+
+/**
+ * Amoeba Particles Scene Class
+ * Manages the overall scene, including camera, renderer, and particle system.
+ */
+class AmoebaParticlesScene {
     constructor(e) {
         this.loaded = !1;
         this.texture = null;
@@ -1730,7 +1675,7 @@ var MainScene = class {
         this.onLoaded()
     }
     initParticles() {
-        this.particles = new MainParticles(this)
+        this.particles = new AmoebaParticleSystem(this)
     }
     initGUI() {
         if (typeof GUI === 'undefined') return;
@@ -1848,11 +1793,15 @@ var MainScene = class {
     }
 };
 
-class LandingMainParticles extends HTMLElement {
+/**
+ * Amoeba Particles Web Component
+ * Encapsulates the AmoebaParticlesScene within a custom HTML element.
+ */
+class AmoebaParticlesComponent extends HTMLElement {
     constructor(){
         super();
         this._container = document.createElement('div');
-        this._container.className = 'main-particles-container';
+        this._container.className = 'amoeba-particles-container';
         this._isVisible = false;
         this._animationFrameId = null;
         this._intersectionObserver = null;
@@ -1867,8 +1816,8 @@ class LandingMainParticles extends HTMLElement {
         const ringWidth2 = parseFloat(this.getAttribute('ringWidth2')) || 0.05;
         const ringDisplacement = parseFloat(this.getAttribute('ringDisplacement')) || 0.15;
 
-        if (typeof MainScene === 'function') {
-            this.scene = new MainScene({
+        if (typeof AmoebaParticlesScene === 'function') {
+            this.scene = new AmoebaParticlesScene({
                 container: this._container,
                 theme,
                 particlesScale,
@@ -1878,7 +1827,7 @@ class LandingMainParticles extends HTMLElement {
                 verbose: false,
                 ringWidth,
                 ringWidth2,
-                ringDisplacement
+                ringDisplacement,
             });
         }
         this._initIntersectionObserver();
@@ -1904,6 +1853,4 @@ class LandingMainParticles extends HTMLElement {
         this.scene && this.scene.kill();
     }
 }
-customElements.define('landing-main-particles', LandingMainParticles);
-
-// Angular component markup examples removed (migrated to native Web Components)
+customElements.define('amoeba-particles', AmoebaParticlesComponent);

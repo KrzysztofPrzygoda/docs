@@ -29,8 +29,9 @@
         }
 
         // Add an event listener to trigger the lazy loading
-        const button = document.getElementById('lazyLoadButton');
-        button.addEventListener('click', loadModule);
+        document
+            .getElementById('lazyLoadButton')
+            ?.addEventListener('click', loadModule);
     </script>
 
     <!--

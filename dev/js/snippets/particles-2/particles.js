@@ -958,9 +958,9 @@ class MorphingParticlesScene {
     }
     async initScene() {
         this.colorControls = {
-            color1: this.theme === "dark" ? "#318bf7" : this.color1,
-            color2: this.theme === "dark" ? "#bada4c" : this.color2,
-            color3: this.theme === "dark" ? "#e35058" : this.color3
+            color1: this.theme === "dark" ? this.color1 || "#318bf7" : this.color1 || "#676A72",
+            color2: this.theme === "dark" ? this.color2 || "#bada4c" : this.color2 || "#FF4641",
+            color3: this.theme === "dark" ? this.color3 || "#e35058" : this.color3 || "#346BF1"
         };
         await this.initParticles();
         this.options.gui && this.initGUI();

@@ -863,7 +863,7 @@ class MorphingParticleSystem {
 class MorphingParticlesScene {
     constructor(e) {
         this.loaded = !1;
-        this.textures = e.textures || ["icon_cube.png"];
+        this.textures = e.textures || ["example.png"];
         this.color1 = e.color1 || "#aecbfa";
         this.color2 = e.color2 || "#aecbfa";
         this.color3 = e.color3 || "#93bbfc";
@@ -1084,7 +1084,7 @@ class MorphingParticlesComponent extends HTMLElement {
         const density = parseInt(this.getAttribute('density')) || 100;
         const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
         const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
-        const texture = this.getAttribute('texture') || 'icon_cube.png';
+        const texture = this.getAttribute('texture') || 'example.png';
         let textures = [];
         try { textures = this.hasAttribute('textures') ? JSON.parse(this.getAttribute('textures')) : []; } catch(e){}
         const color1 = this.getAttribute('color1');

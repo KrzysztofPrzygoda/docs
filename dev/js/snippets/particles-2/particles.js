@@ -1120,6 +1120,7 @@ class MorphingParticlesComponent extends HTMLElement {
         const color2 = this.getAttribute('color2');
         const color3 = this.getAttribute('color3');
         const particleShape = this.hasAttribute('particle-shape') ? parseFloat(this.getAttribute('particle-shape')) : 0;
+        const gui = this.hasAttribute('gui') ? this.getAttribute('gui') === 'true' : false;
 
         if (typeof MorphingParticlesScene === 'function') {
             this.scene = new MorphingParticlesScene({
@@ -1135,7 +1136,7 @@ class MorphingParticlesComponent extends HTMLElement {
                 color2,
                 color3,
                 interactive: true,
-                gui: true
+                gui: gui
             });
         }
         this._initIntersectionObserver();

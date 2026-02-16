@@ -640,6 +640,9 @@ class MorphingParticleSystem {
                 uParticleScale: {
                     value: this.particleScale
                 },
+                uParticleShape: {
+                    value: 0
+                },
                 uPixelRatio: {
                     value: this.scene.pixelRatio
                 },
@@ -728,6 +731,7 @@ class MorphingParticleSystem {
                 uniform float uTime;
 
                 uniform int uColorScheme;
+                uniform float uParticleShape;
 
                 ${GLSL_NOISE}
 
@@ -781,9 +785,16 @@ class MorphingParticleSystem {
                     float rounded = sdRoundBox(uv, vec2(0.5, 0.2), vec4(.25));
                     rounded = smoothstep(.1, 0., rounded);
 
+                    // circular mask
                     float disc = smoothstep(.5, .45, length(uv));
 
-                    float a = uAlpha * disc * smoothstep(0.1, 0.2, vScale);
+                    // square mask (use max of abs coords to form a box)
+                    float square = smoothstep(.5, .45, max(abs(uv.x), abs(uv.y)));
+
+                    // uParticleShape: 0 -> circle (default), 1 -> square
+                    float mask = mix(disc, square, float(uParticleShape));
+
+                    float a = uAlpha * mask * smoothstep(0.1, 0.2, vScale);
 
                     if(a < 0.01){
                         discard;
@@ -836,6 +847,7 @@ class MorphingParticleSystem {
         this.renderMaterial.uniforms.uTime.value = this.scene.clock.getElapsedTime(),
         this.renderMaterial.uniforms.uMousePos.value = this.mousePos,
         this.renderMaterial.uniforms.uParticleScale.value = this.particleScale,
+        this.renderMaterial.uniforms.uParticleShape.value = this.scene.particleShape,
         this.renderMaterial.uniforms.uIsHovering.value = this.scene.hoverProgress,
         this.renderMaterial.uniforms.uPulseProgress.value = this.scene.pushProgress
     }
@@ -868,6 +880,7 @@ class MorphingParticlesScene {
         this.color2 = e.color2 || "#aecbfa";
         this.color3 = e.color3 || "#93bbfc";
         this.options = e;
+        this.particleShape = e.particleShape || 0;
         this.theme = e.theme || "dark";
         this.interactive = e.interactive || !1;
         // Set scene background according to theme. Use null for true transparency.
@@ -1000,6 +1013,10 @@ class MorphingParticlesScene {
             await this.initParticles();
         });
         e.open();
+        // Particle shape control: 0 = circle, 1 = square
+        e.add(this, "particleShape").name("Particle Shape").min(0).max(1).step(1).onChange(t => {
+            this.particles && (this.particles.renderMaterial.uniforms.uParticleShape.value = t);
+        });
     }
     stop() {
         this.isPaused = !0;
@@ -1077,6 +1094,18 @@ class MorphingParticlesComponent extends HTMLElement {
         this._intersectionObserver = null;
         this.scene = null;
     }
+    static get observedAttributes() {
+        return ['particle-shape'];
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'particle-shape') {
+            const v = parseFloat(newValue);
+            if (this.scene) {
+                this.scene.particleShape = isNaN(v) ? 1 : v;
+                this.scene.particles && (this.scene.particles.renderMaterial.uniforms.uParticleShape.value = this.scene.particleShape);
+            }
+        }
+    }
     connectedCallback(){
         // append container and initialize scene with attributes (fallback to defaults)
         this.appendChild(this._container);
@@ -1090,6 +1119,7 @@ class MorphingParticlesComponent extends HTMLElement {
         const color1 = this.getAttribute('color1');
         const color2 = this.getAttribute('color2');
         const color3 = this.getAttribute('color3');
+        const particleShape = this.hasAttribute('particle-shape') ? parseFloat(this.getAttribute('particle-shape')) : 0;
 
         if (typeof MorphingParticlesScene === 'function') {
             this.scene = new MorphingParticlesScene({
@@ -1100,11 +1130,12 @@ class MorphingParticlesComponent extends HTMLElement {
                 cameraZoom,
                 texture,
                 textures,
+                particleShape,
                 color1,
                 color2,
                 color3,
                 interactive: true,
-                gui: false
+                gui: true
             });
         }
         this._initIntersectionObserver();

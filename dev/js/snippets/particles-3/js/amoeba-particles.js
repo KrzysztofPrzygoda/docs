@@ -722,6 +722,7 @@ class AmoebaParticlesComponent extends HTMLElement {
         const ringWidth = parseFloat(this.getAttribute('ringWidth')) || 0.15;
         const ringWidth2 = parseFloat(this.getAttribute('ringWidth2')) || 0.05;
         const ringDisplacement = parseFloat(this.getAttribute('ringDisplacement')) || 0.15;
+        const gui = this.hasAttribute('gui') ? this.getAttribute('gui') === 'true' : false;
 
         if (typeof AmoebaParticlesScene === 'function') {
             this.scene = new AmoebaParticlesScene({
@@ -730,7 +731,7 @@ class AmoebaParticlesComponent extends HTMLElement {
                 particlesScale,
                 density,
                 interactive: true,
-                gui: false,
+                gui: gui,
                 verbose: false,
                 ringWidth,
                 ringWidth2,

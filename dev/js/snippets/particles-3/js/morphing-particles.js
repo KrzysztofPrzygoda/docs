@@ -139,7 +139,7 @@ class MorphingParticleSystem {
     createPointsDistanceDataWorker(imageData, pointsBase, index) {
         return new Promise((resolve, reject) => {
             try {
-                const worker = new Worker(new URL('./points-worker.js', import.meta.url), { type: 'module' });
+                const worker = new Worker(new URL('./points-distance.worker.js', import.meta.url), { type: 'module' });
                 worker.onmessage = (evt) => {
                     resolve(evt.data);
                     worker.terminate();

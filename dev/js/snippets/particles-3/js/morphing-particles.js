@@ -730,28 +730,30 @@ class MorphingParticlesScene {
         this.gui.domElement.style.top = "0";
         this.gui.domElement.style.right = "0";
         this.gui.domElement.style.zIndex = "1000";
-        let e = this.gui.addFolder("Colors");
-        e.addColor(this.colorControls, "color1").name("Color 1").onChange(t => {
+        
+        let c = this.gui.addFolder("Colors");
+        c.addColor(this.colorControls, "color1").name("Color 1").onChange(t => {
             this.particles.renderMaterial.uniforms.uColor1.value.set(new Color(t));
         });
-        e.addColor(this.colorControls, "color2").name("Color 2").onChange(t => {
+        c.addColor(this.colorControls, "color2").name("Color 2").onChange(t => {
             this.particles.renderMaterial.uniforms.uColor2.value.set(new Color(t));
         });
-        e.addColor(this.colorControls, "color3").name("Color 3").onChange(t => {
+        c.addColor(this.colorControls, "color3").name("Color 3").onChange(t => {
             this.particles.renderMaterial.uniforms.uColor3.value.set(new Color(t));
         });
-        e.add(this, "particlesScale").name("Particles Scale").min(.1).max(4).step(.01).onChange(t => {
+
+        let p = this.gui.addFolder("Particles");
+        p.add(this, "particlesScale").name("Particles Scale").min(.1).max(4).step(.01).onChange(t => {
             this.particlesScale = t;
         });
-        e.add(this, "density").name("Density").min(50).max(250).step(10).onChange(async t => {
+        p.add(this, "density").name("Density").min(50).max(250).step(10).onChange(async t => {
             this.density = t;
             this.verbose;
             this.killParticles();
             await this.initParticles();
         });
-        e.open();
         // Particle shape control: 0 = circle, 1 = square
-        e.add(this, "particleShape").name("Particle Shape").min(0).max(1).step(1).onChange(t => {
+        p.add(this, "particleShape").name("Particle Shape").min(0).max(1).step(1).onChange(t => {
             this.particles && (this.particles.renderMaterial.uniforms.uParticleShape.value = t);
         });
     }

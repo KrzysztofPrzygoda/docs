@@ -595,43 +595,37 @@ class AmoebaParticlesScene {
         this.gui.domElement.style.top = "0",
         this.gui.domElement.style.right = "0",
         this.gui.domElement.style.zIndex = "1000";
+
         let e = this.gui.addFolder("Colors");
         e.addColor(this.colorControls, "color1").name("Color 1").onChange(t => {
             this.particles.renderMaterial.uniforms.uColor1.value.set(new Color(t))
-        }
-        ),
+        });
         e.addColor(this.colorControls, "color2").name("Color 2").onChange(t => {
             this.particles.renderMaterial.uniforms.uColor2.value.set(new Color(t))
-        }
-        ),
+        });
         e.addColor(this.colorControls, "color3").name("Color 3").onChange(t => {
             this.particles.renderMaterial.uniforms.uColor3.value.set(new Color(t))
-        }
-        ),
-        e.add(this, "ringWidth").name("Ring Width").min(.001).max(.2).step(.001).onChange(t => {
+        });
+
+        let s = this.gui.addFolder("Simulation");
+        s.add(this, "ringWidth").name("Ring Width").min(.001).max(.2).step(.001).onChange(t => {
             this.ringWidth = t
-        }
-        ),
-        e.add(this, "ringWidth2").name("Ring Width 2").min(.001).max(.2).step(.001).onChange(t => {
+        });
+        s.add(this, "ringWidth2").name("Ring Width 2").min(.001).max(.2).step(.001).onChange(t => {
             this.ringWidth2 = t
-        }
-        ),
-        e.add(this, "particlesScale").name("Particles Scale").min(.1).max(2).step(.01).onChange(t => {
+        });
+        s.add(this, "particlesScale").name("Particles Scale").min(.1).max(2).step(.01).onChange(t => {
             this.particlesScale = t
-        }
-        ),
-        e.add(this, "ringDisplacement").name("Displacement").min(.01).max(1).step(.01).onChange(t => {
+        });
+        s.add(this, "ringDisplacement").name("Displacement").min(.01).max(1).step(.01).onChange(t => {
             this.ringDisplacement = t
-        }
-        ),
-        e.add(this, "density").name("Density").min(100).max(300).step(10).onChange(t => {
+        });
+        s.add(this, "density").name("Density").min(100).max(300).step(10).onChange(t => {
             this.density = t,
             this.verbose,
             this.killParticles(),
             this.initParticles()
-        }
-        ),
-        e.open()
+        });
     }
     stop() {
         this.isPaused = !0,

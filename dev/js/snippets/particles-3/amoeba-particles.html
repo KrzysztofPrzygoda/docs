@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Amoeba Particles Demo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+    html,body{height:100%;margin:0;background:#fff}
+    /* container inside components will size canvases to their parent; ensure the small demo has explicit size */
+    morphing-particles > div { width:100%; height:100%; }
+    amoeba-particles > div { width:100%; height:100%; }
+</style>
+</head>
+<body>
+
+<script type="module" src="./amoeba-particles.js"></script>
+
+<amoeba-particles theme="light" particlesScale="0.75" density="200" ringWidth="0.107" ringWidth2="0.05" ringDisplacement="0.15"></amoeba-particles>
+
+</body>
+</html>

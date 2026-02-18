@@ -41,7 +41,15 @@ async function createMainBuildOptions() {
         entryPoints: [entry],
         outfile: path.join(outdir, outFileName),
         bundle: true,
+        
         minify: true,
+        minifyWhitespace: true,
+        minifyIdentifiers: true,
+        minifySyntax: true,
+        drop: ['console', 'debugger'],
+        legalComments: 'none',
+        keepNames: false,
+
         sourcemap: !noSourcemap,
         format: 'esm',
         target: ['es2020'],

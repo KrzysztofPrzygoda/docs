@@ -1,5 +1,6 @@
 // import './poisson-disk-sampling.umd.js';
-import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm';
+// import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm';
+import PoissonDiskSampling from 'poisson-disk-sampling';
 
 self.onmessage = function(e) {
     const { imageData, pointsBase, index, density } = e.data;

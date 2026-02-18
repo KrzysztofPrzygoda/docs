@@ -1,11 +1,15 @@
-import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
-import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm';
-import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
+// import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
+import * as THREE from 'three';
+// import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm';
+import { gsap } from 'gsap';
+// import PoissonDiskSampling from 'https://cdn.jsdelivr.net/npm/poisson-disk-sampling@2.3.1/+esm'
+import PoissonDiskSampling from 'poisson-disk-sampling';
 // import { PoissonDiskSampling } from './poisson-disk-sampling.js';
 import { PerlinNoise1D } from './perlin-noise.js';
 import { GLSL_NOISE } from './simplex-noise.js';
 import { MouseTracker } from './mouse-tracker.js';
-import GUI from 'https://cdn.jsdelivr.net/npm/lil-gui@0.18.0/+esm';
+// import GUI from 'https://cdn.jsdelivr.net/npm/lil-gui@0.18.0/+esm';
+import GUI from 'lil-gui';
 
 const {
     Vector2,

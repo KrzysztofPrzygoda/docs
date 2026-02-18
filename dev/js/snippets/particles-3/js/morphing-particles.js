@@ -38,6 +38,17 @@ const {
 const Animator = gsap;
 const mt = new MouseTracker();
 
+function createPointsDistanceWorker() {
+    const inlineWorkerSource = globalThis.__POINTS_DISTANCE_WORKER_SOURCE__;
+    if (typeof inlineWorkerSource === 'string' && inlineWorkerSource.length > 0) {
+        const workerBlob = new Blob([inlineWorkerSource], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(workerBlob);
+        return new Worker(workerUrl, { type: 'module' });
+    }
+
+    return new Worker(new URL('./points-distance.worker.js', import.meta.url), { type: 'module' });
+}
+
 /**
  * Linear mapping utility function
  * Maps a value from one range to another.
@@ -139,7 +150,7 @@ class MorphingParticleSystem {
     createPointsDistanceDataWorker(imageData, pointsBase, index) {
         return new Promise((resolve, reject) => {
             try {
-                const worker = new Worker(new URL('./points-distance.worker.js', import.meta.url), { type: 'module' });
+                const worker = createPointsDistanceWorker();
                 worker.onmessage = (evt) => {
                     resolve(evt.data);
                     worker.terminate();

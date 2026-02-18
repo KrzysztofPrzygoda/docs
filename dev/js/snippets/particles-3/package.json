@@ -1,5 +1,9 @@
 {
   "scripts": {
-    "build-morphing-particles": "esbuild js/morphing-particles.js js/points-distance.worker.js --bundle --outdir=dist --format=esm --minify --target=es2017 --entry-names=[name]"
+    "build-morphing-particles": "node build-morphing-particles.mjs",
+    "build": "node build-morphing-particles.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.3"
   }
 }

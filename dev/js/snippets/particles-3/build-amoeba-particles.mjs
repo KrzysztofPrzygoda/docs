@@ -1,0 +1,61 @@
+import { build, context } from 'esbuild';
+import fs from 'fs';
+import path from 'path';
+
+const entry = path.resolve('./js/amoeba-particles.js');
+const outdir = path.resolve('./dist');
+await fs.promises.mkdir(outdir, { recursive: true });
+
+const isWatch = process.argv.includes('--watch');
+const isLight = process.argv.includes('--light');
+const noSourcemap = process.argv.includes('--no-sourcemap');
+
+const lightExternal = [
+    'three',
+    'gsap',
+    'lil-gui',
+    'poisson-disk-sampling'
+];
+
+async function createMainBuildOptions() {
+    const outFileName = isLight ? 'amoeba-particles.light.js' : 'amoeba-particles.js';
+
+    return {
+        entryPoints: [entry],
+        outfile: path.join(outdir, outFileName),
+        bundle: true,
+        minify: true,
+        sourcemap: !noSourcemap,
+        format: 'esm',
+        target: ['es2020'],
+        platform: 'browser',
+        define: { 'process.env.NODE_ENV': '"production"' },
+        external: isLight ? lightExternal : [],
+        banner: {},
+        logLevel: 'info'
+    };
+}
+
+if (isWatch) {
+    const buildOnce = async () => {
+        const opts = await createMainBuildOptions();
+        await build(opts);
+    };
+
+    await buildOnce();
+
+    const ctx = await context({
+        entryPoints: [entry],
+        bundle: false,
+        write: false,
+        logLevel: 'silent'
+    });
+
+    await ctx.watch();
+    console.log('Watching source files. Restart build command after worker changes for refreshed inline payload.');
+} else {
+    const opts = await createMainBuildOptions();
+    build(opts)
+        .then(() => console.log(`Built dist/${isLight ? 'amoeba-particles.light.js' : 'amoeba-particles.js'}`))
+        .catch(() => process.exit(1));
+}

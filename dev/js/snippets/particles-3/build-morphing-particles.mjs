@@ -8,6 +8,14 @@ const outdir = path.resolve('./dist');
 await fs.promises.mkdir(outdir, { recursive: true });
 
 const isWatch = process.argv.includes('--watch');
+const isLight = process.argv.includes('--light');
+
+const lightExternal = [
+    'three',
+    'gsap',
+    'lil-gui',
+    'poisson-disk-sampling'
+];
 
 async function buildWorkerSource() {
     const workerResult = await build({
@@ -26,9 +34,11 @@ async function buildWorkerSource() {
 
 async function createMainBuildOptions() {
     const workerSource = await buildWorkerSource();
+    const outFileName = isLight ? 'morphing-particles.light.js' : 'morphing-particles.js';
+
     return {
         entryPoints: [entry],
-        outfile: path.join(outdir, 'morphing-particles.js'),
+        outfile: path.join(outdir, outFileName),
         bundle: true,
         minify: true,
         sourcemap: true,
@@ -36,7 +46,7 @@ async function createMainBuildOptions() {
         target: ['es2020'],
         platform: 'browser',
         define: { 'process.env.NODE_ENV': '"production"' },
-        // external: ['three', 'gsap'],
+        external: isLight ? lightExternal : [],
         banner: {
             js: `globalThis.__POINTS_DISTANCE_WORKER_SOURCE__ = ${JSON.stringify(workerSource)};`
         },
@@ -63,5 +73,7 @@ if (isWatch) {
     console.log('Watching source files. Restart build command after worker changes for refreshed inline payload.');
 } else {
     const opts = await createMainBuildOptions();
-    build(opts).then(() => console.log('Built dist/morphing-particles.js')).catch(() => process.exit(1));
+    build(opts)
+        .then(() => console.log(`Built dist/${isLight ? 'morphing-particles.light.js' : 'morphing-particles.js'}`))
+        .catch(() => process.exit(1));
 }

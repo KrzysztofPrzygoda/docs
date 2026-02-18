@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "build-morphing-particles": "esbuild js/morphing-particles.js --bundle --outfile=dist/morphing-particles.js --format=esm --minify --target=es2017 --loader:.worker.js=text",
-    "build": "esbuild js/morphing-particles.js js/points-distance.worker.js --bundle --outdir=dist --format=esm --minify --target=es2017 --entry-names=[name] --loader:.worker.js=text"
+    "build-morphing-particles": "esbuild js/morphing-particles.js js/points-distance.worker.js --bundle --outdir=dist --format=esm --minify --target=es2017 --entry-names=[name]"
   }
 }

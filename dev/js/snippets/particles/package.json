@@ -1,5 +1,9 @@
 {
   "scripts": {
+    "dev": "vite",
+    "dev:host": "vite --host 0.0.0.0 --port 3000",
+    "preview": "vite preview",
+
     "build-morphing-particles": "node build-morphing-particles.mjs",
     "build-morphing-particles:full": "npm run build-morphing-particles",
     "build-morphing-particles:light": "npm run build-morphing-particles -- --light",
@@ -13,7 +17,8 @@
     "build": "npm run build-morphing-particles:prod && npm run build-amoeba-particles:prod"
   },
   "devDependencies": {
-    "esbuild": "^0.27.3"
+    "esbuild": "^0.27.3",
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "gsap": "^3.12.2",

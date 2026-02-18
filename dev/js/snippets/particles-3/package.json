@@ -1,7 +1,9 @@
 {
   "scripts": {
     "build-morphing-particles": "node build-morphing-particles.mjs",
-    "build": "node build-morphing-particles.mjs"
+    "build": "node build-morphing-particles.mjs",
+    "build:full": "node build-morphing-particles.mjs",
+    "build:light": "node build-morphing-particles.mjs --light"
   },
   "devDependencies": {
     "esbuild": "^0.27.3"

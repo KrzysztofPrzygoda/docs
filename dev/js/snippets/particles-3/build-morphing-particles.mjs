@@ -9,6 +9,7 @@ await fs.promises.mkdir(outdir, { recursive: true });
 
 const isWatch = process.argv.includes('--watch');
 const isLight = process.argv.includes('--light');
+const noSourcemap = process.argv.includes('--no-sourcemap');
 
 const lightExternal = [
     'three',
@@ -41,7 +42,7 @@ async function createMainBuildOptions() {
         outfile: path.join(outdir, outFileName),
         bundle: true,
         minify: true,
-        sourcemap: true,
+        sourcemap: !noSourcemap,
         format: 'esm',
         target: ['es2020'],
         platform: 'browser',

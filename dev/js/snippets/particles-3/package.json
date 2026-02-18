@@ -3,7 +3,8 @@
     "build-morphing-particles": "node build-morphing-particles.mjs",
     "build": "node build-morphing-particles.mjs",
     "build:full": "node build-morphing-particles.mjs",
-    "build:light": "node build-morphing-particles.mjs --light"
+    "build:light": "node build-morphing-particles.mjs --light",
+    "build:prod": "node build-morphing-particles.mjs --no-sourcemap"
   },
   "devDependencies": {
     "esbuild": "^0.27.3"

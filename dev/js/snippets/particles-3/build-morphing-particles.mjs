@@ -36,7 +36,7 @@ async function createMainBuildOptions() {
         target: ['es2020'],
         platform: 'browser',
         define: { 'process.env.NODE_ENV': '"production"' },
-        external: ['three', 'gsap'],
+        // external: ['three', 'gsap'],
         banner: {
             js: `globalThis.__POINTS_DISTANCE_WORKER_SOURCE__ = ${JSON.stringify(workerSource)};`
         },

@@ -3,12 +3,12 @@
     "build-morphing-particles": "node build-morphing-particles.mjs",
     "build-morphing-particles:full": "npm run build-morphing-particles",
     "build-morphing-particles:light": "npm run build-morphing-particles -- --light",
-    "build-morphing-particles:prod": "npm run build-morphing-particles -- --no-sourcemap",
+    "build-morphing-particles:prod": "npm run build-morphing-particles -- --no-sourcemap --no-gui",
 
     "build-amoeba-particles": "node build-amoeba-particles.mjs",
     "build-amoeba-particles:full": "npm run build-amoeba-particles",
     "build-amoeba-particles:light": "npm run build-amoeba-particles -- --light",
-    "build-amoeba-particles:prod": "npm run build-amoeba-particles -- --no-sourcemap",
+    "build-amoeba-particles:prod": "npm run build-amoeba-particles -- --no-sourcemap --no-gui",
 
     "build": "npm run build-morphing-particles:prod && npm run build-amoeba-particles:prod"
   },

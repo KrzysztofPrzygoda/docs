@@ -9,6 +9,9 @@ await fs.promises.mkdir(outdir, { recursive: true });
 const isWatch = process.argv.includes('--watch');
 const isLight = process.argv.includes('--light');
 const noSourcemap = process.argv.includes('--no-sourcemap');
+const isProd = noSourcemap;
+const noGui = process.argv.includes('--no-gui');
+const guiShim = path.resolve('./js/shims/lil-gui-empty.js');
 
 const lightExternal = [
     'three',
@@ -38,6 +41,7 @@ async function createMainBuildOptions() {
         target: ['es2020'],
         platform: 'browser',
         define: { 'process.env.NODE_ENV': '"production"' },
+        alias: noGui ? { 'lil-gui': guiShim } : {},
         external: isLight ? lightExternal : [],
         banner: {},
         logLevel: 'info'

@@ -75,13 +75,49 @@ class MorphingParticleSystem {
         this.mousePos = new Vector2(0, 0);
         this.cursorPos = new Vector2(0, 0);
         this.colorScheme = scene.theme === "dark" ? 0 : 1;
-        this.particleScale = this.scene.renderer.domElement.width / this.scene.pixelRatio / 2000 * this.scene.particlesScale;
+        this.particleScale = this.scene.particlesScale;
+        this.shapeReady = false;
+        this.setDomainFromCanvas();
+    }
+    setDomainFromCanvas() {
+        const canvas = this.scene.renderer.domElement;
+        const aspect = Math.max(1e-6, canvas.width / canvas.height);
+        if (aspect >= 1) {
+            this.domainWidth = Math.round(500 * aspect);
+            this.domainHeight = 500;
+        } else {
+            this.domainWidth = 500;
+            this.domainHeight = Math.round(500 / aspect);
+        }
+        this.domainCenterX = this.domainWidth * 0.5;
+        this.domainCenterY = this.domainHeight * 0.5;
+        this.domainScale = Math.min(this.domainCenterX, this.domainCenterY);
     }
     static async create(scene, textures) {
         let instance = new MorphingParticleSystem(scene, textures);
         instance.createPoints();
-        await instance.createPointsFromImage();
+        instance.nearestPointsData = [instance.pointsData.slice()];
         instance.init();
+
+        instance.createPointsFromImage()
+            .then(() => {
+                if (instance.nearestPointsData && instance.nearestPointsData.length > 0) {
+                    instance.setPointsTextureFromIndex(0);
+                    instance.shapeReady = true;
+                    if (instance.scene && instance.scene.hoverRequested) {
+                        instance.scene.onHoverStart();
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error('[morphing-particles] Failed to load morph targets, fallback to base points.', err);
+                instance.nearestPointsData = [instance.pointsData.slice()];
+                instance.shapeReady = true;
+                if (instance.scene && instance.scene.hoverRequested) {
+                    instance.scene.onHoverStart();
+                }
+            });
+
         return instance;
     }
     async getImageData(src) {
@@ -90,11 +126,32 @@ class MorphingParticleSystem {
             img.src = src;
             img.onload = () => {
                 let canvas = document.createElement("canvas");
-                canvas.width = 500;
-                canvas.height = 500;
+                canvas.width = this.domainWidth;
+                canvas.height = this.domainHeight;
                 let ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, 500, 500);
-                let imageData = ctx.getImageData(0, 0, 500, 500);
+                const imageRatio = img.width / img.height;
+                const canvasRatio = canvas.width / canvas.height;
+                let drawWidth;
+                let drawHeight;
+                let drawX;
+                let drawY;
+
+                if (imageRatio > canvasRatio) {
+                    drawWidth = canvas.width;
+                    drawHeight = drawWidth / imageRatio;
+                    drawX = 0;
+                    drawY = (canvas.height - drawHeight) * 0.5;
+                } else {
+                    drawHeight = canvas.height;
+                    drawWidth = drawHeight * imageRatio;
+                    drawX = (canvas.width - drawWidth) * 0.5;
+                    drawY = 0;
+                }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 resolve(imageData);
             };
             img.onerror = reject;
@@ -104,15 +161,15 @@ class MorphingParticleSystem {
         const minDistance = mapRange(this.scene.density, 0, 300, 10, 2);
         const maxDistance = mapRange(this.scene.density, 0, 300, 10, 50);
         let poisson = new PoissonDiskSampling({
-            shape: [500, 500],
+            shape: [this.domainWidth, this.domainHeight],
             minDistance: minDistance,
             maxDistance: maxDistance,
             tries: 20
         }).fill();
-        this.pointsBaseData = poisson.map(point => [point[0] - 250, point[1] - 250]);
+        this.pointsBaseData = poisson.map(point => [point[0] - this.domainCenterX, point[1] - this.domainCenterY]);
         this.pointsData = [];
         for (let i = 0; i < poisson.length; i++) {
-            this.pointsData.push(poisson[i][0] - 250, poisson[i][1] - 250);
+            this.pointsData.push(poisson[i][0] - this.domainCenterX, poisson[i][1] - this.domainCenterY);
         }
         this.count = this.pointsData.length / 2;
     }
@@ -163,7 +220,14 @@ class MorphingParticleSystem {
                     reject(err);
                     worker.terminate();
                 };
-                worker.postMessage({ imageData, pointsBase, index, density: this.scene.density });
+                worker.postMessage({
+                    imageData,
+                    pointsBase,
+                    index,
+                    density: this.scene.density,
+                    domainWidth: this.domainWidth,
+                    domainHeight: this.domainHeight
+                });
             } catch (err) {
                 reject(err);
             }
@@ -173,8 +237,8 @@ class MorphingParticleSystem {
         let t = new Float32Array(this.length * 4);
         for (let r = 0; r < this.count; r++) {
             let o = r * 4;
-            t[o + 0] = e[r * 2 + 0] * (1 / 250),
-            t[o + 1] = e[r * 2 + 1] * (1 / 250),
+            t[o + 0] = e[r * 2 + 0] * (1 / this.domainScale),
+            t[o + 1] = e[r * 2 + 1] * (1 / this.domainScale),
             t[o + 2] = 0,
             t[o + 3] = 0
         }
@@ -581,7 +645,7 @@ class MorphingParticleSystem {
         let e = this.scene.clock.getElapsedTime() - this.lastTime;
         this.lastTime = this.scene.clock.getElapsedTime(),
         this.scene.isIntersecting ? this.mousePos.set(this.scene.intersectionPoint.x * .175, this.scene.intersectionPoint.y * .175) : this.mousePos.set(this.scene.intersectionPoint.x * .175, this.scene.intersectionPoint.y * .175),
-        this.particleScale = this.scene.renderer.domElement.width / this.scene.pixelRatio / 2e3 * this.scene.particlesScale,
+        this.particleScale = this.scene.particlesScale,
         this.simMaterial.uniforms.uPosition.value = this.everRendered ? this.rt1.texture : this.posTex,
         this.simMaterial.uniforms.uTime.value = this.scene.clock.getElapsedTime(),
         this.simMaterial.uniforms.uDeltaTime.value = e,
@@ -644,6 +708,7 @@ class MorphingParticlesScene {
         this.cameraZoom = e.cameraZoom || 3.5;
         this.verbose = e.verbose || !1;
         this.onLoadedCallback = e.onLoaded || null;
+        this.hoverRequested = false;
         this.isHovering = !1;
         this.hoverProgress = 0;
         this.pushProgress = 0;
@@ -651,8 +716,9 @@ class MorphingParticlesScene {
         this.scene.background = this.options.background;
         this.canvas = document.createElement("canvas");
         this.options.container.appendChild(this.canvas);
-        this.canvas.width = this.options.container.offsetWidth;
-        this.canvas.height = this.options.container.offsetHeight;
+        const size = this.getCanvasSizeFromParent();
+        this.canvas.width = size.width;
+        this.canvas.height = size.height;
         ColorManagement.enabled = false;
         this.renderer = new WebGLRenderer({
             canvas: this.canvas,
@@ -679,6 +745,8 @@ class MorphingParticlesScene {
         this.dt = 0;
         this.skipFrame = !1;
         this.isPaused = !1;
+        this.resizeDebounceId = null;
+        this.onResizeHandler = null;
         this.raycaster = new Raycaster();
         this.mouse = new Vector2();
         this.intersectionPoint = new Vector3();
@@ -692,24 +760,43 @@ class MorphingParticlesScene {
         }));
         this.scene.add(this.raycastPlane);
     }
+    getCanvasSizeFromParent() {
+        const containerWidth = this.options.container.offsetWidth || this.options.container.parentElement?.offsetWidth || window.innerWidth;
+        const containerHeight = this.options.container.offsetHeight || this.options.container.parentElement?.offsetHeight || window.innerHeight;
+        return {
+            width: Math.max(1, containerWidth),
+            height: Math.max(1, containerHeight)
+        };
+    }
     initEvents() {
-        window.addEventListener("resize", e => {
-            this.onWindowResize();
-        });
+        this.onResizeHandler = () => {
+            if (this.resizeDebounceId) {
+                clearTimeout(this.resizeDebounceId);
+            }
+            this.resizeDebounceId = setTimeout(() => {
+                this.onWindowResize();
+            }, 80);
+        };
+        window.addEventListener("resize", this.onResizeHandler);
     }
     onWindowResize() {
-        this.canvas.width = this.options.container.offsetWidth;
-        this.canvas.height = this.options.container.offsetHeight;
+        const size = this.getCanvasSizeFromParent();
+        this.canvas.width = size.width;
+        this.canvas.height = size.height;
         this.renderer.setSize(this.canvas.width, this.canvas.height);
         this.camera.aspect = this.canvas.width / this.canvas.height;
         this.camera.updateProjectionMatrix();
         this.particles && this.particles.resize();
     }
     onHoverStart() {
+        this.hoverRequested = true;
+        if (!this.particles || !this.particles.shapeReady) return;
         Animator.to(this, { hoverProgress: 1, duration: .5, ease: "power3.out" });
         Animator.fromTo(this, { pushProgress: 0 }, { pushProgress: 1, duration: 2, delay: .1, ease: "power2.out" });
     }
     onHoverEnd() {
+        this.hoverRequested = false;
+        if (!this.particles || !this.particles.shapeReady) return;
         Animator.to(this, { hoverProgress: 0, duration: .5, ease: "power3.out" });
         Animator.fromTo(this, { pushProgress: 0 }, { pushProgress: 1, duration: 2, delay: 0, ease: "power2.out" });
     }
@@ -788,7 +875,14 @@ class MorphingParticlesScene {
     }
     kill() {
         this.stop();
-        window.removeEventListener("resize", this.onWindowResize);
+        if (this.resizeDebounceId) {
+            clearTimeout(this.resizeDebounceId);
+            this.resizeDebounceId = null;
+        }
+        if (this.onResizeHandler) {
+            window.removeEventListener("resize", this.onResizeHandler);
+            this.onResizeHandler = null;
+        }
         this.raycastPlane && (this.scene.remove(this.raycastPlane),
         this.raycastPlane.geometry.dispose(),
         this.raycastPlane.material.dispose());
@@ -861,6 +955,7 @@ class MorphingParticlesComponent extends HTMLElement {
         }
     }
     connectedCallback(){
+        this._isVisible = true;
         // append container and initialize scene with attributes (fallback to defaults)
         this.appendChild(this._container);
         const theme = this.getAttribute('theme') || 'dark';
@@ -905,11 +1000,12 @@ class MorphingParticlesComponent extends HTMLElement {
         const opts = { root: null, rootMargin: '0px', threshold: 0 };
         this._intersectionObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
-                this._isVisible = e.isIntersecting;
-                if (e.isIntersecting) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
+                const hasRenderableArea = e.boundingClientRect.width > 0 && e.boundingClientRect.height > 0;
+                this._isVisible = e.isIntersecting || !hasRenderableArea;
+                if (this._isVisible) this.scene && this.scene.resume(); else this.scene && this.scene.stop();
             });
         }, opts);
-        this._intersectionObserver.observe(this._container);
+        this._intersectionObserver.observe(this);
     }
     _animate = () => {
         this._animationFrameId = requestAnimationFrame(this._animate);

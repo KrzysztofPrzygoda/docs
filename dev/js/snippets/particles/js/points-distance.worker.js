@@ -3,11 +3,18 @@
 import PoissonDiskSampling from 'poisson-disk-sampling';
 
 self.onmessage = function(e) {
-    const { imageData, pointsBase, index, density } = e.data;
+    const { imageData, pointsBase, index, density, domainWidth = 500, domainHeight = 500 } = e.data;
+    const centerX = domainWidth * 0.5;
+    const centerY = domainHeight * 0.5;
 
     const distanceFunction = function (point, imageData) {
         const pixelRedIndex = (Math.round(point[0]) + Math.round(point[1]) * imageData.width) * 4;
-        const pixel = imageData.data[pixelRedIndex] / 255;
+        if (pixelRedIndex < 0 || pixelRedIndex + 3 >= imageData.data.length) {
+            return 1;
+        }
+        const red = imageData.data[pixelRedIndex] / 255;
+        const alpha = imageData.data[pixelRedIndex + 3] / 255;
+        const pixel = red * alpha + (1 - alpha);
         return pixel * pixel * pixel;
     }
 
@@ -17,7 +24,7 @@ self.onmessage = function(e) {
 
     const maxDistance = linearMap(density, 0, 300, 10, 50);
     const poissonDisk = new PoissonDiskSampling({
-        shape: [500, 500],
+        shape: [domainWidth, domainHeight],
         minDistance: 1,
         maxDistance: maxDistance,
         tries: 20,
@@ -28,7 +35,7 @@ self.onmessage = function(e) {
     const points = poissonDisk.fill();
 
     // Convert pointsBase (which may be centered around 0) back to image coords
-    const pointsBaseAbs = pointsBase.map(p => [p[0] + 250, p[1] + 250]);
+    const pointsBaseAbs = pointsBase.map(p => [p[0] + centerX, p[1] + centerY]);
     const nearestPoints = [];
     for (let i = 0; i < pointsBaseAbs.length; i++) {
         let nearestPoint = null;
@@ -49,7 +56,7 @@ self.onmessage = function(e) {
             nearestPoints.push(pointsBase[i][0], pointsBase[i][1]);
         } else {
             // convert selected nearestPoint (image coords) to centered coords before posting
-            nearestPoints.push(nearestPoint[0] - 250, nearestPoint[1] - 250);
+            nearestPoints.push(nearestPoint[0] - centerX, nearestPoint[1] - centerY);
         }
     }
 

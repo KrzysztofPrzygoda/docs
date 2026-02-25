@@ -706,6 +706,7 @@ class MorphingParticlesScene {
         this.particlesScale = e.particlesScale || .5;
         this.density = e.density || 150;
         this.cameraZoom = e.cameraZoom || 3.5;
+        this.responsive = e.responsive !== false;
         this.verbose = e.verbose || !1;
         this.onLoadedCallback = e.onLoaded || null;
         this.hoverRequested = false;
@@ -769,6 +770,7 @@ class MorphingParticlesScene {
         };
     }
     initEvents() {
+        if (!this.responsive) return;
         this.onResizeHandler = () => {
             if (this.resizeDebounceId) {
                 clearTimeout(this.resizeDebounceId);
@@ -943,7 +945,7 @@ class MorphingParticlesComponent extends HTMLElement {
         this.scene = null;
     }
     static get observedAttributes() {
-        return ['particle-shape'];
+        return ['particle-shape', 'responsive'];
     }
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'particle-shape') {
@@ -951,6 +953,17 @@ class MorphingParticlesComponent extends HTMLElement {
             if (this.scene) {
                 this.scene.particleShape = isNaN(v) ? 1 : v;
                 this.scene.particles && (this.scene.particles.renderMaterial.uniforms.uParticleShape.value = this.scene.particleShape);
+            }
+        }
+        if (name === 'responsive' && this.scene) {
+            const responsive = newValue !== 'false';
+            this.scene.responsive = responsive;
+            if (responsive) {
+                this.scene.initEvents();
+                this.scene.onWindowResize();
+            } else if (this.scene.onResizeHandler) {
+                window.removeEventListener('resize', this.scene.onResizeHandler);
+                this.scene.onResizeHandler = null;
             }
         }
     }
@@ -962,6 +975,7 @@ class MorphingParticlesComponent extends HTMLElement {
         const density = parseInt(this.getAttribute('density')) || 100;
         const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
         const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
+        const responsive = this.getAttribute('responsive') !== 'false';
         const texture = this.getAttribute('texture') || 'example.png';
         let textures = [];
         try { textures = this.hasAttribute('textures') ? JSON.parse(this.getAttribute('textures')) : []; } catch(e){}
@@ -978,6 +992,7 @@ class MorphingParticlesComponent extends HTMLElement {
                 density,
                 particlesScale,
                 cameraZoom,
+                responsive,
                 texture,
                 textures,
                 particleShape,

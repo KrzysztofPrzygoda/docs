@@ -198,7 +198,7 @@ class MorphingParticleSystem {
     setPointsTextureFromIndex(e) {
         this.posNearestTex = this.createDataTexturePosition(this.nearestPointsData[e]),
         this.posNearestTex.needsUpdate = !0,
-        this.simMaterial.uniforms.uPosNearest = this.posNearestTex
+        this.simMaterial.uniforms.uPosNearest.value = this.posNearestTex
     }
     init() {
         this.size = 256,

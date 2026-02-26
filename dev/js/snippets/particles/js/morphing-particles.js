@@ -83,7 +83,10 @@ class MorphingParticleSystem {
         if (this.scene.particlesScaleMode === 'absolute') {
             return this.scene.particlesScale;
         }
-        return this.scene.renderer.domElement.width / this.scene.pixelRatio / 2000 * this.scene.particlesScale;
+        const width = this.scene.renderer.domElement.width;
+        const height = this.scene.renderer.domElement.height;
+        const referenceSide = Math.min(width, height);
+        return referenceSide / this.scene.pixelRatio / 1000 * this.scene.particlesScale;
     }
     setDomainFromCanvas() {
         const canvas = this.scene.renderer.domElement;

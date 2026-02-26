@@ -74,7 +74,6 @@ class MorphingParticleSystem {
         this.everRendered = false;
         this.mousePos = new Vector2(0, 0);
         this.cursorPos = new Vector2(0, 0);
-        this.colorScheme = scene.theme === "dark" ? 0 : 1;
         this.particleScale = this.getParticleScale();
         this.shapeReady = false;
         this.setDomainFromCanvas();
@@ -706,16 +705,13 @@ class MorphingParticlesScene {
         this.color3 = e.color3 || "#93bbfc";
         this.options = e;
         this.particleShape = e.particleShape || 0;
-        this.theme = e.theme || "dark";
         this.interactive = e.interactive || !1;
-        // Set scene background according to theme. Use null for true transparency.
-        // this.options.background = this.theme === "dark" ? new Color(1184535) : new Color(16777215);
         this.options.background = null;
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
         this.particlesScale = e.particlesScale || .5;
         this.particlesScaleMode = e.particlesScaleMode || 'relative';
         this.density = e.density || 150;
-        this.cameraZoom = e.cameraZoom || 3.5;
+        this.cameraZoom = e.cameraZoom || 10;
         this.responsive = e.responsive !== false;
         this.verbose = e.verbose || !1;
         this.onLoadedCallback = e.onLoaded || null;
@@ -1012,11 +1008,10 @@ class MorphingParticlesComponent extends HTMLElement {
         this._isVisible = true;
         // append container and initialize scene with attributes (fallback to defaults)
         this.appendChild(this._container);
-        const theme = this.getAttribute('theme') || 'dark';
-        const density = parseInt(this.getAttribute('density')) || 100;
+        const density = parseInt(this.getAttribute('density')) || 150;
         const particlesScale = parseFloat(this.getAttribute('particles-scale')) || 1;
         const particlesScaleMode = this.getAttribute('particles-scale-mode') === 'absolute' ? 'absolute' : 'relative';
-        const cameraZoom = parseFloat(this.getAttribute('camera-zoom')) || 3.5;
+        const cameraZoom = parseFloat(this.getAttribute('camera-zoom')) || 10;
         const responsive = this.getAttribute('responsive') !== 'false';
         const texture = this.getAttribute('texture') || 'example.png';
         let textures = [];
@@ -1030,7 +1025,6 @@ class MorphingParticlesComponent extends HTMLElement {
         if (typeof MorphingParticlesScene === 'function') {
             this.scene = new MorphingParticlesScene({
                 container: this._container,
-                theme,
                 density,
                 particlesScale,
                 particlesScaleMode,

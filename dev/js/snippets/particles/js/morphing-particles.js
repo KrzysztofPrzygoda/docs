@@ -736,7 +736,7 @@ class MorphingParticlesScene {
             antialias: !0,
             alpha: !0,
             powerPreference: "high-performance",
-            preserveDrawingBuffer: !0,
+            preserveDrawingBuffer: e.preserveDrawingBuffer === true,
             stencil: !1,
             precision: "highp"
         });
@@ -1067,7 +1067,7 @@ class MorphingParticlesComponent extends HTMLElement {
     }
     _animate = () => {
         this._animationFrameId = requestAnimationFrame(this._animate);
-        if (this._isVisible) this.scene && this.scene.render();
+        if (this._isVisible && this.scene && !this.scene.isRebuildingParticles) this.scene.render();
     }
     disconnectedCallback(){
         this._intersectionObserver && this._intersectionObserver.disconnect();

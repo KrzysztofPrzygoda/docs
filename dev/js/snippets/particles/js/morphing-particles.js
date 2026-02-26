@@ -75,9 +75,15 @@ class MorphingParticleSystem {
         this.mousePos = new Vector2(0, 0);
         this.cursorPos = new Vector2(0, 0);
         this.colorScheme = scene.theme === "dark" ? 0 : 1;
-        this.particleScale = this.scene.particlesScale;
+        this.particleScale = this.getParticleScale();
         this.shapeReady = false;
         this.setDomainFromCanvas();
+    }
+    getParticleScale() {
+        if (this.scene.particlesScaleMode === 'absolute') {
+            return this.scene.particlesScale;
+        }
+        return this.scene.renderer.domElement.width / this.scene.pixelRatio / 2000 * this.scene.particlesScale;
     }
     setDomainFromCanvas() {
         const canvas = this.scene.renderer.domElement;
@@ -645,7 +651,7 @@ class MorphingParticleSystem {
         let e = this.scene.clock.getElapsedTime() - this.lastTime;
         this.lastTime = this.scene.clock.getElapsedTime(),
         this.scene.isIntersecting ? this.mousePos.set(this.scene.intersectionPoint.x * .175, this.scene.intersectionPoint.y * .175) : this.mousePos.set(this.scene.intersectionPoint.x * .175, this.scene.intersectionPoint.y * .175),
-        this.particleScale = this.scene.particlesScale,
+        this.particleScale = this.getParticleScale(),
         this.simMaterial.uniforms.uPosition.value = this.everRendered ? this.rt1.texture : this.posTex,
         this.simMaterial.uniforms.uTime.value = this.scene.clock.getElapsedTime(),
         this.simMaterial.uniforms.uDeltaTime.value = e,
@@ -704,6 +710,7 @@ class MorphingParticlesScene {
         this.options.background = null;
         this.pixelRatio = e.pixelRatio || window.devicePixelRatio;
         this.particlesScale = e.particlesScale || .5;
+        this.particlesScaleMode = e.particlesScaleMode || 'relative';
         this.density = e.density || 150;
         this.cameraZoom = e.cameraZoom || 3.5;
         this.responsive = e.responsive !== false;
@@ -972,10 +979,10 @@ class MorphingParticlesComponent extends HTMLElement {
         this.scene = null;
     }
     static get observedAttributes() {
-        return ['particle-shape', 'responsive'];
+        return ['particle-shape', 'responsive', 'particles-scale-mode'];
     }
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'particle-shape') {
+        if (name === 'particle-shape' && this.scene) {
             const v = parseFloat(newValue);
             if (this.scene) {
                 this.scene.particleShape = isNaN(v) ? 1 : v;
@@ -993,6 +1000,10 @@ class MorphingParticlesComponent extends HTMLElement {
                 this.scene.onResizeHandler = null;
             }
         }
+        if (name === 'particles-scale-mode' && this.scene) {
+            const mode = newValue === 'absolute' ? 'absolute' : 'relative';
+            this.scene.particlesScaleMode = mode;
+        }
     }
     connectedCallback(){
         this._isVisible = true;
@@ -1001,6 +1012,7 @@ class MorphingParticlesComponent extends HTMLElement {
         const theme = this.getAttribute('theme') || 'dark';
         const density = parseInt(this.getAttribute('density')) || 100;
         const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
+        const particlesScaleMode = this.getAttribute('particles-scale-mode') === 'absolute' ? 'absolute' : 'relative';
         const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
         const responsive = this.getAttribute('responsive') !== 'false';
         const texture = this.getAttribute('texture') || 'example.png';
@@ -1018,6 +1030,7 @@ class MorphingParticlesComponent extends HTMLElement {
                 theme,
                 density,
                 particlesScale,
+                particlesScaleMode,
                 cameraZoom,
                 responsive,
                 texture,

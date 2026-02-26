@@ -1014,9 +1014,9 @@ class MorphingParticlesComponent extends HTMLElement {
         this.appendChild(this._container);
         const theme = this.getAttribute('theme') || 'dark';
         const density = parseInt(this.getAttribute('density')) || 100;
-        const particlesScale = parseFloat(this.getAttribute('particlesScale')) || 1;
+        const particlesScale = parseFloat(this.getAttribute('particles-scale')) || 1;
         const particlesScaleMode = this.getAttribute('particles-scale-mode') === 'absolute' ? 'absolute' : 'relative';
-        const cameraZoom = parseFloat(this.getAttribute('cameraZoom')) || 3.5;
+        const cameraZoom = parseFloat(this.getAttribute('camera-zoom')) || 3.5;
         const responsive = this.getAttribute('responsive') !== 'false';
         const texture = this.getAttribute('texture') || 'example.png';
         let textures = [];

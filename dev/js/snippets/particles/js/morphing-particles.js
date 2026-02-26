@@ -748,6 +748,8 @@ class MorphingParticlesScene {
         this.isPaused = !1;
         this.resizeDebounceId = null;
         this.onResizeHandler = null;
+        this.isRebuildingParticles = false;
+        this.pendingParticlesRebuild = false;
         this.raycaster = new Raycaster();
         this.mouse = new Vector2();
         this.intersectionPoint = new Vector3();
@@ -789,6 +791,29 @@ class MorphingParticlesScene {
         this.camera.aspect = this.canvas.width / this.canvas.height;
         this.camera.updateProjectionMatrix();
         this.particles && this.particles.resize();
+        if (this.responsive) {
+            this.rebuildParticlesAfterResize();
+        }
+    }
+    async rebuildParticlesAfterResize() {
+        if (!this.particles) return;
+        if (this.isRebuildingParticles) {
+            this.pendingParticlesRebuild = true;
+            return;
+        }
+
+        this.isRebuildingParticles = true;
+        do {
+            this.pendingParticlesRebuild = false;
+            const shouldRestoreHover = this.hoverRequested;
+            this.killParticles();
+            await this.initParticles();
+            if (shouldRestoreHover) {
+                this.onHoverStart();
+            }
+        } while (this.pendingParticlesRebuild);
+
+        this.isRebuildingParticles = false;
     }
     onHoverStart() {
         this.hoverRequested = true;
@@ -872,8 +897,10 @@ class MorphingParticlesScene {
         this.verbose;
     }
     killParticles() {
+        if (!this.particles) return;
         this.scene.remove(this.particles.mesh);
         this.particles.kill();
+        this.particles = null;
     }
     kill() {
         this.stop();

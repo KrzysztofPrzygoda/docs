@@ -1,0 +1,116 @@
+<!--
+Below is a code snippet for a video fallback implementation that ensures the video is only loaded under certain conditions:
+does not load video on small screens (@media)
+does not load video on slow internet
+respects Save-Data
+loads video only when the section is in the viewport
+has a fallback timeout
+does not break CSS layout
+This is an architecture similar to what large websites use.
+-->
+
+<section class="hero">
+
+    <video id="hero-video" muted loop playsinline preload="none" poster="/img/hero-last-frame.jpg">
+        <source data-src="/video/hero.mp4" type="video/mp4">
+    </video>
+
+    <img id="hero-video-fallback" src="/img/hero-last-frame.jpg" alt="">
+
+</section>
+
+<style>
+    .hero {
+        position: relative;
+    }
+
+    #hero-video,
+    #hero-video-fallback {
+        width: 100%;
+        height: auto;
+    }
+
+    #hero-video-fallback {
+        position: absolute;
+        inset: 0;
+        object-fit: cover;
+    }
+
+    .hero.video-loaded #hero-video-fallback {
+        display: none;
+    }
+
+    /* mobile – without video */
+
+    @media (max-width:768px) {
+        #hero-video {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    (() => {
+
+        const video = document.getElementById('hero-video');
+        const source = video?.querySelector('source');
+        const hero = video?.closest('.hero');
+
+        if (!video || !source) return;
+
+        /* 1. Check if video is hidden by CSS */
+
+        if (window.getComputedStyle(video).display === "none") return;
+
+        /* 2. Check connection quality */
+
+        const connection = navigator.connection || {};
+
+        if (
+            connection.saveData ||
+            ["slow-2g", "2g"].includes(connection.effectiveType)
+        ) {
+            return;
+        }
+
+        /* 3. Lazy start only when hero is in viewport */
+
+        const observer = new IntersectionObserver(entries => {
+
+            if (!entries[0].isIntersecting) return;
+
+            observer.disconnect();
+
+            startVideo();
+
+        }, { threshold: 0.25 });
+
+        observer.observe(hero);
+
+        /* 4. Start video */
+
+        function startVideo() {
+
+            source.src = source.dataset.src;
+            video.load();
+
+            const timeout = setTimeout(() => {
+                video.pause();
+                video.style.display = "none";
+            }, 5000);
+
+            video.addEventListener("canplay", () => {
+                clearTimeout(timeout);
+                hero.classList.add("video-loaded");
+                video.play().catch(() => { });
+            });
+
+            video.addEventListener("error", () => {
+                clearTimeout(timeout);
+                video.style.display = "none";
+            });
+
+        }
+
+    })();
+</script>

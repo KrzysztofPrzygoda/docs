@@ -16,10 +16,24 @@
             display: grid;
             justify-content: center;
             align-items: center;
+            position: relative;
+        }
+
+        .d-flex {
+            display: flex;
+            position: relative;
+        }
+
+        .full-width {
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            max-width: none;
         }
 
         .box {
-            min-width: 200px;
+            min-width: 50svw;
             min-height: 50svh;
             background-color: #eee;
             border: 1px solid #ccc;
@@ -37,6 +51,11 @@
                 animation-range-start: -20%;
                 animation-range-end: cover 50%;
             }
+            .animation-view-scroll-right {
+                animation: --scroll-right both;
+                animation-range-start: 20%;
+                animation-range-end: cover 50%;
+            }
             [class*="animation-view-"] {
                 animation-timeline: view();
             }
@@ -47,6 +66,14 @@
             }
             100% {
                 scale: 1;
+            }
+        }
+        @keyframes --scroll-right {
+            0% {
+                translate: 100svw 0;
+            }
+            100% {
+                translate: 0 0;
             }
         }
     </style>
@@ -63,6 +90,20 @@
     <div class="box animation-view-scale-up">
         <h1>Animation View</h1>
         <p>This is a view for demonstrating CSS animations.</p>
+    </div>
+    <div class="animation-view-scroll-right d-flex full-width">
+        <div class="box">
+            <h1>Animation View</h1>
+            <p>This is a view for demonstrating CSS animations.</p>
+        </div>
+        <div class="box">
+            <h1>Animation View</h1>
+            <p>This is a view for demonstrating CSS animations.</p>
+        </div>
+        <div class="box">
+            <h1>Animation View</h1>
+            <p>This is a view for demonstrating CSS animations.</p>
+        </div>
     </div>
     <div class="box">
         <h1>Animation View</h1>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation View</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-size: 16px;
+            line-height: 1.1;
+            color: #333;
+        }
+
+        .primary-layout {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            min-width: 200px;
+            min-height: 50svh;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 3rem;
+            padding: 3rem;
+        }
+        
+        @supports (animation-timeline: view()) {
+            .animation-view-scale-up {
+                animation: --scale-up both;
+                animation-range-start: -20%;
+                animation-range-end: cover 50%;
+            }
+            [class*="animation-view-"] {
+                animation-timeline: view();
+            }
+        }
+        @keyframes --scale-up {
+            0% {
+                scale: .5;
+            }
+            100% {
+                scale: 1;
+            }
+        }
+    </style>
+</head>
+<body class="primary-layout">
+    <div class="box">
+        <h1>Animation View</h1>
+        <p>This is a view for demonstrating CSS animations.</p>
+    </div>
+    <div class="box">
+        <h1>Animation View</h1>
+        <p>This is a view for demonstrating CSS animations.</p>
+    </div>
+    <div class="box animation-view-scale-up">
+        <h1>Animation View</h1>
+        <p>This is a view for demonstrating CSS animations.</p>
+    </div>
+    <div class="box">
+        <h1>Animation View</h1>
+        <p>This is a view for demonstrating CSS animations.</p>
+    </div>
+</body>
+</html>

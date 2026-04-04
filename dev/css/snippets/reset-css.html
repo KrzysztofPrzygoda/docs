@@ -1,3 +1,4 @@
+<!-- https://www.youtube.com/watch?v=qI5rXLJnxco -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset CSS</title>
     <style>
+        :root {
+            /* Set up a consistent baseline. */
+            font-size: 100%;
+            line-height: 1.5;
+            /* Enable smooth scrolling and size interpolation for users who prefer it. */
+            @media (prefers-reduced-motion: no-preference) {
+                scroll-behavior: smooth;
+                interpolate-size: allow-keywords;
+            }
+        }
+
         /* Make sizing simpler. */
         *,
         *::before,
@@ -22,10 +34,12 @@
 
         html {
             color-scheme: dark light;
+            scrollbar-gutter: stable;
         }
 
         body {
             min-height: 100svh;
+            min-block-size: 100svh;
         }
         
         /* Responsive media. */

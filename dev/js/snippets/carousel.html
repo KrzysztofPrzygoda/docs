@@ -1,0 +1,195 @@
+<style>
+    .carousel {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        --carousel-control-color: #333;
+        --carousel-control-background: rgba(255, 255, 255, 0.85);
+        --carousel-control-size: 2.75rem;
+        --carousel-control-icon-size: 1.5rem;
+    }
+
+    .carousel__track {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .carousel__track::-webkit-scrollbar {
+        display: none;
+    }
+
+    .carousel__slide {
+        box-sizing: border-box;
+        flex: 0 0 100%;
+        min-width: 0;
+        padding: 3rem;
+        scroll-snap-align: start;
+        background: #eee;
+        text-align: center;
+    }
+
+    .carousel__controls {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.75rem;
+    }
+
+    .carousel--controls-center .carousel__controls {
+        position: absolute;
+        inset: 0;
+        align-items: center;
+        margin: 0;
+        pointer-events: none;
+    }
+
+    .carousel--controls-bottom .carousel__controls {
+        position: absolute;
+        right: 0;
+        bottom: 0.75rem;
+        left: 0;
+        margin: 0;
+        padding: 0 0.75rem;
+        pointer-events: none;
+    }
+
+    .carousel__control {
+        display: grid;
+        width: var(--carousel-control-size);
+        height: var(--carousel-control-size);
+        place-items: center;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        color: var(--carousel-control-color);
+        background: var(--carousel-control-background);
+        cursor: pointer;
+        pointer-events: auto;
+    }
+
+    .carousel__control svg {
+        width: var(--carousel-control-icon-size);
+        height: var(--carousel-control-icon-size);
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2;
+    }
+
+    .carousel__control:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+</style>
+
+<section class="carousel carousel--controls-center" data-autoplay-interval="0" aria-label="Przykładowa karuzela">
+    <div class="carousel__track" aria-live="polite">
+        <div class="carousel__slide">Slajd 1</div>
+        <div class="carousel__slide" data-autoplay-interval="1">Slajd 2</div>
+        <div class="carousel__slide">Slajd 3</div>
+    </div>
+    <div class="carousel__controls">
+        <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m15 18-6-6 6-6" />
+            </svg>
+        </button>
+        <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 18 6-6-6-6" />
+            </svg>
+        </button>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".carousel").forEach((carousel) => {
+            const track = carousel.querySelector(".carousel__track");
+            const slides = Array.from(track.querySelectorAll(".carousel__slide"));
+            const previousButton = carousel.querySelector(".carousel__previous");
+            const nextButton = carousel.querySelector(".carousel__next");
+            const defaultInterval = getInterval(carousel.dataset.autoplayInterval, 5000);
+            let activeIndex = 0;
+            let autoplayTimer;
+            let scrollTimer;
+            let isHovered = false;
+
+            function getInterval(value, fallback) {
+                if (value === undefined || value.trim() === "") return fallback;
+                const seconds = Number(value);
+                return Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : fallback;
+            }
+
+            function scheduleAutoplay() {
+                window.clearTimeout(autoplayTimer);
+                if (document.hidden || isHovered || slides.length < 2 || defaultInterval === 0) return;
+
+                const interval = getInterval(
+                    slides[activeIndex].dataset.autoplayInterval,
+                    defaultInterval
+                );
+                if (interval === 0) return;
+                autoplayTimer = window.setTimeout(() => {
+                    goToSlide((activeIndex + 1) % slides.length);
+                }, interval);
+            }
+
+            function goToSlide(index) {
+                activeIndex = index;
+                slides[activeIndex].scrollIntoView({
+                    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? "auto"
+                        : "smooth",
+                    block: "nearest",
+                    inline: "start"
+                });
+                scheduleAutoplay();
+            }
+
+            previousButton.addEventListener("click", () => {
+                goToSlide((activeIndex - 1 + slides.length) % slides.length);
+            });
+
+            nextButton.addEventListener("click", () => {
+                goToSlide((activeIndex + 1) % slides.length);
+            });
+
+            track.addEventListener("scroll", () => {
+                window.clearTimeout(scrollTimer);
+                scrollTimer = window.setTimeout(() => {
+                    const trackLeft = track.getBoundingClientRect().left;
+                    activeIndex = slides.reduce((closestIndex, slide, index) => {
+                        const closestDistance = Math.abs(
+                            slides[closestIndex].getBoundingClientRect().left - trackLeft
+                        );
+                        const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+                        return distance < closestDistance ? index : closestIndex;
+                    }, 0);
+                    scheduleAutoplay();
+                }, 120);
+            }, { passive: true });
+
+            // Tylko mysz: dotyk emuluje hover i zatrzymywałby przewijanie na stałe.
+            carousel.addEventListener("pointerenter", (event) => {
+                if (event.pointerType !== "mouse") return;
+                isHovered = true;
+                carousel.setAttribute("data-onhover", "true");
+                window.clearTimeout(autoplayTimer);
+            });
+
+            carousel.addEventListener("pointerleave", () => {
+                if (!isHovered) return;
+                isHovered = false;
+                carousel.removeAttribute("data-onhover");
+                scheduleAutoplay();
+            });
+
+            document.addEventListener("visibilitychange", scheduleAutoplay);
+            scheduleAutoplay();
+        });
+    });
+</script>

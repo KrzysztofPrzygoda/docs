@@ -1,297 +1,402 @@
-<style>
-    .carousel {
-        position: relative;
-        width: 100%;
-        max-width: 100%;
-        --carousel-control-color: #333;
-        --carousel-control-background: rgba(255, 255, 255, 0.85);
-        --carousel-control-size: 2.75rem;
-        --carousel-control-icon-size: 1.5rem;
-        --carousel-dot-size: 0.5rem;
-        --carousel-dot-active-width: 2rem;
-        --carousel-dot-gap: 0.5rem;
-        --carousel-dot-color: rgba(0, 0, 0, 0.25);
-        --carousel-dot-progress-color: #333;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    .carousel__viewport {
-        position: relative;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
 
-    .carousel__track {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-    }
+<body>
+    <!-- General styles for the carousel component -->
 
-    .carousel__track::-webkit-scrollbar {
-        display: none;
-    }
+    <style>
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            --carousel-control-color: #333;
+            --carousel-control-background: rgba(255, 255, 255, 0.85);
+            --carousel-control-size: 2.75rem;
+            --carousel-control-icon-size: 1.5rem;
+            --carousel-dot-size: 0.5rem;
+            --carousel-dot-active-width: 2rem;
+            --carousel-dot-gap: 0.5rem;
+            --carousel-dot-color: rgba(0, 0, 0, 0.25);
+            --carousel-dot-progress-color: #333;
+        }
 
-    .carousel__slide {
-        box-sizing: border-box;
-        flex: 0 0 100%;
-        min-width: 0;
-        padding: 3rem;
-        scroll-snap-align: start;
-        background: #eee;
-        text-align: center;
-    }
+        .carousel__viewport {
+            position: relative;
+        }
 
-    .carousel__controls {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 0.75rem;
-    }
+        .carousel__track {
+            display: flex;
+            gap: 3rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
 
-    .carousel--controls-center .carousel__controls {
-        position: absolute;
-        inset: 0;
-        align-items: center;
-        margin: 0;
-        pointer-events: none;
-    }
+        .carousel__track::-webkit-scrollbar {
+            display: none;
+        }
 
-    .carousel--controls-bottom .carousel__controls {
-        position: absolute;
-        right: 0;
-        bottom: 0.75rem;
-        left: 0;
-        margin: 0;
-        padding: 0 0.75rem;
-        pointer-events: none;
-    }
+        .carousel__slide {
+            box-sizing: border-box;
+            flex: 0 0 100%;
+            min-width: 0;
+            padding: 3rem;
+            scroll-snap-align: start;
+            background: #eee;
+            text-align: center;
+        }
 
-    .carousel__control {
-        display: grid;
-        width: var(--carousel-control-size);
-        height: var(--carousel-control-size);
-        place-items: center;
-        padding: 0;
-        border: 0;
-        border-radius: 50%;
-        color: var(--carousel-control-color);
-        background: var(--carousel-control-background);
-        cursor: pointer;
-        pointer-events: auto;
-    }
+        .carousel__controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            opacity: 0.5;
+        }
 
-    .carousel__control svg {
-        width: var(--carousel-control-icon-size);
-        height: var(--carousel-control-icon-size);
-        fill: none;
-        stroke: currentColor;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 2;
-    }
+        [data-onhover="true"] .carousel__controls,
+        .carousel__controls:hover {
+            opacity: 1;
+        }
 
-    .carousel__control:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 2px;
-    }
+        .carousel--controls-center .carousel__controls {
+            position: absolute;
+            inset: 0;
+            align-items: center;
+            margin: 0;
+            pointer-events: none;
+            padding: 1rem;
+        }
 
-    .carousel__dots {
-        position: absolute;
-        right: 0;
-        bottom: 0.75rem;
-        left: 0;
-        display: flex;
-        justify-content: center;
-        gap: var(--carousel-dot-gap);
-        pointer-events: none;
-    }
+        .carousel--controls-bottom .carousel__controls {
+            position: absolute;
+            right: 0;
+            bottom: 0.75rem;
+            left: 0;
+            margin: 0;
+            padding: 0 0.75rem;
+            pointer-events: none;
+        }
 
-    .carousel__dot {
-        position: relative;
-        width: var(--carousel-dot-size);
-        height: var(--carousel-dot-size);
-        padding: 0;
-        overflow: hidden;
-        border: 0;
-        border-radius: var(--carousel-dot-size);
-        background: var(--carousel-dot-color);
-        cursor: pointer;
-        pointer-events: auto;
-        transition: width 0.3s;
-    }
+        .carousel__control {
+            display: grid;
+            width: var(--carousel-control-size);
+            height: var(--carousel-control-size);
+            place-items: center;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            color: var(--carousel-control-color);
+            background: var(--carousel-control-background);
+            cursor: pointer;
+            pointer-events: auto;
+        }
 
-    .carousel__dot::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: var(--carousel-dot-progress-color);
-        transform: scaleX(0);
-        transform-origin: left;
-    }
+        .carousel__control svg {
+            width: var(--carousel-control-icon-size);
+            height: var(--carousel-control-icon-size);
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 2;
+        }
 
-    .carousel__dot[aria-current="true"] {
-        width: var(--carousel-dot-active-width);
-    }
+        .carousel__control:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
 
-    /* Bez trwającego odliczania (autoodtwarzanie wyłączone lub pauza) aktywna kropka jest pełna. */
-    .carousel__dot[aria-current="true"]::after {
-        transform: scaleX(1);
-    }
+        .carousel__dots {
+            position: absolute;
+            right: 0;
+            bottom: 1rem;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            gap: var(--carousel-dot-gap);
+            pointer-events: none;
+        }
 
-    .carousel__dot[data-running]::after {
-        animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
-    }
+        .carousel__dot {
+            position: relative;
+            width: var(--carousel-dot-size);
+            height: var(--carousel-dot-size);
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+            border-radius: var(--carousel-dot-size);
+            background: var(--carousel-dot-color);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: width 0.3s;
+        }
 
-    @keyframes carousel-dot-progress {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(1); }
-    }
+        .carousel__dot::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: var(--carousel-dot-progress-color);
+            transform: scaleX(0);
+            transform-origin: left;
+        }
 
-    .carousel__dot:focus-visible {
-        outline: 2px solid var(--carousel-dot-progress-color);
-        outline-offset: 2px;
-    }
-</style>
+        .carousel__dot[aria-current="true"] {
+            width: var(--carousel-dot-active-width);
+        }
 
-<section class="carousel carousel--controls-center carousel--dots" data-autoplay-interval="3" aria-label="Przykładowa karuzela">
-    <div class="carousel__viewport">
-        <div class="carousel__track" aria-live="polite">
-            <div class="carousel__slide">Slajd 1</div>
-            <div class="carousel__slide" data-autoplay-interval="0">Slajd 2</div>
-            <div class="carousel__slide">Slajd 3</div>
+        /* Bez trwającego odliczania (autoodtwarzanie wyłączone lub pauza) aktywna kropka jest pełna. */
+        .carousel__dot[aria-current="true"]::after {
+            transform: scaleX(1);
+        }
+
+        .carousel__dot[data-running]::after {
+            animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
+        }
+
+        @keyframes carousel-dot-progress {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .carousel__dot:focus-visible {
+            outline: 2px solid var(--carousel-dot-progress-color);
+            outline-offset: 2px;
+        }
+    </style>
+
+    <!-- Custom styles for the specific carousel instance -->
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .custom-carousel__slide {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            align-items: normal;
+            gap: 0;
+            max-height: 90dvh;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .custom-carousel__slide-image {
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .custom-carousel__slide-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .custom-carousel__slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 52ch;
+            padding: min(3rem, 10%);
+            text-align: start;
+        }
+
+        .custom-carousel__slide-content :is(h3, p) {
+            margin: 0 0 1rem 0;
+        }
+
+        @media (max-width: 430px) {
+            .custom-carousel__slide {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <section class="carousel carousel--controls-center carousel--dots" data-autoplay-interval="0"
+        aria-label="Przykładowa karuzela">
+        <div class="carousel__viewport">
+            <div class="carousel__track" aria-live="polite">
+                <div class="carousel__slide custom-carousel__slide">
+                    <div class="custom-carousel__slide-image">
+                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                            alt="" srcset="">
+                    </div>
+                    <div class="custom-carousel__slide-content">
+                        <h3>Name Surname, Title</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+                <div class="carousel__slide custom-carousel__slide">
+                    <div class="custom-carousel__slide-image">
+                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                            alt="" srcset="">
+                    </div>
+                    <div class="custom-carousel__slide-content">
+                        <h3>Name Surname, Title</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+                <!-- <div class="carousel__slide" data-autoplay-interval="0">
+                Slajd 2
+            </div>
+            <div class="carousel__slide">
+                Slajd 3
+            </div> -->
+            </div>
         </div>
-    </div>
-    <div class="carousel__controls">
-        <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m15 18-6-6 6-6" />
-            </svg>
-        </button>
-        <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m9 18 6-6-6-6" />
-            </svg>
-        </button>
-    </div>
-</section>
+        <div class="carousel__controls">
+            <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+            </button>
+            <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+            </button>
+        </div>
+    </section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".carousel").forEach((carousel) => {
-            const track = carousel.querySelector(".carousel__track");
-            const slides = Array.from(track.querySelectorAll(".carousel__slide"));
-            const previousButton = carousel.querySelector(".carousel__previous");
-            const nextButton = carousel.querySelector(".carousel__next");
-            const defaultInterval = getInterval(carousel.dataset.autoplayInterval, 5000);
-            let activeIndex = 0;
-            let autoplayTimer;
-            let scrollTimer;
-            let isHovered = false;
-            let dots = [];
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".carousel").forEach((carousel) => {
+                const track = carousel.querySelector(".carousel__track");
+                const slides = Array.from(track.querySelectorAll(".carousel__slide"));
+                const previousButton = carousel.querySelector(".carousel__previous");
+                const nextButton = carousel.querySelector(".carousel__next");
+                const defaultInterval = getInterval(carousel.dataset.autoplayInterval, 5000);
+                let activeIndex = 0;
+                let autoplayTimer;
+                let scrollTimer;
+                let isHovered = false;
+                let dots = [];
 
-            if (carousel.classList.contains("carousel--dots")) {
-                const dotsContainer = document.createElement("div");
-                dotsContainer.className = "carousel__dots";
-                dots = slides.map((slide, index) => {
-                    const dot = document.createElement("button");
-                    dot.type = "button";
-                    dot.className = "carousel__dot";
-                    dot.setAttribute("aria-label", `Slajd ${index + 1}`);
-                    dot.addEventListener("click", () => goToSlide(index));
-                    dotsContainer.append(dot);
-                    return dot;
-                });
-                track.after(dotsContainer);
-            }
+                if (carousel.classList.contains("carousel--dots")) {
+                    const dotsContainer = document.createElement("div");
+                    dotsContainer.className = "carousel__dots";
+                    dots = slides.map((slide, index) => {
+                        const dot = document.createElement("button");
+                        dot.type = "button";
+                        dot.className = "carousel__dot";
+                        dot.setAttribute("aria-label", `Slajd ${index + 1}`);
+                        dot.addEventListener("click", () => goToSlide(index));
+                        dotsContainer.append(dot);
+                        return dot;
+                    });
+                    track.after(dotsContainer);
+                }
 
-            function updateDots(interval) {
-                dots.forEach((dot, index) => {
-                    dot.removeAttribute("data-running");
-                    dot.setAttribute("aria-current", String(index === activeIndex));
-                });
-                if (!interval || !dots[activeIndex]) return;
+                function updateDots(interval) {
+                    dots.forEach((dot, index) => {
+                        dot.removeAttribute("data-running");
+                        dot.setAttribute("aria-current", String(index === activeIndex));
+                    });
+                    if (!interval || !dots[activeIndex]) return;
 
-                const activeDot = dots[activeIndex];
-                activeDot.style.setProperty("--carousel-progress-duration", `${interval}ms`);
-                void activeDot.offsetWidth; // restart animacji
-                activeDot.setAttribute("data-running", "");
-            }
+                    const activeDot = dots[activeIndex];
+                    activeDot.style.setProperty("--carousel-progress-duration", `${interval}ms`);
+                    void activeDot.offsetWidth; // restart animacji
+                    activeDot.setAttribute("data-running", "");
+                }
 
-            function getInterval(value, fallback) {
-                if (value === undefined || value.trim() === "") return fallback;
-                const seconds = Number(value);
-                return Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : fallback;
-            }
+                function getInterval(value, fallback) {
+                    if (value === undefined || value.trim() === "") return fallback;
+                    const seconds = Number(value);
+                    return Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : fallback;
+                }
 
-            function scheduleAutoplay() {
-                window.clearTimeout(autoplayTimer);
-                const interval = getInterval(
-                    slides[activeIndex].dataset.autoplayInterval,
-                    defaultInterval
-                );
-                const isAutoplaying = !(document.hidden || isHovered || slides.length < 2 ||
-                    defaultInterval === 0 || interval === 0);
-                updateDots(isAutoplaying ? interval : 0);
-                if (!isAutoplaying) return;
-                autoplayTimer = window.setTimeout(() => {
-                    goToSlide((activeIndex + 1) % slides.length);
-                }, interval);
-            }
+                function scheduleAutoplay() {
+                    window.clearTimeout(autoplayTimer);
+                    const interval = getInterval(
+                        slides[activeIndex].dataset.autoplayInterval,
+                        defaultInterval
+                    );
+                    const isAutoplaying = !(document.hidden || isHovered || slides.length < 2 ||
+                        defaultInterval === 0 || interval === 0);
+                    updateDots(isAutoplaying ? interval : 0);
+                    if (!isAutoplaying) return;
+                    autoplayTimer = window.setTimeout(() => {
+                        goToSlide((activeIndex + 1) % slides.length);
+                    }, interval);
+                }
 
-            function goToSlide(index) {
-                activeIndex = index;
-                slides[activeIndex].scrollIntoView({
-                    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                        ? "auto"
-                        : "smooth",
-                    block: "nearest",
-                    inline: "start"
-                });
-                scheduleAutoplay();
-            }
-
-            previousButton.addEventListener("click", () => {
-                goToSlide((activeIndex - 1 + slides.length) % slides.length);
-            });
-
-            nextButton.addEventListener("click", () => {
-                goToSlide((activeIndex + 1) % slides.length);
-            });
-
-            track.addEventListener("scroll", () => {
-                window.clearTimeout(scrollTimer);
-                scrollTimer = window.setTimeout(() => {
-                    const trackLeft = track.getBoundingClientRect().left;
-                    const nearestIndex = slides.reduce((closestIndex, slide, index) => {
-                        const closestDistance = Math.abs(
-                            slides[closestIndex].getBoundingClientRect().left - trackLeft
-                        );
-                        const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
-                        return distance < closestDistance ? index : closestIndex;
-                    }, 0);
-                    if (nearestIndex === activeIndex) return;
-                    activeIndex = nearestIndex;
+                function goToSlide(index) {
+                    activeIndex = index;
+                    slides[activeIndex].scrollIntoView({
+                        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                            ? "auto"
+                            : "smooth",
+                        block: "nearest",
+                        inline: "start"
+                    });
                     scheduleAutoplay();
-                }, 120);
-            }, { passive: true });
+                }
 
-            // Tylko mysz: dotyk emuluje hover i zatrzymywałby przewijanie na stałe.
-            carousel.addEventListener("pointerenter", (event) => {
-                if (event.pointerType !== "mouse") return;
-                isHovered = true;
-                carousel.setAttribute("data-onhover", "true");
-                window.clearTimeout(autoplayTimer);
-                updateDots(0);
-            });
+                previousButton.addEventListener("click", () => {
+                    goToSlide((activeIndex - 1 + slides.length) % slides.length);
+                });
 
-            carousel.addEventListener("pointerleave", () => {
-                if (!isHovered) return;
-                isHovered = false;
-                carousel.removeAttribute("data-onhover");
+                nextButton.addEventListener("click", () => {
+                    goToSlide((activeIndex + 1) % slides.length);
+                });
+
+                track.addEventListener("scroll", () => {
+                    window.clearTimeout(scrollTimer);
+                    scrollTimer = window.setTimeout(() => {
+                        const trackLeft = track.getBoundingClientRect().left;
+                        const nearestIndex = slides.reduce((closestIndex, slide, index) => {
+                            const closestDistance = Math.abs(
+                                slides[closestIndex].getBoundingClientRect().left - trackLeft
+                            );
+                            const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+                            return distance < closestDistance ? index : closestIndex;
+                        }, 0);
+                        if (nearestIndex === activeIndex) return;
+                        activeIndex = nearestIndex;
+                        scheduleAutoplay();
+                    }, 120);
+                }, { passive: true });
+
+                // Tylko mysz: dotyk emuluje hover i zatrzymywałby przewijanie na stałe.
+                carousel.addEventListener("pointerenter", (event) => {
+                    if (event.pointerType !== "mouse") return;
+                    isHovered = true;
+                    carousel.setAttribute("data-onhover", "true");
+                    window.clearTimeout(autoplayTimer);
+                    updateDots(0);
+                });
+
+                carousel.addEventListener("pointerleave", () => {
+                    if (!isHovered) return;
+                    isHovered = false;
+                    carousel.removeAttribute("data-onhover");
+                    scheduleAutoplay();
+                });
+
+                document.addEventListener("visibilitychange", scheduleAutoplay);
                 scheduleAutoplay();
             });
-
-            document.addEventListener("visibilitychange", scheduleAutoplay);
-            scheduleAutoplay();
         });
-    });
-</script>
+    </script>
+</body>
+
+</html>

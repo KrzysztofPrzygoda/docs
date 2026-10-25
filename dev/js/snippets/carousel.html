@@ -7,6 +7,15 @@
         --carousel-control-background: rgba(255, 255, 255, 0.85);
         --carousel-control-size: 2.75rem;
         --carousel-control-icon-size: 1.5rem;
+        --carousel-dot-size: 0.5rem;
+        --carousel-dot-active-width: 2rem;
+        --carousel-dot-gap: 0.5rem;
+        --carousel-dot-color: rgba(0, 0, 0, 0.25);
+        --carousel-dot-progress-color: #333;
+    }
+
+    .carousel__viewport {
+        position: relative;
     }
 
     .carousel__track {
@@ -83,13 +92,73 @@
         outline: 2px solid currentColor;
         outline-offset: 2px;
     }
+
+    .carousel__dots {
+        position: absolute;
+        right: 0;
+        bottom: 0.75rem;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        gap: var(--carousel-dot-gap);
+        pointer-events: none;
+    }
+
+    .carousel__dot {
+        position: relative;
+        width: var(--carousel-dot-size);
+        height: var(--carousel-dot-size);
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        border-radius: var(--carousel-dot-size);
+        background: var(--carousel-dot-color);
+        cursor: pointer;
+        pointer-events: auto;
+        transition: width 0.3s;
+    }
+
+    .carousel__dot::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: var(--carousel-dot-progress-color);
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
+    .carousel__dot[aria-current="true"] {
+        width: var(--carousel-dot-active-width);
+    }
+
+    /* Bez trwającego odliczania (autoodtwarzanie wyłączone lub pauza) aktywna kropka jest pełna. */
+    .carousel__dot[aria-current="true"]::after {
+        transform: scaleX(1);
+    }
+
+    .carousel__dot[data-running]::after {
+        animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
+    }
+
+    @keyframes carousel-dot-progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+    }
+
+    .carousel__dot:focus-visible {
+        outline: 2px solid var(--carousel-dot-progress-color);
+        outline-offset: 2px;
+    }
 </style>
 
-<section class="carousel carousel--controls-center" data-autoplay-interval="0" aria-label="Przykładowa karuzela">
-    <div class="carousel__track" aria-live="polite">
-        <div class="carousel__slide">Slajd 1</div>
-        <div class="carousel__slide" data-autoplay-interval="1">Slajd 2</div>
-        <div class="carousel__slide">Slajd 3</div>
+<section class="carousel carousel--controls-center carousel--dots" data-autoplay-interval="3" aria-label="Przykładowa karuzela">
+    <div class="carousel__viewport">
+        <div class="carousel__track" aria-live="polite">
+            <div class="carousel__slide">Slajd 1</div>
+            <div class="carousel__slide" data-autoplay-interval="0">Slajd 2</div>
+            <div class="carousel__slide">Slajd 3</div>
+        </div>
     </div>
     <div class="carousel__controls">
         <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
@@ -117,6 +186,35 @@
             let autoplayTimer;
             let scrollTimer;
             let isHovered = false;
+            let dots = [];
+
+            if (carousel.classList.contains("carousel--dots")) {
+                const dotsContainer = document.createElement("div");
+                dotsContainer.className = "carousel__dots";
+                dots = slides.map((slide, index) => {
+                    const dot = document.createElement("button");
+                    dot.type = "button";
+                    dot.className = "carousel__dot";
+                    dot.setAttribute("aria-label", `Slajd ${index + 1}`);
+                    dot.addEventListener("click", () => goToSlide(index));
+                    dotsContainer.append(dot);
+                    return dot;
+                });
+                track.after(dotsContainer);
+            }
+
+            function updateDots(interval) {
+                dots.forEach((dot, index) => {
+                    dot.removeAttribute("data-running");
+                    dot.setAttribute("aria-current", String(index === activeIndex));
+                });
+                if (!interval || !dots[activeIndex]) return;
+
+                const activeDot = dots[activeIndex];
+                activeDot.style.setProperty("--carousel-progress-duration", `${interval}ms`);
+                void activeDot.offsetWidth; // restart animacji
+                activeDot.setAttribute("data-running", "");
+            }
 
             function getInterval(value, fallback) {
                 if (value === undefined || value.trim() === "") return fallback;
@@ -126,13 +224,14 @@
 
             function scheduleAutoplay() {
                 window.clearTimeout(autoplayTimer);
-                if (document.hidden || isHovered || slides.length < 2 || defaultInterval === 0) return;
-
                 const interval = getInterval(
                     slides[activeIndex].dataset.autoplayInterval,
                     defaultInterval
                 );
-                if (interval === 0) return;
+                const isAutoplaying = !(document.hidden || isHovered || slides.length < 2 ||
+                    defaultInterval === 0 || interval === 0);
+                updateDots(isAutoplaying ? interval : 0);
+                if (!isAutoplaying) return;
                 autoplayTimer = window.setTimeout(() => {
                     goToSlide((activeIndex + 1) % slides.length);
                 }, interval);
@@ -162,13 +261,15 @@
                 window.clearTimeout(scrollTimer);
                 scrollTimer = window.setTimeout(() => {
                     const trackLeft = track.getBoundingClientRect().left;
-                    activeIndex = slides.reduce((closestIndex, slide, index) => {
+                    const nearestIndex = slides.reduce((closestIndex, slide, index) => {
                         const closestDistance = Math.abs(
                             slides[closestIndex].getBoundingClientRect().left - trackLeft
                         );
                         const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
                         return distance < closestDistance ? index : closestIndex;
                     }, 0);
+                    if (nearestIndex === activeIndex) return;
+                    activeIndex = nearestIndex;
                     scheduleAutoplay();
                 }, 120);
             }, { passive: true });
@@ -179,6 +280,7 @@
                 isHovered = true;
                 carousel.setAttribute("data-onhover", "true");
                 window.clearTimeout(autoplayTimer);
+                updateDots(0);
             });
 
             carousel.addEventListener("pointerleave", () => {

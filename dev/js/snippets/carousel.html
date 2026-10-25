@@ -191,7 +191,24 @@
                 let autoplayTimer;
                 let scrollTimer;
                 let isHovered = false;
+                let isVisible = false;
                 let dots = [];
+
+                if ("IntersectionObserver" in window) {
+                    const visibilityObserver = new IntersectionObserver((entries) => {
+                        const [entry] = entries;
+                        isVisible = entry ? entry.isIntersecting : false;
+                        if (!isVisible) {
+                            window.clearTimeout(autoplayTimer);
+                            updateDots(0);
+                            return;
+                        }
+                        scheduleAutoplay();
+                    }, {
+                        threshold: 0.01
+                    });
+                    visibilityObserver.observe(carousel);
+                }
 
                 if (carousel.classList.contains("carousel--dots")) {
                     const dotsContainer = document.createElement("div");
@@ -227,13 +244,26 @@
                     return Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : fallback;
                 }
 
+                function isCarouselVisible() {
+                    if ("IntersectionObserver" in window) {
+                        return isVisible;
+                    }
+
+                    const rect = carousel.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+                    return rect.bottom > 0 && rect.top < viewportHeight &&
+                        rect.right > 0 && rect.left < viewportWidth;
+                }
+
                 function scheduleAutoplay() {
                     window.clearTimeout(autoplayTimer);
                     const interval = getInterval(
                         slides[activeIndex].dataset.autoplayInterval,
                         defaultInterval
                     );
-                    const isAutoplaying = !(document.hidden || isHovered || slides.length < 2 ||
+                    const isAutoplaying = isCarouselVisible() && !(document.hidden || isHovered || slides.length < 2 ||
                         defaultInterval === 0 || interval === 0);
                     updateDots(isAutoplaying ? interval : 0);
                     if (!isAutoplaying) return;
@@ -243,13 +273,16 @@
                 }
 
                 function goToSlide(index) {
+                    if (!isCarouselVisible()) return;
+                    const targetSlide = slides[index];
+                    if (!targetSlide) return;
+
                     activeIndex = index;
-                    slides[activeIndex].scrollIntoView({
+                    track.scrollTo({
+                        left: targetSlide.offsetLeft,
                         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
                             ? "auto"
-                            : "smooth",
-                        block: "nearest",
-                        inline: "start"
+                            : "smooth"
                     });
                     scheduleAutoplay();
                 }

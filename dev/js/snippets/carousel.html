@@ -59,7 +59,9 @@
             margin-top: 0.75rem;
             opacity: 0.5;
         }
-
+        .carousel:not(.carousel--arrows) .carousel__controls {
+            display: none;
+        }
         [data-onhover="true"] .carousel__controls,
         .carousel__controls:hover {
             opacity: 1;
@@ -177,105 +179,8 @@
         }
     </style>
 
-    <!-- Custom styles for the specific carousel instance -->
-    <style>
-        body {
-            margin: 0;
-            font-family: sans-serif;
-        }
-
-        .custom-carousel__slide {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-            align-items: normal;
-            gap: 0;
-            max-height: 90dvh;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .custom-carousel__slide-image {
-            min-width: 0;
-            min-height: 0;
-        }
-
-        .custom-carousel__slide-image img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .custom-carousel__slide-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            max-width: 52ch;
-            padding: min(3rem, 10%);
-            text-align: start;
-        }
-
-        .custom-carousel__slide-content :is(h3, p) {
-            margin: 0 0 1rem 0;
-        }
-
-        @media (max-width: 430px) {
-            .custom-carousel__slide {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-
-    <section class="carousel carousel--controls-center carousel--dots" data-autoplay-interval="0"
-        aria-label="Przykładowa karuzela">
-        <div class="carousel__viewport">
-            <div class="carousel__track" aria-live="polite">
-                <div class="carousel__slide custom-carousel__slide">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
-                            alt="" srcset="">
-                    </div>
-                    <div class="custom-carousel__slide-content">
-                        <h3>Name Surname, Title</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div>
-                </div>
-                <div class="carousel__slide custom-carousel__slide">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
-                            alt="" srcset="">
-                    </div>
-                    <div class="custom-carousel__slide-content">
-                        <h3>Name Surname, Title</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div>
-                </div>
-                <!-- <div class="carousel__slide" data-autoplay-interval="0">
-                Slajd 2
-            </div>
-            <div class="carousel__slide">
-                Slajd 3
-            </div> -->
-            </div>
-        </div>
-        <div class="carousel__controls">
-            <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m15 18-6-6 6-6" />
-                </svg>
-            </button>
-            <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m9 18 6-6-6-6" />
-                </svg>
-            </button>
-        </div>
-    </section>
-
+    <!-- Scripts for carousel functionality -->
+     
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".carousel").forEach((carousel) => {
@@ -397,6 +302,106 @@
             });
         });
     </script>
+
+    <!-- Custom styles for the specific carousel instance -->
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .custom-carousel__slide {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            align-items: normal;
+            gap: 0;
+            max-height: 90dvh;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .custom-carousel__slide-image {
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .custom-carousel__slide-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .custom-carousel__slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 52ch;
+            padding: min(3rem, 10%);
+            text-align: start;
+        }
+
+        .custom-carousel__slide-content :is(h3, p) {
+            margin: 0 0 1rem 0;
+        }
+
+        @media (max-width: 430px) {
+            .custom-carousel__slide {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <section class="carousel carousel--controls-center carousel--arrows carousel--dots" data-autoplay-interval="0"
+        aria-label="Przykładowa karuzela">
+        <div class="carousel__viewport">
+            <div class="carousel__track" aria-live="polite">
+                <div class="carousel__slide custom-carousel__slide">
+                    <div class="custom-carousel__slide-image">
+                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                            alt="" srcset="">
+                    </div>
+                    <div class="custom-carousel__slide-content">
+                        <h3>Name Surname, Title</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+                <div class="carousel__slide custom-carousel__slide">
+                    <div class="custom-carousel__slide-image">
+                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                            alt="" srcset="">
+                    </div>
+                    <div class="custom-carousel__slide-content">
+                        <h3>Name Surname, Title</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+                <!-- <div class="carousel__slide" data-autoplay-interval="0">
+                Slajd 2
+            </div>
+            <div class="carousel__slide">
+                Slajd 3
+            </div> -->
+            </div>
+        </div>
+        <div class="carousel__controls">
+            <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+            </button>
+            <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+            </button>
+        </div>
+    </section>
+
 </body>
 
 </html>

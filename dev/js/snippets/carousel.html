@@ -190,6 +190,9 @@
                 let activeIndex = 0;
                 let autoplayTimer;
                 let scrollTimer;
+                let wheelTimer;
+                let wheelDeltaX = 0;
+                let isWheelGestureActive = false;
                 let isHovered = false;
                 let isVisible = false;
                 let dots = [];
@@ -311,6 +314,24 @@
                         scheduleAutoplay();
                     }, 120);
                 }, { passive: true });
+
+                track.addEventListener("wheel", (event) => {
+                    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+
+                    event.preventDefault();
+                    wheelDeltaX += event.deltaX;
+                    window.clearTimeout(wheelTimer);
+                    wheelTimer = window.setTimeout(() => {
+                        wheelDeltaX = 0;
+                        isWheelGestureActive = false;
+                    }, 200);
+
+                    if (isWheelGestureActive || Math.abs(wheelDeltaX) < 40) return;
+
+                    isWheelGestureActive = true;
+                    const direction = wheelDeltaX > 0 ? 1 : -1;
+                    goToSlide((activeIndex + direction + slides.length) % slides.length);
+                }, { passive: false });
 
                 // Tylko mysz: dotyk emuluje hover i zatrzymywałby przewijanie na stałe.
                 carousel.addEventListener("pointerenter", (event) => {

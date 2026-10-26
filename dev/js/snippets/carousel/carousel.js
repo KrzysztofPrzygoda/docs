@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let isHovered = false;
         let isVisible = false;
         let dots = [];
+        const maxVisibleDots = 7;
 
         if ("IntersectionObserver" in window) {
             const visibilityObserver = new IntersectionObserver((entries) => {
@@ -44,9 +45,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function updateDots(interval) {
+            const centerOffset = Math.floor((maxVisibleDots - 1) / 2);
+            const firstVisibleIndex = Math.min(
+                Math.max(activeIndex - centerOffset, 0),
+                Math.max(slides.length - maxVisibleDots, 0)
+            );
+            const lastVisibleIndex = Math.min(
+                firstVisibleIndex + maxVisibleDots - 1,
+                slides.length - 1
+            );
+
             dots.forEach((dot, index) => {
                 dot.removeAttribute("data-running");
                 dot.setAttribute("aria-current", String(index === activeIndex));
+                const isVisible = index >= firstVisibleIndex && index <= lastVisibleIndex;
+                dot.classList.toggle("is-hidden", !isVisible);
+
+                const hasHiddenLeft = firstVisibleIndex > 0;
+                const hasHiddenRight = lastVisibleIndex < slides.length - 1;
+                const isLeftSmall = hasHiddenLeft && index === firstVisibleIndex;
+                const isLeftMedium = hasHiddenLeft && index === firstVisibleIndex + 1;
+                const isRightSmall = hasHiddenRight && index === lastVisibleIndex;
+                const isRightMedium = hasHiddenRight && index === lastVisibleIndex - 1;
+
+                dot.toggleAttribute("data-edge-small", isLeftSmall || isRightSmall);
+                dot.toggleAttribute("data-edge-medium", isLeftMedium || isRightMedium);
             });
             if (!interval || !dots[activeIndex]) return;
 

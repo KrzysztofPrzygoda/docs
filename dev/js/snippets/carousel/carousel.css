@@ -113,9 +113,12 @@
     bottom: 1rem;
     left: 0;
     display: flex;
+    align-items: center;
     justify-content: center;
     gap: var(--carousel-dot-gap);
+    min-height: calc(var(--carousel-dot-active-width) + 0.5rem);
     pointer-events: none;
+    transition: transform 0.3s ease;
 }
 
 .carousel__dot {
@@ -129,7 +132,32 @@
     background: var(--carousel-dot-color);
     cursor: pointer;
     pointer-events: auto;
-    transition: width 0.3s;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+}
+
+.carousel__dot.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(2px) scale(0.75);
+    width: 0;
+    height: 0;
+    margin-inline: -0.125rem;
+}
+
+.carousel__dot[data-edge-medium] {
+    width: calc(var(--carousel-dot-size) * 0.75);
+    height: calc(var(--carousel-dot-size) * 0.75);
+    border-radius: 999px;
+}
+
+.carousel__dot[data-edge-small] {
+    width: calc(var(--carousel-dot-size) * 0.6);
+    height: calc(var(--carousel-dot-size) * 0.6);
+    border-radius: 50%;
 }
 
 .carousel__dot::after {

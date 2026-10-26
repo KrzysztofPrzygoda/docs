@@ -112,16 +112,15 @@
     right: 0;
     bottom: 1rem;
     left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--carousel-dot-gap);
+    display: block;
+    text-align: center;
     min-height: calc(var(--carousel-dot-active-width) + 0.5rem);
     pointer-events: none;
     transition: transform 0.3s ease;
 }
 
 .carousel__dot {
+    vertical-align: middle;
     position: relative;
     width: var(--carousel-dot-size);
     height: var(--carousel-dot-size);
@@ -135,7 +134,8 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
-    transition: width 0.3s ease, height 0.3s ease, opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, margin 0.3s ease;
+    margin: 0 var(--carousel-dot-gap);
 }
 .carousel__dot:hover {
     background: var(--carousel-dot-progress-color);
@@ -147,6 +147,7 @@
     pointer-events: none;
     width: 0;
     height: 0;
+    margin: 0;
 }
 
 .carousel__dot[data-edge-medium] {

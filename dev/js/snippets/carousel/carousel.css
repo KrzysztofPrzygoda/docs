@@ -1,0 +1,171 @@
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    --carousel-control-color: #333;
+    --carousel-control-background: rgba(255, 255, 255, 0.85);
+    --carousel-control-size: 2.75rem;
+    --carousel-control-icon-size: 2rem;
+    --carousel-dot-size: 0.75rem;
+    --carousel-dot-active-width: 2rem;
+    --carousel-dot-gap: 0.5rem;
+    --carousel-dot-color: rgba(0, 0, 0, 0.25);
+    --carousel-dot-progress-color: #333;
+    --carousel-border-radius: 4ch;
+}
+
+.carousel__viewport {
+    position: relative;
+}
+
+.carousel__track {
+    display: flex;
+    border-radius: var(--carousel-border-radius, 0);
+    gap: 3rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel__slide {
+    box-sizing: border-box;
+    flex: 0 0 100%;
+    min-width: 0;
+    padding: 3rem;
+    scroll-snap-align: start;
+    background: #eee;
+    border-radius: var(--carousel-border-radius, 0);
+    text-align: center;
+}
+
+.carousel__controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    opacity: 0.5;
+}
+
+.carousel:not(.carousel--arrows) .carousel__controls {
+    display: none;
+}
+
+[data-onhover="true"] .carousel__controls,
+.carousel__controls:hover {
+    opacity: 1;
+}
+
+.carousel--controls-center .carousel__controls {
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    margin: 0;
+    pointer-events: none;
+    padding: 1rem;
+}
+
+.carousel--controls-bottom .carousel__controls {
+    position: absolute;
+    right: 0;
+    bottom: 0.75rem;
+    left: 0;
+    margin: 0;
+    padding: 0 0.75rem;
+    pointer-events: none;
+}
+
+.carousel__control {
+    display: grid;
+    width: var(--carousel-control-size);
+    height: var(--carousel-control-size);
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: var(--carousel-control-color);
+    background: var(--carousel-control-background);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.carousel__control svg {
+    width: var(--carousel-control-icon-size);
+    height: var(--carousel-control-icon-size);
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1;
+}
+
+.carousel__control:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.carousel__dots {
+    position: absolute;
+    right: 0;
+    bottom: 1rem;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    gap: var(--carousel-dot-gap);
+    pointer-events: none;
+}
+
+.carousel__dot {
+    position: relative;
+    width: var(--carousel-dot-size);
+    height: var(--carousel-dot-size);
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--carousel-dot-size);
+    background: var(--carousel-dot-color);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: width 0.3s;
+}
+
+.carousel__dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--carousel-dot-progress-color);
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.carousel__dot[aria-current="true"] {
+    width: var(--carousel-dot-active-width);
+}
+
+/* Bez trwającego odliczania (autoodtwarzanie wyłączone lub pauza) aktywna kropka jest pełna. */
+.carousel__dot[aria-current="true"]::after {
+    transform: scaleX(1);
+}
+
+.carousel__dot[data-running]::after {
+    animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
+}
+
+@keyframes carousel-dot-progress {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.carousel__dot:focus-visible {
+    outline: 2px solid var(--carousel-dot-progress-color);
+    outline-offset: 2px;
+}

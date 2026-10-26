@@ -145,10 +145,8 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(2px) scale(0.75);
     width: 0;
     height: 0;
-    margin-inline: -0.125rem;
 }
 
 .carousel__dot[data-edge-medium] {

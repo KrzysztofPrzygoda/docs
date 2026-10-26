@@ -24,6 +24,7 @@
             --carousel-dot-gap: 0.5rem;
             --carousel-dot-color: rgba(0, 0, 0, 0.25);
             --carousel-dot-progress-color: #333;
+            --carousel-border-radius: 4ch;
         }
 
         .carousel__viewport {
@@ -32,6 +33,7 @@
 
         .carousel__track {
             display: flex;
+            border-radius: var(--carousel-border-radius, 0);
             gap: 3rem;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
@@ -50,6 +52,7 @@
             padding: 3rem;
             scroll-snap-align: start;
             background: #eee;
+            border-radius: var(--carousel-border-radius, 0);
             text-align: center;
         }
 

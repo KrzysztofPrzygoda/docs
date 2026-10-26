@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let activeIndex = 0;
         let autoplayTimer;
         let scrollTimer;
+        let isProgrammaticScroll = false;
         let isHovered = false;
         let isVisible = false;
         let dots = [];
@@ -119,6 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!targetSlide) return;
 
             activeIndex = index;
+            isProgrammaticScroll = true;
+            window.clearTimeout(scrollTimer);
+            scrollTimer = window.setTimeout(() => {
+                isProgrammaticScroll = false;
+            }, 120);
             track.scrollTo({
                 left: targetSlide.offsetLeft,
                 behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -136,22 +142,36 @@ document.addEventListener("DOMContentLoaded", () => {
             goToSlide((activeIndex + 1) % slides.length);
         });
 
+        function syncActiveSlide() {
+            const trackLeft = track.getBoundingClientRect().left;
+            const nearestIndex = slides.reduce((closestIndex, slide, index) => {
+                const closestDistance = Math.abs(
+                    slides[closestIndex].getBoundingClientRect().left - trackLeft
+                );
+                const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+                return distance < closestDistance ? index : closestIndex;
+            }, 0);
+            if (nearestIndex === activeIndex) return;
+            activeIndex = nearestIndex;
+            scheduleAutoplay();
+        }
+
+        // Przewijanie użytkownika (wheel/touch) aktualizuje kropki natychmiast;
+        // przewijanie programowe jest ignorowane do jego zakończenia.
         track.addEventListener("scroll", () => {
             window.clearTimeout(scrollTimer);
+            if (!isProgrammaticScroll) syncActiveSlide();
             scrollTimer = window.setTimeout(() => {
-                const trackLeft = track.getBoundingClientRect().left;
-                const nearestIndex = slides.reduce((closestIndex, slide, index) => {
-                    const closestDistance = Math.abs(
-                        slides[closestIndex].getBoundingClientRect().left - trackLeft
-                    );
-                    const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
-                    return distance < closestDistance ? index : closestIndex;
-                }, 0);
-                if (nearestIndex === activeIndex) return;
-                activeIndex = nearestIndex;
-                scheduleAutoplay();
+                isProgrammaticScroll = false;
+                syncActiveSlide();
             }, 120);
         }, { passive: true });
+
+        ["wheel", "touchstart"].forEach((type) => {
+            track.addEventListener(type, () => {
+                isProgrammaticScroll = false;
+            }, { passive: true });
+        });
 
         // Tylko mysz: dotyk emuluje hover i zatrzymywałby przewijanie na stałe.
         carousel.addEventListener("pointerenter", (event) => {

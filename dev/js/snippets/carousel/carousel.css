@@ -9,7 +9,7 @@
     --carousel-dot-size: 0.5rem;
     --carousel-dot-active-width: 3rem;
     --carousel-dot-gap: 1rem;
-    --carousel-dot-color: rgba(0, 0, 0, 0.25);
+    --carousel-dot-color: #bbbb;
     --carousel-dot-hover-color: #333;
     --carousel-dot-progress-color: #333;
     --carousel-dot-progress-start-dots: 0;
@@ -176,6 +176,7 @@
         visibility var(--carousel-dot-animation-speed) ease,
         margin var(--carousel-dot-animation-speed) ease;
     margin: 0 calc(var(--carousel-dot-gap) / 2);
+    mix-blend-mode: luminosity;
 }
 .carousel__dot:hover {
     background: var(--carousel-dot-hover-color);

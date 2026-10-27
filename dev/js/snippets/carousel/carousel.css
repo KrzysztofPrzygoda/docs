@@ -7,7 +7,7 @@
     --carousel-control-size: 2.75rem;
     --carousel-control-icon-size: 2rem;
     --carousel-dot-size: 0.5rem;
-    --carousel-dot-active-width: 2rem;
+    --carousel-dot-active-width: 3rem;
     --carousel-dot-gap: 1rem;
     --carousel-dot-color: rgba(0, 0, 0, 0.25);
     --carousel-dot-hover-color: #333;
@@ -168,12 +168,14 @@
 }
 
 .carousel__dot::after {
+    --carousel-dot-progress-size: calc(var(--carousel-dot-size) + var(--carousel-dot-active-width));
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
     background: var(--carousel-dot-progress-color);
-    transform: scaleX(0);
+    width: var(--carousel-dot-size);
+    left: calc(var(--carousel-dot-size) * -1);
     transform-origin: left;
 }
 
@@ -183,20 +185,26 @@
 
 /* Bez trwającego odliczania (autoodtwarzanie wyłączone lub pauza) aktywna kropka jest pełna. */
 .carousel__dot[aria-current="true"]::after {
-    transform: scaleX(1);
+    width: var(--carousel-dot-progress-size);
 }
 
 .carousel__dot[data-running]::after {
+    --carousel-dot-start-size: var(--carousel-dot-size);
+    /* --carousel-dot-start-size: calc(var(--carousel-dot-size) * 2); */
     animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
 }
 
 @keyframes carousel-dot-progress {
-    from {
-        transform: scaleX(0);
+    0% {
+        width: var(--carousel-dot-start-size);
     }
 
-    to {
-        transform: scaleX(1);
+    30% {
+        width: var(--carousel-dot-start-size);
+    }
+
+    100% {
+        width: var(--carousel-dot-progress-size);
     }
 }
 

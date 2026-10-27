@@ -13,7 +13,7 @@
     --carousel-dot-hover-color: #333;
     --carousel-dot-progress-color: #333;
     --carousel-dot-progress-start-dots: 0;
-    --carousel-dot-animation-speed: 1s;
+    --carousel-dot-animation-speed: 0.5s;
     --carousel-dots-bottom: 0;
     --carousel-track-radius: 0ch;
     --carousel-slide-radius: 4ch;
@@ -142,7 +142,6 @@
     padding: 0;
     margin: 0;
     height: var(--carousel-dot-size);
-    /* min-height: var(--carousel-dot-size); */
 }
 .carousel__dot {
     vertical-align: middle;
@@ -209,11 +208,10 @@
 
 /* Bez trwającego odliczania (autoodtwarzanie wyłączone lub pauza) aktywna kropka jest pełna. */
 .carousel__dot[aria-current="true"]::after {
-    width: var(--carousel-dot-progress-size);
+    /* width: var(--carousel-dot-progress-size); */
 }
 
 .carousel__dot[data-running]::after {
-    /* --carousel-dot-start-size: var(--carousel-dot-size); */
     --carousel-dot-start-size: calc(var(--carousel-dot-size) * calc(var(--carousel-dot-progress-start-dots) + 1));
     animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
 }

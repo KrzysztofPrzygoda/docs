@@ -56,7 +56,7 @@
     box-sizing: border-box;
     flex: 0 0 100%;
     min-width: 0;
-    padding: 3rem;
+    height: auto;
     scroll-snap-align: start;
     background: #eee;
     border-radius: var(--carousel-slide-radius, 0);

@@ -15,6 +15,9 @@
         body {
             margin: 0;
             font-family: sans-serif;
+            display: grid;
+            place-items: center;
+            height: 100vh;
         }
 
         .carousel {
@@ -26,6 +29,12 @@
             --carousel-slide-width: 70%;
             --carousel-has-mask: 0;
         }            
+
+        .carousel__slide {
+            display: grid;
+            place-items: center;
+            height: auto;
+        }
 
         .custom-carousel__slide {
             display: grid;
@@ -71,8 +80,8 @@
 
     <section
         class="carousel carousel--centered carousel--controls-center carousel--arrows carousel--dots"
-        data-autoplay-interval="0"
-        aria-label="Przykładowa karuzela">
+        data-autoplay-interval="4"
+        aria-label="Example Carousel">
         <div class="carousel__viewport">
             <ul class="carousel__track" tabindex="0" aria-live="polite">
                 <li class="carousel__slide custom-carousel__slide">
@@ -118,49 +127,49 @@
                     </div>
                 </li>
                 <li class="carousel__slide" data-autoplay-interval="4">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide" data-autoplay-interval="5">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
                 <li class="carousel__slide">
-                    Slajd
+                    Slide
                 </li>
             </ul>
         </div>

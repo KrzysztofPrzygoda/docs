@@ -66,7 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             dots.forEach((dot, index) => {
                 dot.removeAttribute("data-running");
-                dot.setAttribute("aria-current", String(index === activeIndex));
+
+                if (index === activeIndex) {
+                    dot.setAttribute("aria-current", "true");
+                } else {
+                    dot.removeAttribute("aria-current");
+                }
+
                 const isVisible = index >= firstVisibleIndex && index <= lastVisibleIndex;
                 dot.classList.toggle("is-hidden", !isVisible);
 

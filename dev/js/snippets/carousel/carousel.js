@@ -38,7 +38,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const dot = document.createElement("button");
                 dot.type = "button";
                 dot.className = "carousel__dot";
-                dot.setAttribute("aria-label", `Slide ${index + 1}`);
+                dot.setAttribute(
+                    "aria-label",
+                    slide.getAttribute("aria-label") || `Slide ${index + 1}`
+                );
+                dot.setAttribute(
+                    "title",
+                    slide.getAttribute("aria-label") || `Slide ${index + 1}`
+                );
                 dot.addEventListener("click", () => goToSlide(index));
                 dotsContainer.append(dot);
                 return dot;

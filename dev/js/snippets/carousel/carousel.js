@@ -94,6 +94,16 @@ document.addEventListener("DOMContentLoaded", () => {
             return Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : fallback;
         }
 
+        function updateCurrentSlide() {
+            slides.forEach((slide, index) => {
+                if (index === activeIndex) {
+                    slide.setAttribute("aria-current", "true");
+                } else {
+                    slide.removeAttribute("aria-current");
+                }
+            });
+        }
+
         function isCarouselVisible() {
             if ("IntersectionObserver" in window) {
                 return isVisible;
@@ -115,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             const isAutoplaying = isCarouselVisible() && !(document.hidden || isHovered || slides.length < 2 ||
                 defaultInterval === 0 || interval === 0);
+            updateCurrentSlide();
             updateDots(isAutoplaying ? interval : 0);
             if (!isAutoplaying) return;
             autoplayTimer = window.setTimeout(() => {

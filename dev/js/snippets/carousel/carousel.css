@@ -43,6 +43,11 @@
     display: none;
 }
 
+.carousel__track:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
+
 .carousel__slide {
     box-sizing: border-box;
     flex: 0 0 100%;

@@ -142,7 +142,8 @@
     margin: 0;
     height: var(--carousel-dot-size);
     min-height: var(--carousel-dot-size);
-    /* border: 1px solid red; */
+    font-size: var(--carousel-dot-size);
+    line-height: 0;
 }
 
 .carousel__dot {

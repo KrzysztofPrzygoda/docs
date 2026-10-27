@@ -52,7 +52,7 @@
 }
 
 .carousel__slide {
-    display: flex;
+    display: list-item;
     box-sizing: border-box;
     flex: 0 0 100%;
     min-width: 0;

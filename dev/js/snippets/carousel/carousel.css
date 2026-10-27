@@ -14,6 +14,7 @@
     --carousel-dot-progress-color: #333;
     --carousel-dot-progress-start-dots: 0;
     --carousel-dot-animation-speed: 1s;
+    --carousel-dots-bottom: 0;
     --carousel-track-radius: 0ch;
     --carousel-slide-radius: 4ch;
     --carousel-slide-width: 80%;
@@ -132,14 +133,16 @@
 
 .carousel__dots {
     position: absolute;
-    right: 0;
-    bottom: 1rem;
-    left: 0;
+    inset: auto 0;
+    bottom: var(--carousel-dots-bottom, 1rem);
     display: block;
     text-align: center;
-    min-height: calc(var(--carousel-dot-active-width) + 0.5rem);
     pointer-events: none;
-    transition: transform 0.3s ease;
+    padding: 0;
+    margin: 0;
+    height: var(--carousel-dot-size);
+    min-height: var(--carousel-dot-size);
+    /* border: 1px solid red; */
 }
 
 .carousel__dot {

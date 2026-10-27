@@ -135,17 +135,15 @@
     position: absolute;
     inset: auto 0;
     bottom: var(--carousel-dots-bottom, 1rem);
-    display: block;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
     padding: 0;
     margin: 0;
     height: var(--carousel-dot-size);
-    min-height: var(--carousel-dot-size);
-    font-size: var(--carousel-dot-size);
-    line-height: 0;
+    /* min-height: var(--carousel-dot-size); */
 }
-
 .carousel__dot {
     vertical-align: middle;
     position: relative;
@@ -163,6 +161,7 @@
     transition: width var(--carousel-dot-animation-speed) ease,
         height var(--carousel-dot-animation-speed) ease,
         opacity var(--carousel-dot-animation-speed) ease,
+        border-radius var(--carousel-dot-animation-speed) ease,
         visibility var(--carousel-dot-animation-speed) ease,
         margin var(--carousel-dot-animation-speed) ease;
     margin: 0 calc(var(--carousel-dot-gap) / 2);

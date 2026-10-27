@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const previousButton = carousel.querySelector(".carousel__previous");
         const nextButton = carousel.querySelector(".carousel__next");
         const defaultInterval = getInterval(carousel.dataset.autoplayInterval, 5000);
+        const centerSlides = carousel.classList.contains("carousel--centered");
         let activeIndex = 0;
         let autoplayTimer;
         let scrollTimer;
@@ -125,8 +126,13 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTimer = window.setTimeout(() => {
                 isProgrammaticScroll = false;
             }, 120);
+            const slideRect = targetSlide.getBoundingClientRect();
+            const trackRect = track.getBoundingClientRect();
             track.scrollTo({
-                left: targetSlide.offsetLeft,
+                left: centerSlides
+                    ? track.scrollLeft + slideRect.left - trackRect.left -
+                        (track.clientWidth - slideRect.width) / 2
+                    : targetSlide.offsetLeft,
                 behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
                     ? "auto"
                     : "smooth"
@@ -143,12 +149,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         function syncActiveSlide() {
-            const trackLeft = track.getBoundingClientRect().left;
+            const trackRect = track.getBoundingClientRect();
+            const trackCenter = centerSlides
+                ? trackRect.left + track.clientWidth / 2
+                : trackRect.left;
             const nearestIndex = slides.reduce((closestIndex, slide, index) => {
-                const closestDistance = Math.abs(
-                    slides[closestIndex].getBoundingClientRect().left - trackLeft
-                );
-                const distance = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+                const closestRect = slides[closestIndex].getBoundingClientRect();
+                const slideRect = slide.getBoundingClientRect();
+                const closestPosition = centerSlides
+                    ? closestRect.left + closestRect.width / 2
+                    : closestRect.left;
+                const slidePosition = centerSlides
+                    ? slideRect.left + slideRect.width / 2
+                    : slideRect.left;
+                const closestDistance = Math.abs(closestPosition - trackCenter);
+                const distance = Math.abs(slidePosition - trackCenter);
                 return distance < closestDistance ? index : closestIndex;
             }, 0);
             if (nearestIndex === activeIndex) return;

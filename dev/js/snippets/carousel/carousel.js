@@ -140,12 +140,30 @@ document.addEventListener("DOMContentLoaded", () => {
             scheduleAutoplay();
         }
 
-        previousButton.addEventListener("click", () => {
-            goToSlide((activeIndex - 1 + slides.length) % slides.length);
-        });
-
-        nextButton.addEventListener("click", () => {
+        function goToNextSlide() {
             goToSlide((activeIndex + 1) % slides.length);
+        }
+        function goToPreviousSlide() {
+            goToSlide((activeIndex - 1 + slides.length) % slides.length);
+        }
+
+        nextButton.addEventListener("click", goToNextSlide);
+        previousButton.addEventListener("click", goToPreviousSlide);
+
+        track.addEventListener("keydown", (event) => {
+            if (event.altKey || event.ctrlKey || event.metaKey ||
+                event.target.isContentEditable ||
+                ["INPUT", "SELECT", "TEXTAREA"].includes(event.target.tagName)) {
+                return;
+            }
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                goToPreviousSlide();
+            } else if (event.key === "ArrowRight") {
+                event.preventDefault();
+                goToNextSlide();
+            }
         });
 
         function syncActiveSlide() {

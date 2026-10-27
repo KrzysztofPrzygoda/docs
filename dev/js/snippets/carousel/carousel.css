@@ -29,12 +29,15 @@
 }
 
 .carousel__track {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    border-radius: var(--carousel-track-radius, 0);
     gap: 3rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    border-radius: var(--carousel-track-radius, 0);
     mask-image: var(--carousel-track-mask);
     -webkit-overflow-scrolling: touch;
 }
@@ -49,6 +52,7 @@
 }
 
 .carousel__slide {
+    display: flex;
     box-sizing: border-box;
     flex: 0 0 100%;
     min-width: 0;

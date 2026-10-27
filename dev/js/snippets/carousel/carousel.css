@@ -12,6 +12,7 @@
     --carousel-dot-color: rgba(0, 0, 0, 0.25);
     --carousel-dot-hover-color: #333;
     --carousel-dot-progress-color: #333;
+    --carousel-dot-progress-start-dots: 0;
     --carousel-dot-animation-speed: 1s;
     --carousel-border-radius: 4ch;
 }
@@ -189,8 +190,8 @@
 }
 
 .carousel__dot[data-running]::after {
-    --carousel-dot-start-size: var(--carousel-dot-size);
-    /* --carousel-dot-start-size: calc(var(--carousel-dot-size) * 2); */
+    /* --carousel-dot-start-size: var(--carousel-dot-size); */
+    --carousel-dot-start-size: calc(var(--carousel-dot-size) * calc(var(--carousel-dot-progress-start-dots) + 1));
     animation: carousel-dot-progress var(--carousel-progress-duration) linear forwards;
 }
 

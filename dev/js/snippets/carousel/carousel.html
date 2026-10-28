@@ -20,7 +20,9 @@
             place-items: center;
             min-height: 100vh;
         }
-
+        main {
+            max-width: 2560px;
+        }
         .carousel {
             --carousel-dot-progress-start-dots: 0;
             --carousel-dot-animation-speed: 0.5s;
@@ -28,8 +30,11 @@
             --carousel-track-radius: 0ch;
             --carousel-slide-radius: 4ch;
             --carousel-slide-width: 70%;
+            
             --carousel-has-mask: 0;
-        }            
+            --carousel-slide-opacity: 1;
+            --carousel-slide-scale: 1;
+        }
 
         .carousel__slide {
             display: grid;
@@ -84,116 +89,120 @@
             }
         }
     </style>
-
-    <section
-        class="carousel carousel--centered carousel--controls-center carousel--arrows carousel--dots"
-        data-autoplay-interval="0"
-        aria-label="Example Carousel">
-        <div class="carousel__viewport">
-            <ul class="carousel__track" tabindex="0" aria-live="polite">
-                <li class="carousel__slide custom-carousel__slide" aria-label="Name Surname, Title" role="presentation">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
-                            alt="" srcset="">
-                    </div>
-                    <div class="custom-carousel__slide-content">
-                        <h3>Name Surname, Title</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div>
-                </li>
-                <li class="carousel__slide custom-carousel__slide" aria-label="Name Surname, Title" role="presentation">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://images.unsplash.com/photo-1791394813021-06bb982238ec?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDE%3D"
-                            alt="" srcset="">
-                    </div>
-                    <div class="custom-carousel__slide-content">
-                        <h3>Name Surname, Title</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div>
-                </li>
-                <li class="carousel__slide" data-autoplay-interval="1" role="presentation">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://images.unsplash.com/photo-1792939678209-cff58a20f2b3?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
-                            alt="" srcset="" width="2670" height="1780">
-                    </div>
-                </li>
-                <li class="carousel__slide" data-autoplay-interval="2" role="presentation">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://images.unsplash.com/photo-1792976730658-6b46fcaf0550?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
-                            alt="" srcset="">
-                    </div>
-                </li>
-                <li class="carousel__slide" data-autoplay-interval="3" role="presentation">
-                    <div class="custom-carousel__slide-image">
-                        <img src="https://images.unsplash.com/photo-1789758385655-ba7cfcfc3533?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDE%3D"
-                            alt="" srcset="">
-                    </div>
-                </li>
-                <li class="carousel__slide" data-autoplay-interval="4" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" data-autoplay-interval="5" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-                <li class="carousel__slide" role="presentation">
-                    Slide
-                </li>
-            </ul>
-        </div>
-        <div class="carousel__controls">
-            <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m15 18-6-6 6-6" />
-                </svg>
-            </button>
-            <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m9 18 6-6-6-6" />
-                </svg>
-            </button>
-        </div>
-    </section>
-
+    <main>
+        <section class="carousel carousel--centered carousel--controls-center carousel--arrows carousel--dots"
+            data-autoplay-interval="0" aria-label="Example Carousel">
+            <div class="carousel__viewport">
+                <ul class="carousel__track" tabindex="0" aria-live="polite">
+                    <li class="carousel__slide custom-carousel__slide" aria-label="Name Surname, Title"
+                        role="presentation">
+                        <div class="custom-carousel__slide-image">
+                            <img src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                                alt="" srcset="">
+                        </div>
+                        <div class="custom-carousel__slide-content">
+                            <h3>Name Surname, Title</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
+                                ut
+                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                                ullamco
+                                laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                    </li>
+                    <li class="carousel__slide custom-carousel__slide" aria-label="Name Surname, Title"
+                        role="presentation">
+                        <div class="custom-carousel__slide-image">
+                            <img src="https://images.unsplash.com/photo-1791394813021-06bb982238ec?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDE%3D"
+                                alt="" srcset="">
+                        </div>
+                        <div class="custom-carousel__slide-content">
+                            <h3>Name Surname, Title</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
+                                ut
+                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                                ullamco
+                                laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                    </li>
+                    <li class="carousel__slide" data-autoplay-interval="1" role="presentation">
+                        <div class="custom-carousel__slide-image">
+                            <img src="https://images.unsplash.com/photo-1792939678209-cff58a20f2b3?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                                alt="" srcset="" width="2670" height="1780">
+                        </div>
+                    </li>
+                    <li class="carousel__slide" data-autoplay-interval="2" role="presentation">
+                        <div class="custom-carousel__slide-image">
+                            <img src="https://images.unsplash.com/photo-1792976730658-6b46fcaf0550?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+                                alt="" srcset="">
+                        </div>
+                    </li>
+                    <li class="carousel__slide" data-autoplay-interval="3" role="presentation">
+                        <div class="custom-carousel__slide-image">
+                            <img src="https://images.unsplash.com/photo-1789758385655-ba7cfcfc3533?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDE%3D"
+                                alt="" srcset="">
+                        </div>
+                    </li>
+                    <li class="carousel__slide" data-autoplay-interval="4" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" data-autoplay-interval="5" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                    <li class="carousel__slide" role="presentation">
+                        Slide
+                    </li>
+                </ul>
+            </div>
+            <div class="carousel__controls">
+                <button class="carousel__control carousel__previous" type="button" aria-label="Poprzedni slajd">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6" />
+                    </svg>
+                </button>
+                <button class="carousel__control carousel__next" type="button" aria-label="Następny slajd">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+    </main>
 </body>
 
 </html>

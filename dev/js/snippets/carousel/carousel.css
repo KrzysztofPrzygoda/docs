@@ -6,6 +6,7 @@
     --carousel-control-background: rgba(255, 255, 255, 0.85);
     --carousel-control-size: 2.75rem;
     --carousel-control-icon-size: 2rem;
+    
     --carousel-dot-size: 0.5rem;
     --carousel-dot-active-width: 3rem;
     --carousel-dot-gap: 1rem;
@@ -15,12 +16,16 @@
     --carousel-dot-progress-start-dots: 0;
     --carousel-dot-animation-speed: 0.5s;
     --carousel-dots-bottom: 0;
+    
     --carousel-track-radius: 0ch;
     --carousel-slide-radius: 4ch;
+    
     --carousel-slide-width: 80%;
+    --carousel-slide-width-margin: calc(((100% - var(--carousel-slide-width)) / 2) * var(--carousel-has-mask));
+    --carousel-slide-opacity: 0.75;
+    --carousel-slide-scale: 0.97;
     
     --carousel-has-mask: 1;
-    --carousel-slide-width-margin: calc(((100% - var(--carousel-slide-width)) / 2) * var(--carousel-has-mask));
     --carousel-track-mask: linear-gradient(to right, transparent 0%, #000 var(--carousel-slide-width-margin), #000 calc(100% - var(--carousel-slide-width-margin)), transparent 100%);
 }
 
@@ -64,6 +69,15 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
+}
+.carousel__slide {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: var(--carousel-slide-opacity, 1);
+    transform: scale(var(--carousel-slide-scale, 1));
+}
+.carousel__slide[aria-current="true"] {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .carousel--centered .carousel__slide {
